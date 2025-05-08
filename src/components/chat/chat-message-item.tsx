@@ -1,9 +1,9 @@
 'use client';
 
 import type { ChatMessage } from '@/lib/types';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; // Avatar no longer used
 import { Card, CardContent } from '@/components/ui/card';
-import { User, Bot } from 'lucide-react';
+// import { User, Bot } from 'lucide-react'; // Icons for Avatar no longer used
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -19,14 +19,9 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
   const bubblePosition = isUser ? 'rounded-br-none' : 'rounded-bl-none';
 
   return (
-    <div className={cn('flex flex-col gap-2 py-3', alignment)}>
-      <div className={cn('flex gap-3 items-end', isUser ? 'flex-row-reverse' : 'flex-row')}>
-        <Avatar className="shadow-md">
-          <AvatarImage src={isUser ? "https://picsum.photos/seed/useravatar/40/40" : "https://picsum.photos/seed/aicharacter/40/40"} alt={isUser ? "User" : "AI Character"} data-ai-hint={isUser ? "user avatar" : "humanoid character"} />
-          <AvatarFallback className={cn(isUser ? "bg-accent text-accent-foreground" : "bg-golden-yellow-hsl text-primary-foreground")}>
-            {isUser ? <User /> : <Bot />}
-          </AvatarFallback>
-        </Avatar>
+    <div className={cn('flex flex-col gap-1 py-3', alignment)}>
+      <div className={cn('flex items-end', isUser ? 'flex-row-reverse' : 'flex-row')}>
+        {/* Avatar component removed as per request */}
         <Card className={cn('max-w-xs sm:max-w-md md:max-w-lg shadow-lg transform transition-all duration-300 hover:scale-[1.02]', bubbleColor, bubblePosition)}>
           <CardContent className="p-3 space-y-2">
             {message.isLoadingText && ( 
@@ -63,9 +58,10 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
           </CardContent>
         </Card>
       </div>
-      <p className={cn('text-xs text-muted-foreground/80', isUser ? 'text-right pr-12' : 'text-left pl-12')}>
+      <p className={cn('text-xs text-muted-foreground/80', isUser ? 'text-right mr-1' : 'text-left ml-1')}>
         {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
       </p>
     </div>
   );
 }
+

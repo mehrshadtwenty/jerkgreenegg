@@ -14,12 +14,6 @@ export function AppHeader() {
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
           <Button variant="ghost" asChild className="font-heading hover:text-accent transition-colors">
-            <Link href="/">Chat</Link>
-          </Button>
-          <Button variant="ghost" asChild className="font-heading hover:text-accent transition-colors">
-            <Link href="/gallery">Gallery</Link>
-          </Button>
-          <Button variant="ghost" asChild className="font-heading hover:text-accent transition-colors">
             <Link href="/about">About</Link>
           </Button>
         </nav>

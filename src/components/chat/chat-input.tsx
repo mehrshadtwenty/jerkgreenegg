@@ -3,23 +3,32 @@
 import { useState, type FormEvent } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Send, Sparkles } from 'lucide-react';
+import { Send, Sparkles, StopCircle } from 'lucide-react';
 
 interface ChatInputProps {
-  onSubmit: (question: string) => Promise<void>; // Image generation is now separate
-  onGenerateImageRequest: () => void; // New handler for generating image for last response
+  onSubmit: (question: string) => Promise<void>;
+  onGenerateImageRequest: () => void;
+  onStopImageGeneration?: () => void;
   isLoading: boolean;
+  isImageGenerating: boolean; 
   onUserTypingChange: (isTyping: boolean) => void;
 }
 
-export function ChatInput({ onSubmit, onGenerateImageRequest, isLoading, onUserTypingChange }: ChatInputProps) {
+export function ChatInput({ 
+  onSubmit, 
+  onGenerateImageRequest, 
+  onStopImageGeneration,
+  isLoading, 
+  isImageGenerating,
+  onUserTypingChange 
+}: ChatInputProps) {
   const [question, setQuestion] = useState('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!question.trim() || isLoading) return;
+    if (!question.trim() || isLoading || isImageGenerating) return;
     onUserTypingChange(false); 
-    await onSubmit(question); // No longer passes generateImage boolean
+    await onSubmit(question);
     setQuestion('');
   };
 
@@ -33,7 +42,7 @@ export function ChatInput({ onSubmit, onGenerateImageRequest, isLoading, onUserT
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-2 p-4 border-t border-border/50 bg-card/30 rounded-b-lg shadow-up-lg">
+    <form onSubmit={handleSubmit} className="p-4 border-t border-border/50 bg-card/80">
       <div className="relative">
         <Textarea
           value={question}
@@ -41,7 +50,7 @@ export function ChatInput({ onSubmit, onGenerateImageRequest, isLoading, onUserT
           onFocus={() => onUserTypingChange(question.trim().length > 0)}
           onBlur={() => onUserTypingChange(false)}
           placeholder="Tell me if…"
-          className="pr-20 min-h-[70px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
+          className="pr-20 min-h-[60px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
                      border-2 border-primary/30 
                      focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
                      rounded-lg shadow-inner"
@@ -51,31 +60,44 @@ export function ChatInput({ onSubmit, onGenerateImageRequest, isLoading, onUserT
               handleSubmit(e as unknown as FormEvent<HTMLFormElement>);
             }
           }}
-          disabled={isLoading}
+          disabled={isLoading || isImageGenerating}
           aria-label="Your question"
         />
         <Button 
           type="submit" 
           size="icon" 
           className="absolute right-3 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground disabled:opacity-70 rounded-full shadow-md hover:shadow-fantasy-glow-accent"
-          disabled={isLoading || !question.trim()}
+          disabled={isLoading || isImageGenerating || !question.trim()}
           aria-label="Send question"
         >
           <Send className="h-5 w-5" />
         </Button>
       </div>
-      <div className="mt-3 flex items-center justify-start"> {/* Changed to justify-start */}
+      <div className="mt-3 flex items-center justify-between">
         <Button
-          type="button" // Important: not a submit button
+          type="button"
           variant="link"
           onClick={onGenerateImageRequest}
-          disabled={isLoading}
+          disabled={isLoading || isImageGenerating}
           className="p-0 h-auto text-sm font-medium text-emerald-green-hsl hover:text-emerald-green-hsl/80 disabled:text-muted-foreground/70 flex items-center gap-1"
         >
           <Sparkles className="h-4 w-4" />
           Generate Image for last response
         </Button>
+        {isImageGenerating && onStopImageGeneration && (
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            onClick={onStopImageGeneration}
+            className="flex items-center gap-1 animate-pulse"
+          >
+            <StopCircle className="h-4 w-4" />
+            Stop
+          </Button>
+        )}
       </div>
     </form>
   );
 }
+
