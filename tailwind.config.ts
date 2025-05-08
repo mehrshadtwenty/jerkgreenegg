@@ -66,6 +66,7 @@ export default {
         'mystic-gold-hsl': 'hsl(var(--mystic-gold-hsl))',
         'amethyst-purple-hsl': 'hsl(var(--amethyst-purple-hsl))',
         'electric-lime-hsl': 'hsl(var(--electric-lime-hsl))',
+        'orange-flame-hsl': 'hsl(var(--orange-flame-hsl))',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -81,21 +82,26 @@ export default {
   				from: { height: 'var(--radix-accordion-content-height)' },
   				to: { height: '0' }
   			},
-        'sparkle-animation': {
-          '0%, 100%': { opacity: '0', transform: 'scale(0.5) translateY(0px)' },
-          '50%': { opacity: '1', transform: 'scale(1) translateY(-5px)' },
-          '75%': { opacity: '0.5', transform: 'scale(0.8) translateY(0px)' },
+        /* Removed old sparkle-animation and pulse-glow from here, moved to globals.css with specifics for lamp */
+         'lamp-bob': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-5px)' },
         },
-        'pulse-glow': {
-          from : { boxShadow: '0 0 5px -2px hsl(var(--primary)), 0 0 10px -5px hsl(var(--accent))' },
-          to: { boxShadow: '0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--accent))' }
+        'lamp-blink': {
+          '0%, 90%, 100%': { transform: 'scaleY(1)' },
+          '95%': { transform: 'scaleY(0.1)' },
+        },
+         'pulse-glow-lamp': {
+          'from': { filter: 'drop-shadow(0 0 3px hsl(var(--primary) / 0.7)) drop-shadow(0 0 8px hsl(var(--accent) / 0.5))' },
+          'to': { filter: 'drop-shadow(0 0 6px hsl(var(--primary))) drop-shadow(0 0 15px hsl(var(--accent) / 0.7))' }
         }
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-        'sparkle': 'sparkle-animation 2s infinite ease-in-out',
-        'pulse-glow': 'pulse-glow 2s infinite alternate',
+        'lamp-bob': 'lamp-bob 3s infinite ease-in-out',
+        'lamp-blink': 'lamp-blink 5s infinite',
+        'pulse-glow-lamp': 'pulse-glow-lamp 2.5s infinite alternate',
   		},
       boxShadow: {
         'up-lg': '0 -10px 15px -3px rgba(0, 0, 0, 0.1), 0 -4px 6px -2px rgba(0, 0, 0, 0.05)'
@@ -104,5 +110,3 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-
-    

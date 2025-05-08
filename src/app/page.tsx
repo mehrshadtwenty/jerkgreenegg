@@ -14,6 +14,7 @@ export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [aiStatus, setAiStatus] = useState<AiStatus>('idle');
   const [isLoading, setIsLoading] = useState(false);
+  const [isUserTyping, setIsUserTyping] = useState(false); // New state for user typing
   const { toast } = useToast();
 
   // Load gallery from localStorage on mount
@@ -41,6 +42,7 @@ export default function HomePage() {
 
   const handleNewMessage = async (question: string, shouldGenerateImage: boolean) => {
     setIsLoading(true);
+    setIsUserTyping(false); // Stop typing animation when message is sent
     const userMessage: ChatMessage = {
       id: uuidv4(),
       role: 'user',
@@ -58,7 +60,7 @@ export default function HomePage() {
     setMessages(prev => [...prev, aiPlaceholderMessage]);
 
     try {
-      setAiStatus(shouldGenerateImage ? 'thinking_image' : 'thinking_text');
+      setAiStatus('thinking_text'); // Initial state for AI processing
       
       let aiTextResponse: string | undefined;
       let aiImageResponseUrl: string | undefined;
@@ -67,7 +69,7 @@ export default function HomePage() {
       try {
         const textResult = await answerUserQuestion({ question });
         aiTextResponse = textResult.answer;
-        setAiStatus(shouldGenerateImage ? 'thinking_image' : 'presenting_text'); // Update status after text response
+        // Status will be updated based on whether an image is also being generated
       } catch (textError) {
         console.error("Error getting text answer:", textError);
         aiTextResponse = "I had a little trouble thinking of an answer for that. Please try again!";
@@ -78,17 +80,17 @@ export default function HomePage() {
         });
       }
       
-      // Update placeholder with text
+      // Update placeholder with text, keep loading if image is next
+       setAiStatus(shouldGenerateImage ? 'thinking_image' : 'presenting_text');
       setMessages(prev => prev.map(msg => 
         msg.id === aiPlaceholderMessage.id ? { ...msg, text: aiTextResponse, isLoading: shouldGenerateImage } : msg
       ));
 
       if (shouldGenerateImage) {
-        setAiStatus('thinking_image'); // Ensure status is thinking_image
+        // setAiStatus('thinking_image'); // Already set or will be set
         try {
           const imageResult = await generateImageFromQuestion({ question });
           aiImageResponseUrl = imageResult.imageUrl;
-          setAiStatus('presenting_image');
           
           if (aiImageResponseUrl) {
             saveToGallery({
@@ -105,11 +107,12 @@ export default function HomePage() {
             description: "Failed to generate image.",
             variant: "destructive",
           });
-          // Update placeholder to show image error, text is already there
+           // Update placeholder to show image error, text is already there
            setMessages(prev => prev.map(msg => 
             msg.id === aiPlaceholderMessage.id ? { ...msg, text: (msg.text || "") + "\n\n(But I couldn't conjure an image for that.)", imageUrl: undefined, isLoading: false } : msg
           ));
         }
+        setAiStatus('presenting_image'); // Image (or failure) is ready
       }
       
       // Final update to AI message
@@ -141,7 +144,9 @@ export default function HomePage() {
       });
     } finally {
       setIsLoading(false);
-      setAiStatus('idle');
+      if (aiStatus !== 'error') { // Don't reset to idle if there was an error that set its own status
+         setAiStatus('idle');
+      }
     }
   };
 
@@ -150,9 +155,9 @@ export default function HomePage() {
       messages={messages}
       aiStatus={aiStatus}
       isLoading={isLoading}
+      isUserTyping={isUserTyping}
+      onSetIsUserTyping={setIsUserTyping}
       onNewMessage={handleNewMessage}
     />
   );
 }
-
-    

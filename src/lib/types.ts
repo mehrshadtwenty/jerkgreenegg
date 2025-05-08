@@ -17,7 +17,6 @@ export interface GalleryImage {
 
 export type AiStatus = 
   | 'idle' 
-  | 'listening' 
   | 'thinking_text' 
   | 'thinking_image' 
   | 'presenting_text' 

@@ -46,6 +46,7 @@ body {
     --mystic-gold-hsl: 45 60% 51%;
     --amethyst-purple-hsl: 270 50% 60%;
     --electric-lime-hsl: 90 97% 55%;
+    --orange-flame-hsl: 25 100% 60%; /* New Orange */
 
     --font-heading-family: "Merienda", serif; /* For Merienda font */
   }
@@ -87,6 +88,7 @@ body {
     --mystic-gold-hsl: 45 70% 61%;
     --amethyst-purple-hsl: 270 40% 50%;
     --electric-lime-hsl: 90 80% 65%;
+    --orange-flame-hsl: 25 90% 55%;
   }
 }
 
@@ -126,11 +128,11 @@ body {
   .font-heading {
     font-family: var(--font-heading-family);
   }
-  .sparkle-effect {
+  .sparkle-effect { /* Can be applied to cards */
     position: relative;
-    animation: pulse-glow 2s infinite alternate;
+    /* animation: pulse-glow 2s infinite alternate; */ /* Let's disable this for now to focus on lamp */
   }
-  .sparkle-effect::before,
+  /* .sparkle-effect::before,
   .sparkle-effect::after {
     content: '';
     position: absolute;
@@ -151,22 +153,152 @@ body {
     bottom: -10px;
     left: calc(50% - 4px);
     animation-delay: 1s;
-  }
+  } */
 }
 
-@keyframes sparkle-animation {
+/* @keyframes sparkle-animation {
   0%, 100% { opacity: 0; transform: scale(0.5) translateY(0px); }
   50% { opacity: 1; transform: scale(1) translateY(-5px); }
   75% { opacity: 0.5; transform: scale(0.8) translateY(0px); }
-}
+} */
 
-@keyframes pulse-glow {
+@keyframes pulse-glow-lamp {
   from {
-    box-shadow: 0 0 5px -2px hsl(var(--primary)), 0 0 10px -5px hsl(var(--accent));
+    filter: drop-shadow(0 0 3px hsl(var(--primary) / 0.7)) drop-shadow(0 0 8px hsl(var(--accent) / 0.5));
   }
   to {
-    box-shadow: 0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--accent));
+    filter: drop-shadow(0 0 6px hsl(var(--primary))) drop-shadow(0 0 15px hsl(var(--accent) / 0.7));
   }
 }
 
-    
+/* Magic Lamp SVG Styles & Animations */
+.magic-lamp-svg {
+  overflow: visible; /* To see shadows and effects outside viewBox */
+  filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
+}
+
+.lamp-body-fill { fill: hsl(var(--primary)); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5; }
+.lamp-lid-fill { fill: hsl(var(--primary) / 0.9); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5; }
+.lamp-spout-fill { fill: hsl(var(--primary)); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5;}
+.lamp-knob-fill { fill: hsl(var(--primary-foreground)); }
+
+.lamp-shadow-base-lid { fill: hsl(var(--card) / 0.3); }
+.lamp-shadow-spout { fill: hsl(var(--card) / 0.2); }
+
+
+.lamp-eye { fill: white; stroke: hsl(var(--primary-foreground)); stroke-width: 0.5; transition: transform 0.3s ease-in-out; }
+.lamp-pupil { fill: hsl(var(--primary-foreground)); transition: transform 0.2s ease-in-out; }
+.lamp-eyebrow { fill: none; stroke: hsl(var(--primary-foreground)); stroke-width: 2; stroke-linecap: round; transition: transform 0.3s ease-in-out; }
+.lamp-mouth { fill: none; stroke: hsl(var(--primary-foreground)); stroke-width: 1.5; stroke-linecap: round; transition: transform 0.3s ease-in-out; }
+.lamp-ear { fill: hsl(var(--primary) / 0.8); stroke: hsl(var(--primary-foreground)/0.7); stroke-width: 1; transition: opacity 0.3s, transform 0.3s; }
+.lamp-hand { fill: hsl(var(--mystic-gold-hsl)/0.8); stroke: hsl(var(--primary-foreground)/0.6); stroke-width: 1; transition: opacity 0.3s, transform 0.3s; }
+
+
+/* Default hidden states for animated parts */
+.lamp-ears-group, .lamp-hand-chin, .lamp-hands-presenting, .lamp-sparkles {
+  opacity: 0;
+  transform-origin: center center;
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+.lamp-ears-group {transform: scale(0.8);}
+.lamp-hand-chin {transform: translateY(10px) scale(0.8);}
+.lamp-hands-presenting {transform: scale(0.8) rotate(-5deg);}
+
+
+/* IDLE State */
+.lamp-idle .magic-lamp-svg { animation: pulse-glow-lamp 2.5s infinite alternate, lamp-bob 3s infinite ease-in-out; }
+.lamp-idle .lamp-pupil { animation: lamp-blink 5s infinite; }
+.lamp-idle .lamp-eyebrow { transform: translateY(0px); }
+.lamp-idle .lamp-mouth { transform: scaleY(0.8); d: path("M50 95 Q60 98 70 95");} /* Gentle smile */
+
+/* USER TYPING State */
+.lamp-typing .magic-lamp-svg { animation: pulse-glow-lamp 2s infinite alternate, lamp-bob-attentive 2s infinite ease-in-out; }
+.lamp-typing .lamp-ears-group { opacity: 1; transform: scale(1); }
+.lamp-typing .lamp-eye { transform: scale(1.1); } /* Wider eyes */
+.lamp-typing .lamp-pupil { transform: translateX(1px); animation: lamp-pupil-scan 4s infinite ease-in-out; }
+.lamp-typing .lamp-eyebrow { transform: translateY(-3px) rotate(-2deg); } /* Eyebrows up */
+.lamp-typing .lamp-mouth { d: path("M50 96 Q60 102 70 96"); } /* Slightly more open mouth, curious */
+
+/* THINKING TEXT State */
+.lamp-thinking-text .magic-lamp-svg { animation: pulse-glow-lamp 1.5s infinite alternate; transform: rotate(-5deg) translateY(-5px); }
+.lamp-thinking-text .lamp-hand-chin { opacity: 1; transform: translateY(0) scale(1); }
+.lamp-thinking-text .lamp-eyebrow { transform: translateY(-2px) rotate(3deg); } /* One eyebrow raised */
+.lamp-thinking-text .lamp-mouth { d: path("M55 97 Q60 95 65 97"); } /* Hmm mouth */
+.lamp-thinking-text .lamp-pupil { animation: lamp-think-pupils 3s infinite ease-in-out; }
+
+
+/* THINKING IMAGE State */
+.lamp-thinking-image .magic-lamp-svg { animation: pulse-glow-lamp 1s infinite alternate, lamp-shake 0.5s infinite ease-in-out; }
+.lamp-thinking-image .lamp-sparkles { opacity: 0.7; animation: lamp-sparkle-effect 1s infinite; }
+.lamp-thinking-image .lamp-eyebrow { transform: translateY(-4px); } /* Both up high */
+.lamp-thinking-image .lamp-mouth { d: path("M50 95 Q60 105 70 95"); } /* Ooh mouth */
+
+/* PRESENTING TEXT State */
+.lamp-presenting-text .magic-lamp-svg { animation: pulse-glow-lamp 2s infinite alternate; transform: scale(1.05) translateY(-3px); }
+.lamp-presenting-text .lamp-eyebrow { transform: translateY(0px); }
+.lamp-presenting-text .lamp-mouth { d: path("M45 95 Q60 103 75 95"); } /* Happy smile */
+
+/* PRESENTING IMAGE State */
+.lamp-presenting-image .magic-lamp-svg { animation: pulse-glow-lamp 1.8s infinite alternate; transform: scale(1.1) rotate(2deg); }
+.lamp-presenting-image .lamp-hands-presenting { opacity: 1; transform: scale(1) rotate(0deg) translateX(0); }
+.lamp-presenting-image .lamp-sparkles { opacity: 1; animation: lamp-sparkle-effect 0.8s infinite; }
+.lamp-presenting-image .lamp-eyebrow { transform: translateY(-3px); }
+.lamp-presenting-image .lamp-mouth { d: path("M45 95 Q60 108 75 95"); } /* Wide excited smile */
+
+/* ERROR State */
+.lamp-error .magic-lamp-svg { transform: rotate(10deg) translateY(10px) scale(0.95); filter: grayscale(50%) brightness(0.8); animation: lamp-error-tremble 0.3s infinite; }
+.lamp-error .lamp-eyebrow { transform: translateY(3px) rotate(15deg); } /* Sad eyebrows */
+.lamp-error .lamp-mouth { d: path("M50 100 Q60 90 70 100"); } /* Sad mouth */
+.lamp-error .lamp-eye { transform: scaleY(0.7); }
+
+
+/* Keyframes for lamp parts */
+@keyframes lamp-bob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes lamp-bob-attentive {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(1deg); }
+}
+@keyframes lamp-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+@keyframes lamp-pupil-scan {
+  0%, 100% { transform: translateX(0px); }
+  25% { transform: translateX(-1.5px); }
+  75% { transform: translateX(1.5px); }
+}
+
+@keyframes lamp-think-pupils {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-1px) rotate(-15deg); }
+  75% { transform: translateY(1px) rotate(15deg); }
+}
+
+@keyframes lamp-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  25% { transform: translateX(-2px) rotate(-1deg); }
+  75% { transform: translateX(2px) rotate(1deg); }
+}
+
+@keyframes lamp-error-tremble {
+  0% { transform: translate(1px, 1px) rotate(10deg); }
+  50% { transform: translate(-1px, -1px) rotate(9deg); }
+  100% { transform: translate(1px, 1px) rotate(10deg); }
+}
+
+@keyframes lamp-sparkle-effect {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0.5); }
+}
+.lamp-sparkles .sparkle-1 { animation-delay: 0s; }
+.lamp-sparkles .sparkle-2 { animation-delay: 0.2s; }
+.lamp-sparkles .sparkle-3 { animation-delay: 0.4s; }
+
+/* Random movement styling from MagicLampDisplay component might override transform here */
+.lamp-container {
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* For random movements */
+}

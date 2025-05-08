@@ -5,23 +5,34 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Paperclip, Send, Sparkles } from 'lucide-react'; // Sparkles for "Imagine It"
+import { Send, Sparkles } from 'lucide-react';
 
 interface ChatInputProps {
   onSubmit: (question: string, generateImage: boolean) => Promise<void>;
   isLoading: boolean;
+  onUserTypingChange: (isTyping: boolean) => void;
 }
 
-export function ChatInput({ onSubmit, isLoading }: ChatInputProps) {
+export function ChatInput({ onSubmit, isLoading, onUserTypingChange }: ChatInputProps) {
   const [question, setQuestion] = useState('');
   const [generateImage, setGenerateImage] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!question.trim() || isLoading) return;
+    onUserTypingChange(false); // Stop typing animation on submit
     await onSubmit(question, generateImage);
     setQuestion('');
     // setGenerateImage(false); // Optionally reset checkbox
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setQuestion(e.target.value);
+    if (e.target.value.trim().length > 0) {
+      onUserTypingChange(true);
+    } else {
+      onUserTypingChange(false);
+    }
   };
 
   return (
@@ -29,7 +40,9 @@ export function ChatInput({ onSubmit, isLoading }: ChatInputProps) {
       <div className="relative">
         <Textarea
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
+          onChange={handleTextChange}
+          onFocus={() => onUserTypingChange(question.trim().length > 0)}
+          onBlur={() => onUserTypingChange(false)}
           placeholder="Type your question or scenario here... e.g., 'What if cats could talk?'"
           className="pr-20 min-h-[80px] text-base bg-input text-input-foreground placeholder:text-muted-foreground/70 focus:ring-accent"
           onKeyDown={(e) => {
@@ -69,5 +82,3 @@ export function ChatInput({ onSubmit, isLoading }: ChatInputProps) {
     </form>
   );
 }
-
-    
