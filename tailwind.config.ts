@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
     darkMode: ["class"],
@@ -9,6 +10,11 @@ export default {
   ],
   theme: {
   	extend: {
+      fontFamily: {
+        sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
+        mono: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
+        heading: ['var(--font-heading-family)', ...defaultTheme.fontFamily.serif], // Use Merienda from CSS var
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -41,7 +47,10 @@ export default {
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
   			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
+  			input: {
+          DEFAULT: 'hsl(var(--input))',
+          foreground: 'hsl(var(--input-foreground))'
+        },
   			ring: 'hsl(var(--ring))',
   			chart: {
   				'1': 'hsl(var(--chart-1))',
@@ -50,16 +59,13 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-  			sidebar: {
-  				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
+        // Additional fantasy palette colors
+        'sky-blue-hsl': 'hsl(var(--sky-blue-hsl))',
+        'rose-pink-hsl': 'hsl(var(--rose-pink-hsl))',
+        'emerald-green-hsl': 'hsl(var(--emerald-green-hsl))',
+        'mystic-gold-hsl': 'hsl(var(--mystic-gold-hsl))',
+        'amethyst-purple-hsl': 'hsl(var(--amethyst-purple-hsl))',
+        'electric-lime-hsl': 'hsl(var(--electric-lime-hsl))',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -68,27 +74,35 @@ export default {
   		},
   		keyframes: {
   			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
+  				from: { height: '0' },
+  				to: { height: 'var(--radix-accordion-content-height)' }
   			},
   			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
-  			}
+  				from: { height: 'var(--radix-accordion-content-height)' },
+  				to: { height: '0' }
+  			},
+        'sparkle-animation': {
+          '0%, 100%': { opacity: '0', transform: 'scale(0.5) translateY(0px)' },
+          '50%': { opacity: '1', transform: 'scale(1) translateY(-5px)' },
+          '75%': { opacity: '0.5', transform: 'scale(0.8) translateY(0px)' },
+        },
+        'pulse-glow': {
+          from : { boxShadow: '0 0 5px -2px hsl(var(--primary)), 0 0 10px -5px hsl(var(--accent))' },
+          to: { boxShadow: '0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--accent))' }
+        }
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+        'sparkle': 'sparkle-animation 2s infinite ease-in-out',
+        'pulse-glow': 'pulse-glow 2s infinite alternate',
+  		},
+      boxShadow: {
+        'up-lg': '0 -10px 15px -3px rgba(0, 0, 0, 0.1), 0 -4px 6px -2px rgba(0, 0, 0, 0.05)'
+      }
   	}
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
+    

@@ -16,8 +16,28 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      { // Assuming AI might return images from Google's user content storage
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      { // Placeholder for AI image generation if it uses this pattern
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
+      { // Placeholder for AI image generation if it uses this pattern from Gemini
+        protocol: 'https',
+        hostname: 'generativelanguage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 };
 
 export default nextConfig;
+
+    
