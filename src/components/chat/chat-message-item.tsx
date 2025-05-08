@@ -15,21 +15,21 @@ interface ChatMessageItemProps {
 export function ChatMessageItem({ message }: ChatMessageItemProps) {
   const isUser = message.role === 'user';
   const alignment = isUser ? 'items-end' : 'items-start';
-  const bubbleColor = isUser ? 'bg-primary/80 text-primary-foreground' : 'bg-secondary/80 text-secondary-foreground';
+  const bubbleColor = isUser ? 'bg-primary/80 text-primary-foreground' : 'bg-secondary/90 text-secondary-foreground';
   const bubblePosition = isUser ? 'rounded-br-none' : 'rounded-bl-none';
 
   return (
     <div className={cn('flex flex-col gap-2 py-3', alignment)}>
       <div className={cn('flex gap-3 items-end', isUser ? 'flex-row-reverse' : 'flex-row')}>
         <Avatar className="shadow-md">
-          <AvatarImage src={isUser ? undefined : "https://picsum.photos/40/40?random=2"} alt={isUser ? "User" : "AI Genie"} data-ai-hint={isUser ? "user avatar" : "genie avatar"} />
-          <AvatarFallback className={cn(isUser ? "bg-accent text-accent-foreground" : "bg-mystic-gold-hsl text-primary-foreground")}>
+          <AvatarImage src={isUser ? undefined : "/images/magic-lamp-avatar.png"} alt={isUser ? "User" : "AI Genie"} data-ai-hint={isUser ? "user avatar" : "genie avatar"} />
+          <AvatarFallback className={cn(isUser ? "bg-accent text-accent-foreground" : "bg-golden-yellow-hsl text-primary-foreground")}>
             {isUser ? <User /> : <Bot />}
           </AvatarFallback>
         </Avatar>
-        <Card className={cn('max-w-xs sm:max-w-md md:max-w-lg shadow-lg transform transition-all duration-300 hover:scale-105', bubbleColor, bubblePosition)}>
+        <Card className={cn('max-w-xs sm:max-w-md md:max-w-lg shadow-lg transform transition-all duration-300 hover:scale-[1.02]', bubbleColor, bubblePosition)}>
           <CardContent className="p-3 space-y-2">
-            {message.isLoading && (
+            {message.isLoading && !message.text && ( // Show loading dots only if no text yet
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                 <div className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -37,15 +37,24 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
               </div>
             )}
             {message.text && <p className="whitespace-pre-wrap">{message.text}</p>}
+             {message.isLoading && message.text && message.imageUrl === undefined && ( // Show loading for image if text is present but image is still loading
+              <div className="flex items-center gap-2 mt-2 text-xs">
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce"></div>
+                <span className="italic">Conjuring image...</span>
+              </div>
+            )}
             {message.imageUrl && (
-              <div className="mt-2 rounded-lg overflow-hidden border-2 border-primary/50">
+              <div className="chat-image-container mt-2 rounded-lg overflow-hidden border-2 border-primary/50 shadow-fantasy-glow-primary p-1 bg-black/20">
                 <Image 
                   src={message.imageUrl} 
-                  alt="Generated image" 
+                  alt="Generated image by AI" 
                   width={300} 
                   height={300} 
-                  className="object-cover w-full h-auto" 
+                  className="object-cover w-full h-auto rounded" 
                   data-ai-hint="fantasy art"
+                  priority={true} // Prioritize loading visible images
                 />
               </div>
             )}
@@ -58,5 +67,3 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
     </div>
   );
 }
-
-    

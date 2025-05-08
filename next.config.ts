@@ -35,9 +35,12 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       }
     ],
+    // Allow serving local images from public/images directory
+    // This is not strictly needed for remotePatterns but good for consistency if
+    // next/image is used with local static assets.
+    // For local images, the path starts with `/` and Next.js handles it.
+    // No specific config needed here for local /public images.
   },
 };
 
 export default nextConfig;
-
-    

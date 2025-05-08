@@ -20,10 +20,10 @@ export function ChatInput({ onSubmit, isLoading, onUserTypingChange }: ChatInput
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!question.trim() || isLoading) return;
-    onUserTypingChange(false); // Stop typing animation on submit
+    onUserTypingChange(false); 
     await onSubmit(question, generateImage);
     setQuestion('');
-    // setGenerateImage(false); // Optionally reset checkbox
+    // setGenerateImage(false); // Keep it checked if user wants to continue generating images
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,15 +36,18 @@ export function ChatInput({ onSubmit, isLoading, onUserTypingChange }: ChatInput
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 p-4 border-t border-border bg-card/50 rounded-b-lg shadow-up-lg">
+    <form onSubmit={handleSubmit} className="mt-2 p-4 border-t border-border/50 bg-card/30 rounded-b-lg shadow-up-lg">
       <div className="relative">
         <Textarea
           value={question}
           onChange={handleTextChange}
           onFocus={() => onUserTypingChange(question.trim().length > 0)}
           onBlur={() => onUserTypingChange(false)}
-          placeholder="Type your question or scenario here... e.g., 'What if cats could talk?'"
-          className="pr-20 min-h-[80px] text-base bg-input text-input-foreground placeholder:text-muted-foreground/70 focus:ring-accent"
+          placeholder="Tell me if…"
+          className="pr-20 min-h-[70px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
+                     border-2 border-primary/30 
+                     focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
+                     rounded-lg shadow-inner"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
@@ -57,7 +60,7 @@ export function ChatInput({ onSubmit, isLoading, onUserTypingChange }: ChatInput
         <Button 
           type="submit" 
           size="icon" 
-          className="absolute right-3 top-1/2 -translate-y-1/2 bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-70"
+          className="absolute right-3 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground disabled:opacity-70 rounded-full shadow-md hover:shadow-fantasy-glow-accent"
           disabled={isLoading || !question.trim()}
           aria-label="Send question"
         >
@@ -71,11 +74,11 @@ export function ChatInput({ onSubmit, isLoading, onUserTypingChange }: ChatInput
             checked={generateImage}
             onCheckedChange={(checked) => setGenerateImage(Boolean(checked))}
             disabled={isLoading}
-            className="border-accent data-[state=checked]:bg-accent data-[state=checked]:text-accent-foreground"
+            className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus:ring-accent"
           />
-          <Label htmlFor="generateImage" className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+          <Label htmlFor="generateImage" className="text-sm font-medium text-muted-foreground flex items-center gap-1 cursor-pointer">
             <Sparkles className="h-4 w-4 text-emerald-green-hsl" />
-            Imagine It? (Generate an image)
+            Imagine It?
           </Label>
         </div>
       </div>

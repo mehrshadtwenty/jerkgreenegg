@@ -25,12 +25,12 @@ export async function generateImageFromQuestion(input: GenerateImageFromQuestion
   return generateImageFromQuestionFlow(input);
 }
 
-const generateImagePrompt = ai.definePrompt({
-  name: 'generateImagePrompt',
-  input: {schema: GenerateImageFromQuestionInputSchema},
-  output: {schema: GenerateImageFromQuestionOutputSchema},
-  prompt: `Generate a creative image based on the following hypothetical question: "{{question}}"`,
-});
+// This prompt is now used directly by ai.generate, not as a definePrompt object for this flow.
+const imageGenerationUserPrompt = (question: string) => 
+  `Generate a visually stunning, creative, and imaginative image that vividly represents the hypothetical scenario posed in the following question. The image should be fantastical, dreamlike, and align with a whimsical, magical theme. Emphasize vibrant colors and an expressive, artistic style.
+
+Question: "${question}"`;
+
 
 const generateImageFromQuestionFlow = ai.defineFlow(
   {
@@ -40,12 +40,20 @@ const generateImageFromQuestionFlow = ai.defineFlow(
   },
   async input => {
     const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp',
-      prompt: input.question,
+      model: 'googleai/gemini-2.0-flash-exp', // Ensure this model supports image generation
+      prompt: imageGenerationUserPrompt(input.question),
       config: {
-        responseModalities: ['TEXT', 'IMAGE'],
+        responseModalities: ['TEXT', 'IMAGE'], // Must include IMAGE
+         // Adjust safety for creative image generation if needed, though defaults are usually fine
+        safetySettings: [
+           { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+           // Other categories can be less restrictive for creative images if desired
+        ]
       },
     });
-    return {imageUrl: media.url!};
+    if (!media || !media.url) {
+      throw new Error("Image generation failed or returned no URL.");
+    }
+    return {imageUrl: media.url};
   }
 );

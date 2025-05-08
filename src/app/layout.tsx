@@ -6,24 +6,24 @@ import { Toaster } from "@/components/ui/toaster";
 import { MainLayout } from '@/components/layout/main-layout';
 
 const fontSans = Inter({ 
-  variable: '--font-geist-sans', // Kept variable name for CSS consistency
+  variable: '--font-geist-sans', 
   subsets: ['latin'],
 });
 
 const fontMono = Roboto_Mono({ 
-  variable: '--font-geist-mono', // Kept variable name for CSS consistency
+  variable: '--font-geist-mono', 
   subsets: ['latin'],
 });
 
 const fontHeading = Merienda({
   subsets: ['latin'],
-  variable: '--font-heading',
-  weight: ['400', '700'],
+  variable: '--font-heading-family', // Changed variable name to match CSS
+  weight: ['300', '400', '700', '900'], // Merienda offers these weights
 });
 
 export const metadata: Metadata = {
-  title: 'TellMeIf AI - Your Magical Companion',
-  description: 'Ask questions, get creative answers, and generate images with TellMeIf AI!',
+  title: 'Tell Me If AI - Your Magical Companion',
+  description: 'Ask questions, get creative answers, and generate images with Tell Me If AI!',
 };
 
 export default function RootLayout({
@@ -34,11 +34,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <style dangerouslySetInnerHTML={{ __html: `
-          :root {
-            ${fontHeading.variable}: ${fontHeading.style.fontFamily};
-          }
-        `}} />
+        {/* 
+          The `style` block is no longer needed here if the variable name 
+          in `globals.css` (`--font-heading-family`) matches the variable name 
+          provided by `Merienda` (`--font-heading-family`).
+          The font variable is automatically applied by Next.js.
+        */}
       </head>
       <body className={`${fontSans.variable} ${fontMono.variable} ${fontHeading.variable} antialiased flex flex-col min-h-screen`}>
         <MainLayout>

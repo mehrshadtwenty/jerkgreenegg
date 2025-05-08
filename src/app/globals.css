@@ -8,87 +8,91 @@ body {
 
 @layer base {
   :root {
-    --background: 270 50% 60%; /* Amethyst Purple */
-    --foreground: 20 80% 98%; /* Light cream for text on purple */
+    /* Updated Fantasy Palette & Theme Mapping */
+    --background: 270 60% 12%; /* Dark Galactic Purple (for a starry sky feel) */
+    --foreground: 30 100% 97%; /* Pearl White */
 
-    --card: 270 45% 55%; /* Slightly darker Amethyst for cards */
-    --card-foreground: 20 80% 98%;
+    --card: 270 55% 20%; /* Slightly lighter Dark Galactic Purple for cards */
+    --card-foreground: 30 100% 97%;
 
-    --popover: 270 40% 50%;
-    --popover-foreground: 20 80% 98%;
+    --popover: 270 50% 18%;
+    --popover-foreground: 30 100% 97%;
 
-    --primary: 45 60% 51%; /* Mystic Gold */
-    --primary-foreground: 45 100% 10%; /* Dark brown/black for text on gold */
+    --primary: 50 100% 55%; /* Golden Yellow */
+    --primary-foreground: 50 100% 10%; /* Dark brown/black for text on gold */
 
-    --secondary: 339 100% 80%; /* Lighter Rose Pink for secondary elements */
-    --secondary-foreground: 339 100% 15%; /* Dark pink/maroon */
+    --secondary: 210 100% 60%; /* Bright Blue */
+    --secondary-foreground: 210 100% 10%; /* Dark for text on blue */
     
-    --muted: 270 40% 70%; /* Lighter purple for muted elements */
-    --muted-foreground: 270 30% 85%; /* Lighter text for muted */
+    --muted: 270 50% 30%; /* Lighter purple for muted elements */
+    --muted-foreground: 270 40% 75%; /* Lighter text for muted */
 
-    --accent: 90 97% 55%; /* Electric Lime */
-    --accent-foreground: 90 100% 10%; /* Dark green/black for text on lime */
+    --accent: 15 100% 58%; /* Fiery Orange */
+    --accent-foreground: 15 100% 10%; /* Dark for text on orange */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 50%; /* Ruby Red */
+    --destructive-foreground: 0 0% 98%; /* Pearl White on Red */
 
-    --border: 270 35% 50%; /* Darker purple for borders */
-    --input: 270 40% 65%; /* Lighter purple for input backgrounds */
-    --input-foreground: 20 80% 98%;
-    --ring: 90 97% 55%; /* Electric Lime for focus rings */
+    --border: 270 50% 25%; /* Darker purple for borders */
+    --input: 270 50% 28%; /* Slightly lighter purple for input backgrounds */
+    --input-foreground: 30 100% 97%;
+    --ring: 15 100% 58%; /* Fiery Orange for focus rings - matches accent */
 
     --radius: 0.5rem;
 
-    /* Additional fantasy palette colors as HSL */
-    --sky-blue-hsl: 197 71% 73%;
-    --rose-pink-hsl: 339 100% 70%;
-    --emerald-green-hsl: 145 49% 55%;
-    --mystic-gold-hsl: 45 60% 51%;
-    --amethyst-purple-hsl: 270 50% 60%;
-    --electric-lime-hsl: 90 97% 55%;
-    --orange-flame-hsl: 25 100% 60%; /* New Orange */
+    /* Core Fantasy Palette HSL Variables */
+    --bright-blue-hsl: 210 100% 60%;
+    --golden-yellow-hsl: 50 100% 55%;
+    --emerald-green-hsl: 145 60% 50%;
+    --ruby-red-hsl: 0 70% 50%;
+    --pearl-white-hsl: 30 100% 97%;
+    
+    /* Optional/Additional Fantasy Palette HSL Variables */
+    --galactic-purple-hsl: 270 60% 55%; /* A more vibrant purple for specific elements */
+    --neon-pink-hsl: 320 100% 60%;
+    --fiery-orange-hsl: 15 100% 58%; 
+
+    /* Legacy colors from original theme - remapped or can be used if specific shades needed */
+    --sky-blue-hsl: var(--bright-blue-hsl); /* Remapped */
+    --rose-pink-hsl: var(--neon-pink-hsl); /* Remapped */
+    --mystic-gold-hsl: var(--golden-yellow-hsl); /* Remapped */
+    --amethyst-purple-hsl: var(--galactic-purple-hsl); /* Remapped */
+    --electric-lime-hsl: var(--fiery-orange-hsl); /* Remapped to new accent */
+
 
     --font-heading-family: "Merienda", serif; /* For Merienda font */
   }
 
   .dark {
-    --background: 270 30% 10%; /* Very dark purple */
-    --foreground: 270 50% 85%; /* Lighter lavender for text */
+    /* Dark mode can refine these, but will inherit for now for consistency */
+    --background: 270 70% 8%; 
+    --foreground: 30 100% 95%;
 
-    --card: 270 30% 15%;
-    --card-foreground: 270 50% 85%;
+    --card: 270 65% 15%;
+    --card-foreground: 30 100% 95%;
 
-    --popover: 270 25% 12%;
-    --popover-foreground: 270 50% 85%;
+    --popover: 270 60% 12%;
+    --popover-foreground: 30 100% 95%;
 
-    --primary: 45 70% 61%; /* Brighter Mystic Gold */
-    --primary-foreground: 45 100% 5%; 
+    --primary: 50 100% 60%; /* Brighter Golden Yellow */
+    --primary-foreground: 50 100% 5%; 
 
-    --secondary: 339 80% 60%; /* Darker Rose Pink */
-    --secondary-foreground: 339 100% 95%;
+    --secondary: 210 100% 65%; /* Brighter Bright Blue */
+    --secondary-foreground: 210 100% 5%;
 
-    --muted: 270 30% 25%;
-    --muted-foreground: 270 40% 60%;
+    --muted: 270 50% 25%;
+    --muted-foreground: 270 40% 65%;
 
-    --accent: 90 80% 65%; /* Brighter Electric Lime */
-    --accent-foreground: 90 100% 5%;
+    --accent: 15 100% 63%; /* Brighter Fiery Orange */
+    --accent-foreground: 15 100% 5%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 80% 55%; /* Brighter Ruby Red */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 270 30% 22%;
-    --input: 270 25% 20%;
-    --input-foreground: 270 50% 85%;
-    --ring: 90 80% 65%;
-    
-    /* Additional fantasy palette colors for dark mode - can be same or adjusted */
-    --sky-blue-hsl: 197 65% 60%;
-    --rose-pink-hsl: 339 90% 65%;
-    --emerald-green-hsl: 145 45% 50%;
-    --mystic-gold-hsl: 45 70% 61%;
-    --amethyst-purple-hsl: 270 40% 50%;
-    --electric-lime-hsl: 90 80% 65%;
-    --orange-flame-hsl: 25 90% 55%;
+    --border: 270 60% 22%;
+    --input: 270 55% 18%;
+    --input-foreground: 30 100% 95%;
+    --ring: 15 100% 63%;
   }
 }
 
@@ -101,12 +105,27 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    /* Dreamlike background: subtle animated gradient */
+    background: linear-gradient(
+      160deg,
+      hsl(var(--background)) 30%,
+      hsl(var(--galactic-purple-hsl) / 0.5) 60%,
+      hsl(var(--bright-blue-hsl) / 0.3) 100%
+    );
+    background-size: 200% 200%; /* For animation */
+    animation: dreamy-bg-flow 25s ease-in-out infinite alternate;
   }
+
+  @keyframes dreamy-bg-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading-family);
     @apply text-foreground;
   }
-  /* Custom scrollbar for a more magical feel */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -128,53 +147,25 @@ body {
   .font-heading {
     font-family: var(--font-heading-family);
   }
-  .sparkle-effect { /* Can be applied to cards */
+   .sparkle-effect { 
     position: relative;
-    /* animation: pulse-glow 2s infinite alternate; */ /* Let's disable this for now to focus on lamp */
   }
-  /* .sparkle-effect::before,
-  .sparkle-effect::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: hsl(var(--accent));
-    border-radius: 50%;
-    opacity: 0;
-    animation: sparkle-animation 2s infinite ease-in-out;
-    box-shadow: 0 0 5px hsl(var(--accent)), 0 0 10px hsl(var(--accent));
-  }
-  .sparkle-effect::before {
-    top: -10px;
-    left: calc(50% - 4px);
-    animation-delay: 0s;
-  }
-  .sparkle-effect::after {
-    bottom: -10px;
-    left: calc(50% - 4px);
-    animation-delay: 1s;
-  } */
 }
 
-/* @keyframes sparkle-animation {
-  0%, 100% { opacity: 0; transform: scale(0.5) translateY(0px); }
-  50% { opacity: 1; transform: scale(1) translateY(-5px); }
-  75% { opacity: 0.5; transform: scale(0.8) translateY(0px); }
-} */
 
 @keyframes pulse-glow-lamp {
   from {
-    filter: drop-shadow(0 0 3px hsl(var(--primary) / 0.7)) drop-shadow(0 0 8px hsl(var(--accent) / 0.5));
+    filter: drop-shadow(0 0 5px hsl(var(--primary) / 0.8)) drop-shadow(0 0 10px hsl(var(--accent) / 0.6));
   }
   to {
-    filter: drop-shadow(0 0 6px hsl(var(--primary))) drop-shadow(0 0 15px hsl(var(--accent) / 0.7));
+    filter: drop-shadow(0 0 10px hsl(var(--primary))) drop-shadow(0 0 20px hsl(var(--accent) / 0.8));
   }
 }
 
 /* Magic Lamp SVG Styles & Animations */
 .magic-lamp-svg {
-  overflow: visible; /* To see shadows and effects outside viewBox */
-  filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
+  overflow: visible;
+  filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
 }
 
 .lamp-body-fill { fill: hsl(var(--primary)); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5; }
@@ -182,41 +173,47 @@ body {
 .lamp-spout-fill { fill: hsl(var(--primary)); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5;}
 .lamp-knob-fill { fill: hsl(var(--primary-foreground)); }
 
-.lamp-shadow-base-lid { fill: hsl(var(--card) / 0.3); }
-.lamp-shadow-spout { fill: hsl(var(--card) / 0.2); }
+.lamp-shadow-base-lid { fill: hsl(var(--card) / 0.4); }
+.lamp-shadow-spout { fill: hsl(var(--card) / 0.3); }
 
-
-.lamp-eye { fill: white; stroke: hsl(var(--primary-foreground)); stroke-width: 0.5; transition: transform 0.3s ease-in-out; }
+.lamp-eye { fill: hsl(var(--pearl-white-hsl)); stroke: hsl(var(--primary-foreground)); stroke-width: 0.5; transition: transform 0.3s ease-in-out; }
 .lamp-pupil { fill: hsl(var(--primary-foreground)); transition: transform 0.2s ease-in-out; }
 .lamp-eyebrow { fill: none; stroke: hsl(var(--primary-foreground)); stroke-width: 2; stroke-linecap: round; transition: transform 0.3s ease-in-out; }
-.lamp-mouth { fill: none; stroke: hsl(var(--primary-foreground)); stroke-width: 1.5; stroke-linecap: round; transition: transform 0.3s ease-in-out; }
-.lamp-ear { fill: hsl(var(--primary) / 0.8); stroke: hsl(var(--primary-foreground)/0.7); stroke-width: 1; transition: opacity 0.3s, transform 0.3s; }
-.lamp-hand { fill: hsl(var(--mystic-gold-hsl)/0.8); stroke: hsl(var(--primary-foreground)/0.6); stroke-width: 1; transition: opacity 0.3s, transform 0.3s; }
+.lamp-mouth { fill: none; stroke: hsl(var(--primary-foreground)); stroke-width: 1.5; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
+.lamp-ear { fill: hsl(var(--primary) / 0.8); stroke: hsl(var(--primary-foreground)/0.7); stroke-width: 1; transition: opacity 0.4s, transform 0.4s; }
+.lamp-hand { fill: hsl(var(--golden-yellow-hsl)/0.8); stroke: hsl(var(--primary-foreground)/0.6); stroke-width: 1; transition: opacity 0.4s, transform 0.4s; }
 
 
-/* Default hidden states for animated parts */
-.lamp-ears-group, .lamp-hand-chin, .lamp-hands-presenting, .lamp-sparkles {
+/* Default hidden/initial states for animated parts */
+.lamp-ears-group {
+  opacity: 0;
+  transform: scale(0.5) translateY(5px); /* Start smaller and slightly down */
+  transform-origin: 50% 100%; /* Animate from base of ears */
+}
+.lamp-hand-chin, .lamp-hands-presenting, .lamp-sparkles {
   opacity: 0;
   transform-origin: center center;
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
 }
-.lamp-ears-group {transform: scale(0.8);}
+
 .lamp-hand-chin {transform: translateY(10px) scale(0.8);}
 .lamp-hands-presenting {transform: scale(0.8) rotate(-5deg);}
 
 
 /* IDLE State */
 .lamp-idle .magic-lamp-svg { animation: pulse-glow-lamp 2.5s infinite alternate, lamp-bob 3s infinite ease-in-out; }
-.lamp-idle .lamp-pupil { animation: lamp-blink 5s infinite; }
+.lamp-idle .lamp-pupil { animation: lamp-blink 5s infinite, lamp-pupil-idle-roam 8s infinite ease-in-out; }
 .lamp-idle .lamp-eyebrow { transform: translateY(0px); }
 .lamp-idle .lamp-mouth { transform: scaleY(0.8); d: path("M50 95 Q60 98 70 95");} /* Gentle smile */
+.lamp-idle .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); } /* Ears hidden */
 
-/* USER TYPING State */
+
+/* USER TYPING State (Listening) */
 .lamp-typing .magic-lamp-svg { animation: pulse-glow-lamp 2s infinite alternate, lamp-bob-attentive 2s infinite ease-in-out; }
-.lamp-typing .lamp-ears-group { opacity: 1; transform: scale(1); }
-.lamp-typing .lamp-eye { transform: scale(1.1); } /* Wider eyes */
-.lamp-typing .lamp-pupil { transform: translateX(1px); animation: lamp-pupil-scan 4s infinite ease-in-out; }
-.lamp-typing .lamp-eyebrow { transform: translateY(-3px) rotate(-2deg); } /* Eyebrows up */
+.lamp-typing .lamp-ears-group { opacity: 1; transform: scale(1) translateY(0px) rotate(0deg); } /* Ears sprout and are attentive */
+.lamp-typing .lamp-eye { transform: scale(1.15); } /* Wider eyes */
+.lamp-typing .lamp-pupil { transform: translateX(0); animation: lamp-pupil-scan 4s infinite ease-in-out; }
+.lamp-typing .lamp-eyebrow { transform: translateY(-4px) rotate(-3deg); } /* Eyebrows up, curious */
 .lamp-typing .lamp-mouth { d: path("M50 96 Q60 102 70 96"); } /* Slightly more open mouth, curious */
 
 /* THINKING TEXT State */
@@ -225,39 +222,43 @@ body {
 .lamp-thinking-text .lamp-eyebrow { transform: translateY(-2px) rotate(3deg); } /* One eyebrow raised */
 .lamp-thinking-text .lamp-mouth { d: path("M55 97 Q60 95 65 97"); } /* Hmm mouth */
 .lamp-thinking-text .lamp-pupil { animation: lamp-think-pupils 3s infinite ease-in-out; }
-
+.lamp-thinking-text .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); } /* Ears retract when thinking */
 
 /* THINKING IMAGE State */
-.lamp-thinking-image .magic-lamp-svg { animation: pulse-glow-lamp 1s infinite alternate, lamp-shake 0.5s infinite ease-in-out; }
+.lamp-thinking-image .magic-lamp-svg { animation: pulse-glow-lamp 1s infinite alternate, lamp-shake 0.5s 3 ease-in-out; } /* Shake a few times */
 .lamp-thinking-image .lamp-sparkles { opacity: 0.7; animation: lamp-sparkle-effect 1s infinite; }
-.lamp-thinking-image .lamp-eyebrow { transform: translateY(-4px); } /* Both up high */
-.lamp-thinking-image .lamp-mouth { d: path("M50 95 Q60 105 70 95"); } /* Ooh mouth */
+.lamp-thinking-image .lamp-eyebrow { transform: translateY(-5px) rotate(1deg); } /* Both up high, focused */
+.lamp-thinking-image .lamp-mouth { d: path("M50 95 Q60 105 70 95"); } /* Ooh mouth, concentrating */
+.lamp-thinking-image .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
 
 /* PRESENTING TEXT State */
 .lamp-presenting-text .magic-lamp-svg { animation: pulse-glow-lamp 2s infinite alternate; transform: scale(1.05) translateY(-3px); }
 .lamp-presenting-text .lamp-eyebrow { transform: translateY(0px); }
 .lamp-presenting-text .lamp-mouth { d: path("M45 95 Q60 103 75 95"); } /* Happy smile */
+.lamp-presenting-text .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
 
 /* PRESENTING IMAGE State */
 .lamp-presenting-image .magic-lamp-svg { animation: pulse-glow-lamp 1.8s infinite alternate; transform: scale(1.1) rotate(2deg); }
 .lamp-presenting-image .lamp-hands-presenting { opacity: 1; transform: scale(1) rotate(0deg) translateX(0); }
 .lamp-presenting-image .lamp-sparkles { opacity: 1; animation: lamp-sparkle-effect 0.8s infinite; }
-.lamp-presenting-image .lamp-eyebrow { transform: translateY(-3px); }
+.lamp-presenting-image .lamp-eyebrow { transform: translateY(-3px) rotate(-2deg); } /* Excited eyebrows */
 .lamp-presenting-image .lamp-mouth { d: path("M45 95 Q60 108 75 95"); } /* Wide excited smile */
+.lamp-presenting-image .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
 
 /* ERROR State */
-.lamp-error .magic-lamp-svg { transform: rotate(10deg) translateY(10px) scale(0.95); filter: grayscale(50%) brightness(0.8); animation: lamp-error-tremble 0.3s infinite; }
+.lamp-error .magic-lamp-svg { transform: rotate(10deg) translateY(10px) scale(0.95); filter: grayscale(50%) brightness(0.8); animation: lamp-error-tremble 0.3s 3; }
 .lamp-error .lamp-eyebrow { transform: translateY(3px) rotate(15deg); } /* Sad eyebrows */
 .lamp-error .lamp-mouth { d: path("M50 100 Q60 90 70 100"); } /* Sad mouth */
 .lamp-error .lamp-eye { transform: scaleY(0.7); }
+.lamp-error .lamp-ears-group { opacity: 0.5; transform: scale(0.8) rotate(-10deg) translateY(3px); } /* Droopy ears */
 
 
 /* Keyframes for lamp parts */
 @keyframes lamp-bob {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
+  50% { transform: translateY(-7px); }
 }
-@keyframes lamp-bob-attentive {
+@keyframes lamp-bob-attentive { /* More subtle bob when listening */
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-3px) rotate(1deg); }
 }
@@ -265,40 +266,75 @@ body {
   0%, 90%, 100% { transform: scaleY(1); }
   95% { transform: scaleY(0.1); }
 }
-@keyframes lamp-pupil-scan {
+@keyframes lamp-pupil-scan { /* For typing/listening */
   0%, 100% { transform: translateX(0px); }
-  25% { transform: translateX(-1.5px); }
-  75% { transform: translateX(1.5px); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(0px); }
+  75% { transform: translateX(2px); }
+}
+@keyframes lamp-pupil-idle-roam { /* Gentle roaming for idle */
+  0%, 100% { transform: translate(0px, 0px); }
+  20% { transform: translate(-1px, 0.5px); }
+  40% { transform: translate(0.5px, -0.5px); }
+  60% { transform: translate(1px, 0px); }
+  80% { transform: translate(-0.5px, 0.5px); }
 }
 
-@keyframes lamp-think-pupils {
+@keyframes lamp-think-pupils { /* Darting eyes for thinking */
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-1px) rotate(-15deg); }
-  75% { transform: translateY(1px) rotate(15deg); }
+  25% { transform: translateY(-1.5px) translateX(-1px) rotate(-20deg); }
+  50% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+  75% { transform: translateY(1px) translateX(1.5px) rotate(20deg); }
 }
 
 @keyframes lamp-shake {
   0%, 100% { transform: translateX(0) rotate(0); }
-  25% { transform: translateX(-2px) rotate(-1deg); }
-  75% { transform: translateX(2px) rotate(1deg); }
+  25% { transform: translateX(-3px) rotate(-1.5deg); }
+  50% { transform: translateX(0) rotate(0); }
+  75% { transform: translateX(3px) rotate(1.5deg); }
 }
 
 @keyframes lamp-error-tremble {
   0% { transform: translate(1px, 1px) rotate(10deg); }
-  50% { transform: translate(-1px, -1px) rotate(9deg); }
+  25% { transform: translate(-1px, -1px) rotate(9deg); }
+  50% { transform: translate(1px, -1px) rotate(11deg); }
+  75% { transform: translate(-1px, 1px) rotate(10deg); }
   100% { transform: translate(1px, 1px) rotate(10deg); }
 }
 
 @keyframes lamp-sparkle-effect {
-  0% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1.2); }
-  100% { opacity: 0; transform: scale(0.5); }
+  0% { opacity: 0; transform: scale(0.5) translateY(5px); }
+  50% { opacity: 1; transform: scale(1.2) translateY(0px); }
+  100% { opacity: 0; transform: scale(0.5) translateY(-5px); }
 }
 .lamp-sparkles .sparkle-1 { animation-delay: 0s; }
 .lamp-sparkles .sparkle-2 { animation-delay: 0.2s; }
 .lamp-sparkles .sparkle-3 { animation-delay: 0.4s; }
 
-/* Random movement styling from MagicLampDisplay component might override transform here */
+
 .lamp-container {
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* For random movements */
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease-in-out; /* For random movements - added cubic-bezier for bounciness */
+}
+
+/* Animation for image appearing in chat */
+@keyframes image-fade-in-sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: drop-shadow(0 0 0px hsl(var(--accent)/0));
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px hsl(var(--accent)/0.7));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px hsl(var(--accent)/0.3));
+  }
+}
+
+.chat-image-container {
+  animation: image-fade-in-sparkle 0.7s ease-out forwards;
 }
