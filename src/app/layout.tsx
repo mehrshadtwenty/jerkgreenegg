@@ -1,23 +1,23 @@
+
 import type { Metadata } from 'next';
-import { Geist_Sans as GeistSans, Geist_Mono as GeistMono } from 'next/font/google'; // Corrected import names to match usage
-import { Merienda } from 'next/font/google';
+import { Inter, Roboto_Mono, Merienda } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { MainLayout } from '@/components/layout/main-layout';
 
-const fontSans = GeistSans({ // Changed from Geist to GeistSans
-  variable: '--font-geist-sans',
+const fontSans = Inter({ 
+  variable: '--font-geist-sans', // Kept variable name for CSS consistency
   subsets: ['latin'],
 });
 
-const fontMono = GeistMono({ // Changed from Geist_Mono to GeistMono
-  variable: '--font-geist-mono',
+const fontMono = Roboto_Mono({ 
+  variable: '--font-geist-mono', // Kept variable name for CSS consistency
   subsets: ['latin'],
 });
 
 const fontHeading = Merienda({
   subsets: ['latin'],
-  variable: '--font-heading', // This will be used by font-heading utility class or direct CSS
+  variable: '--font-heading',
   weight: ['400', '700'],
 });
 
@@ -49,5 +49,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-    
