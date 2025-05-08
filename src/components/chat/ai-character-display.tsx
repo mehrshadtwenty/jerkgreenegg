@@ -128,35 +128,58 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
      // Increased size for the character's container
     <div className={cn("relative w-40 h-52 sm:w-48 sm:h-60 md:w-56 md:h-72 character-container", animationClass)} style={randomAnimationStyle}>
       <svg viewBox="0 0 60 85" className="w-full h-full ai-character-svg">
+        {/* Shadow for character */}
         <ellipse cx="30" cy="82" rx="18" ry="3" fill="hsla(var(--background), 0.3)" />
+        
+        {/* Feet */}
         <ellipse cx="23" cy="79" rx="5" ry="2.5" className="character-hands-feet-fill" />
         <ellipse cx="37" cy="79" rx="5" ry="2.5" className="character-hands-feet-fill" />
+
+        {/* Legs */}
         <rect x="20" y="60" width="7" height="20" rx="3.5" className="character-limbs-fill" />
         <rect x="33" y="60" width="7" height="20" rx="3.5" className="character-limbs-fill" />
+        
+        {/* Body */}
         <ellipse cx="30" cy="48" rx="14" ry="18" className="character-body-fill" />
+        
+        {/* Head */}
         <circle cx="30" cy="25" r="12" className="character-head-fill" />
+        
+        {/* Ears (animated to appear) */}
         <g className="character-ears-group">
             <path d="M16 20 Q13 15, 18 10 Q20 15, 16 20Z" className="character-ear" transform="translate(-2,0) rotate(-20 17 15)" />
             <path d="M44 20 Q47 15, 42 10 Q40 15, 44 20Z" className="character-ear" transform="translate(2,0) rotate(20 43 15)" />
         </g>
+        
+        {/* Eyes and Pupils */}
         <g className="character-eyes-group">
           <ellipse cx="25" cy="25" rx="3.5" ry="4.5" className="character-eye" />
           <ellipse cx="35" cy="25" rx="3.5" ry="4.5" className="character-eye" />
           <circle cx="25" cy="26" r="1.5" className="character-pupil" />
           <circle cx="35" cy="26" r="1.5" className="character-pupil" />
         </g>
+        
+        {/* Eyebrows */}
         <path d="M22 20 Q25 18.5 28 20" className="character-eyebrow" />
         <path d="M32 20 Q35 18.5 38 20" className="character-eyebrow" />
+        
+        {/* Mouth */}
         <path d="M26 31 Q30 33 34 31" className="character-mouth" />
+        
+        {/* Arms (as paths) */}
         <path d="M16 40 C 10 45, 10 55, 18 58" className="character-limbs-fill" strokeWidth="5" strokeLinecap="round" fill="none" /> 
         <path d="M44 40 C 50 45, 50 55, 42 58" className="character-limbs-fill" strokeWidth="5" strokeLinecap="round" fill="none" />
-        <g className="character-hand-chin">
+        
+        {/* Hands (animated to appear for specific poses) */}
+        <g className="character-hand-chin"> {/* Hand for thinking pose */}
             <circle cx="38" cy="36" r="4" className="character-hands-feet-fill"/> 
         </g>
-        <g className="character-hands-presenting">
+        <g className="character-hands-presenting"> {/* Hands for presenting pose */}
             <circle cx="12" cy="50" r="4.5" className="character-hands-feet-fill" />
             <circle cx="48" cy="50" r="4.5" className="character-hands-feet-fill" />
         </g>
+        
+        {/* Sparkles (animated effect) */}
         <g className="character-sparkles">
             <circle cx="30" cy="5" r="2" fill="hsl(var(--accent))" className="sparkle-1"/>
             <circle cx="12" cy="10" r="1.5" fill="hsl(var(--golden-yellow-hsl))" className="sparkle-2"/>
