@@ -1,7 +1,7 @@
+
 'use client';
 
 import type { AiStatus } from '@/lib/types';
-// import { Card, CardContent } from '@/components/ui/card'; // Card wrapper no longer needed for fixed positioning
 import { useEffect, useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -10,21 +10,23 @@ interface AiCharacterDisplayProps {
   isUserTyping: boolean;
 }
 
-// Status config now only drives animation class
 const statusConfig: Record<AiStatus | 'user_typing', { characterAnimationClass: string }> = {
   idle: { characterAnimationClass: 'character-idle' },
-  user_typing: { characterAnimationClass: 'character-typing' },
-  thinking_text: { characterAnimationClass: 'character-thinking-text' },
+  user_typing: { characterAnimationClass: 'character-typing' }, // Listening
+  thinking_text: { characterAnimationClass: 'character-thinking-text' }, // Scheming/Pondering
   thinking_image: { characterAnimationClass: 'character-thinking-image' },
   presenting_text: { characterAnimationClass: 'character-presenting-text' },
-  presenting_image: { characterAnimationClass: 'character-presenting-image' },
+  presenting_image: { characterAnimationClass: 'character-presenting-image' }, // Excitedly presenting
   error: { characterAnimationClass: 'character-error' },
 };
 
+// Expanded Idle Animations
 const idleAnimationTypes = [
-  'float_bob', 'jump', 'mini_wave', 'disappear_reappear', 'look_around', 'subtle_nod',
-  'quick_spin', 'peek_a_boo', 'happy_bounce', 'slight_lean'
+  'float_bob', 'jump_playful', 'dance_energetic', 'wink_cheeky', 'tongue_out_playful', 'dramatic_pose',
+  'disappear_reappear_sparkles', 'look_around_dynamic', 'quick_spin_showoff', 'happy_bounce_big', 'slight_lean_cool',
+  // 'kick_ball' // This would require a separate ball element and more complex animation logic
 ];
+
 
 const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
   const [randomAnimationStyle, setRandomAnimationStyle] = useState<React.CSSProperties>({});
@@ -37,68 +39,66 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
 
       const randType = idleAnimationTypes[Math.floor(Math.random() * idleAnimationTypes.length)];
       let duration = 500; 
-      let nextDelay = 2000 + Math.random() * 2000; 
+      let nextDelay = 3000 + Math.random() * 3000; 
 
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
 
       switch(randType) {
-        case 'jump':
-          setRandomAnimationStyle({ transform: 'translateY(-25px) scale(1.1)', transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' });
-          duration = 200;
+        case 'jump_playful':
+          setRandomAnimationStyle({ transform: 'translateY(-35px) scale(1.15) rotate(5deg)', transition: 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)' });
+          duration = 250;
           break;
-        case 'mini_wave':
-          setRandomAnimationStyle({ transform: 'rotate(10deg) translateX(8px)', transition: 'transform 0.25s ease-in-out' });
-           if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
-           resetTimeoutRef.current = setTimeout(() => {
-            setRandomAnimationStyle({ transform: 'rotate(-10deg) translateX(-8px)', transition: 'transform 0.25s ease-in-out' });
-          }, 250);
-          duration = 500;
+        case 'dance_energetic': // Example: a little shimmy
+          setRandomAnimationStyle({ transform: 'translateX(10px) rotate(8deg)', transition: 'transform 0.2s ease-in-out' });
+          if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+          resetTimeoutRef.current = setTimeout(() => {
+            setRandomAnimationStyle({ transform: 'translateX(-10px) rotate(-8deg)', transition: 'transform 0.2s ease-in-out' });
+            setTimeout(() => {
+                setRandomAnimationStyle({ transform: 'translateX(0px) rotate(0deg)', transition: 'transform 0.2s ease-in-out' });
+            }, 200);
+          }, 200);
+          duration = 600;
           break;
-        case 'disappear_reappear':
-          setRandomAnimationStyle({ opacity: 0, transform: 'scale(0.1) rotate(1080deg)', transition: 'opacity 0.6s ease-in, transform 0.8s ease-in-out' });
-          duration = 800; 
+        case 'disappear_reappear_sparkles':
+          setRandomAnimationStyle({ opacity: 0, transform: 'scale(0.1) rotate(720deg)', transition: 'opacity 0.5s ease-in, transform 0.7s ease-in-out' });
+          duration = 700; 
           if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
           resetTimeoutRef.current = setTimeout(() => { 
-            setRandomAnimationStyle({ opacity: 1, transform: 'scale(1) rotate(0deg)', transition: 'opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)' });
-          }, 900); 
-          nextDelay = 5000; 
+            setRandomAnimationStyle({ opacity: 1, transform: 'scale(1) rotate(0deg)', transition: 'opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)' });
+          }, 800); 
+          nextDelay = 4000; 
           break;
-        case 'look_around':
-           setRandomAnimationStyle({ transform: 'translateX(12px) rotateY(20deg)', transition: 'transform 0.4s ease-in-out'});
+        case 'look_around_dynamic':
+           setRandomAnimationStyle({ transform: 'translateX(15px) rotateY(25deg) rotateX(5deg)', transition: 'transform 0.4s ease-in-out'});
            if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
            resetTimeoutRef.current = setTimeout(() => {
-             setRandomAnimationStyle({ transform: 'translateX(-12px) rotateY(-20deg)', transition: 'transform 0.4s ease-in-out'});
+             setRandomAnimationStyle({ transform: 'translateX(-15px) rotateY(-25deg) rotateX(-5deg)', transition: 'transform 0.4s ease-in-out'});
            }, 500);
            duration = 1000;
           break;
-        case 'subtle_nod':
-            setRandomAnimationStyle({ transform: `rotateX(${Math.random() * 15 - 7.5}deg) translateY(-3px)`, transition: 'transform 0.7s ease-in-out' });
-            duration = 700;
-            break;
-        case 'quick_spin':
-            setRandomAnimationStyle({ transform: 'rotateY(360deg)', transition: 'transform 0.5s ease-in-out' });
-            duration = 500;
-            break;
-        case 'peek_a_boo': 
-            setRandomAnimationStyle({ transform: 'translateY(10px) scaleY(0.8)', opacity: 0.7, transition: 'transform 0.2s ease-out, opacity 0.2s ease-out' });
+        case 'wink_cheeky': // Uses CSS animation defined in globals.css
+            // This could trigger a class that changes one eye path
+            // For simplicity, let's do a quick scale on one eye via a more complex selector if we had one
+            // Or, a slight head tilt + eye squint could imply it
+            setRandomAnimationStyle({ transform: 'rotate(-5deg) scaleX(0.95)', transition: 'transform 0.2s ease-in-out'});
             duration = 200;
-            nextDelay = 1500;
             break;
-        case 'happy_bounce':
-            setRandomAnimationStyle({ transform: 'translateY(-10px)', transition: 'transform 0.15s ease-out alternate 3' }); 
-            duration = 450; 
+        case 'tongue_out_playful': // Needs specific mouth path change
+            setRandomAnimationStyle({ transform: 'scale(1.05)', transition: 'transform 0.15s ease-in-out'});
+            // Actual tongue out would be changing the 'character-mouth' d attribute in CSS.
+            duration = 150;
             break;
-        case 'slight_lean':
-            setRandomAnimationStyle({ transform: `translateX(${Math.random() > 0.5 ? '5px' : '-5px'}) rotate(${Math.random() * 4 - 2}deg)`, transition: 'transform 0.6s ease-in-out'});
-            duration = 600;
+        case 'dramatic_pose':
+            setRandomAnimationStyle({ transform: 'scale(1.1) rotate(10deg) translateY(-10px)', transition: 'transform 0.3s ease-out' });
+            duration = 300;
             break;
-        default: 
-          setRandomAnimationStyle({ transform: `translateY(${Math.random() * -10}px)`, transition: 'transform 0.9s ease-in-out' });
+        default: // float_bob or similar
+          setRandomAnimationStyle({ transform: `translateY(${Math.random() * -15}px) rotate(${Math.random() * 6 - 3}deg)`, transition: 'transform 0.9s ease-in-out' });
           duration = 900;
           break;
       }
       
-      if (randType !== 'disappear_reappear' && randType !== 'mini_wave' && randType !== 'look_around' && randType !== 'happy_bounce') {
+      if (randType !== 'disappear_reappear_sparkles' && randType !== 'dance_energetic' && randType !== 'look_around_dynamic') {
         if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
         resetTimeoutRef.current = setTimeout(() => {
           setRandomAnimationStyle({ transform: 'translateY(0) rotate(0deg) scale(1) rotateX(0deg) rotateY(0deg) scaleX(1)', opacity: 1, transition: 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out'});
@@ -114,7 +114,8 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
     } else {
       if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current);
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
-      setRandomAnimationStyle({ transform: 'translateY(0) rotate(0deg) scale(1) rotateX(0deg) rotateY(0deg) scaleX(1)', opacity: 1, transition: 'transform 0.3s ease-out, opacity 0.3s ease-out' });
+      // Reset to a base pose quickly when not idle
+      setRandomAnimationStyle({ transform: 'translateY(0) rotate(0deg) scale(1) rotateX(0deg) rotateY(0deg) scaleX(1)', opacity: 1, transition: 'transform 0.2s ease-out, opacity 0.2s ease-out' });
     }
 
     return () => {
@@ -123,42 +124,71 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
     };
   }, [animationClass]);
 
+  // Increased size. Original: w-40 h-52 to w-56 h-72. New: approx 50% larger
+  // E.g. w-60 h-78 sm:w-72 sm:h-90 md:w-84 md:h-105
   return (
-    <div className={cn("w-40 h-52 sm:w-48 sm:h-60 md:w-56 md:h-72 character-container", animationClass)} style={randomAnimationStyle}>
-      <svg viewBox="0 0 60 85" className="w-full h-full ai-character-svg">
-        <ellipse cx="30" cy="82" rx="18" ry="3" fill="hsla(var(--background), 0.3)" />
-        <ellipse cx="23" cy="79" rx="5" ry="2.5" className="character-hands-feet-fill" />
-        <ellipse cx="37" cy="79" rx="5" ry="2.5" className="character-hands-feet-fill" />
-        <rect x="20" y="60" width="7" height="20" rx="3.5" className="character-limbs-fill" />
-        <rect x="33" y="60" width="7" height="20" rx="3.5" className="character-limbs-fill" />
-        <ellipse cx="30" cy="48" rx="14" ry="18" className="character-body-fill" />
-        <circle cx="30" cy="25" r="12" className="character-head-fill" />
+     <div className={cn("w-52 h-70 sm:w-60 sm:h-80 md:w-72 md:h-96 character-container", animationClass)} style={randomAnimationStyle}>
+      <svg viewBox="0 0 70 100" className="w-full h-full ai-character-svg">
+        {/* Shadow a bit larger */}
+        <ellipse cx="35" cy="97" rx="22" ry="4" fill="hsla(var(--background), 0.3)" />
+
+        {/* Body parts - more humanoid */}
+        {/* Feet - precisely positioned */}
+        <ellipse cx="25" cy="92" rx="7" ry="3.5" className="character-hands-feet-fill character-foot-left" />
+        <ellipse cx="45" cy="92" rx="7" ry="3.5" className="character-hands-feet-fill character-foot-right" />
+        
+        {/* Legs */}
+        <rect x="20" y="65" width="10" height="28" rx="5" className="character-limbs-fill character-leg-left" />
+        <rect x="40" y="65" width="10" height="28" rx="5" className="character-limbs-fill character-leg-right" />
+
+        {/* Torso - larger */}
+        <ellipse cx="35" cy="50" rx="18" ry="22" className="character-body-fill" />
+        
+        {/* Head - larger */}
+        <circle cx="35" cy="22" r="15" className="character-head-fill" />
+
+        {/* Ears (for sprouting) - initially small/hidden */}
         <g className="character-ears-group">
-            <path d="M16 20 Q13 15, 18 10 Q20 15, 16 20Z" className="character-ear" transform="translate(-2,0) rotate(-20 17 15)" />
-            <path d="M44 20 Q47 15, 42 10 Q40 15, 44 20Z" className="character-ear" transform="translate(2,0) rotate(20 43 15)" />
+            <path d="M18 18 Q15 10, 20 2 Q22 10, 18 18Z" className="character-ear character-ear-left" transform="translate(-3 -2) rotate(-25 19 10)" />
+            <path d="M52 18 Q55 10, 50 2 Q48 10, 52 18Z" className="character-ear character-ear-right" transform="translate(3 -2) rotate(25 51 10)" />
         </g>
+
+        {/* Eyes - expressive, larger */}
         <g className="character-eyes-group">
-          <ellipse cx="25" cy="25" rx="3.5" ry="4.5" className="character-eye" />
-          <ellipse cx="35" cy="25" rx="3.5" ry="4.5" className="character-eye" />
-          <circle cx="25" cy="26" r="1.5" className="character-pupil" />
-          <circle cx="35" cy="26" r="1.5" className="character-pupil" />
+          <ellipse cx="28" cy="22" rx="4.5" ry="5.5" className="character-eye character-eye-left" />
+          <ellipse cx="42" cy="22" rx="4.5" ry="5.5" className="character-eye character-eye-right" />
+          <circle cx="28" cy="23" r="2" className="character-pupil character-pupil-left" />
+          <circle cx="42" cy="23" r="2" className="character-pupil character-pupil-right" />
         </g>
-        <path d="M22 20 Q25 18.5 28 20" className="character-eyebrow" />
-        <path d="M32 20 Q35 18.5 38 20" className="character-eyebrow" />
-        <path d="M26 31 Q30 33 34 31" className="character-mouth" />
-        <path d="M16 40 C 10 45, 10 55, 18 58" className="character-limbs-fill" strokeWidth="5" strokeLinecap="round" fill="none" /> 
-        <path d="M44 40 C 50 45, 50 55, 42 58" className="character-limbs-fill" strokeWidth="5" strokeLinecap="round" fill="none" />
+
+        {/* Eyebrows - expressive paths */}
+        <path d="M22 15 Q28 13 32 15" className="character-eyebrow character-eyebrow-left" />
+        <path d="M38 15 Q42 13 48 15" className="character-eyebrow character-eyebrow-right" />
+
+        {/* Mouth - expressive path */}
+        <path d="M30 30 Q35 33 40 30" className="character-mouth" />
+
+        {/* Arms and Hands (simple representation) */}
+        {/* Arms */}
+        <path d="M17 40 C 10 42, 8 55, 18 60" className="character-limbs-fill character-arm-left" strokeWidth="8" strokeLinecap="round" fill="none" /> 
+        <path d="M53 40 C 60 42, 62 55, 52 60" className="character-limbs-fill character-arm-right" strokeWidth="8" strokeLinecap="round" fill="none" />
+        
+        {/* Hands (for presenting, thinking) */}
+        {/* Hand for 'thinking' - initially hidden, positioned near chin */}
         <g className="character-hand-chin">
-            <circle cx="38" cy="36" r="4" className="character-hands-feet-fill"/> 
+            <ellipse cx="43" cy="33" rx="5" ry="4" className="character-hands-feet-fill character-hand-right"/> 
         </g>
+        {/* Hands for 'presenting' - initially hidden */}
         <g className="character-hands-presenting">
-            <circle cx="12" cy="50" r="4.5" className="character-hands-feet-fill" />
-            <circle cx="48" cy="50" r="4.5" className="character-hands-feet-fill" />
+            <ellipse cx="10" cy="55" rx="6" ry="5" className="character-hands-feet-fill character-hand-left" />
+            <ellipse cx="60" cy="55" rx="6" ry="5" className="character-hands-feet-fill character-hand-right" />
         </g>
+
+        {/* Sparkles for effects */}
         <g className="character-sparkles">
-            <circle cx="30" cy="5" r="2" fill="hsl(var(--accent))" className="sparkle-1"/>
-            <circle cx="12" cy="10" r="1.5" fill="hsl(var(--golden-yellow-hsl))" className="sparkle-2"/>
-            <circle cx="48" cy="12" r="1.8" fill="hsl(var(--neon-pink-hsl))" className="sparkle-3"/>
+            <circle cx="35" cy="5" r="2.5" fill="hsl(var(--accent))" className="sparkle-1"/>
+            <circle cx="15" cy="10" r="2" fill="hsl(var(--golden-yellow-hsl))" className="sparkle-2"/>
+            <circle cx="55" cy="12" r="2.2" fill="hsl(var(--neon-pink-hsl))" className="sparkle-3"/>
         </g>
       </svg>
     </div>
@@ -169,29 +199,28 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
   const effectiveStatus = isUserTyping && (status === 'idle' || status === 'presenting_text' || status === 'presenting_image' || status === 'error') ? 'user_typing' : status;
   const currentVisuals = statusConfig[effectiveStatus] || statusConfig.idle;
   const [isMounted, setIsMounted] = useState(false);
-  const [position, setPosition] = useState({ top: '15%', left: '85%' }); // Initial position
+  // Initial position can be more central or varied now
+  const [position, setPosition] = useState({ top: '50%', left: '50%' }); 
 
   useEffect(() => {
-    setIsMounted(true); // Ensure client-side execution for random positioning
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
     if (!isMounted) return;
 
     const moveCharacter = () => {
+      // Allow movement across a wider range of the screen
+      // Ensure it doesn't overlap too much with critical UI elements like chat input when active
       let newTopPercent, newLeftPercent;
-      
-      // Try to keep it away from the bottom center (chat input) and absolute center (messages)
-      if (Math.random() < 0.6) { // 60% chance to be in upper half
-        newTopPercent = 5 + Math.random() * 45; // 5% to 50% from top
-      } else { // 40% chance to be in lower half, but not too low
-        newTopPercent = 50 + Math.random() * 25; // 50% to 75% from top
-      }
 
-      if (Math.random() < 0.5) { // 50% chance to be on left side (0-35%)
-        newLeftPercent = 5 + Math.random() * 30; 
-      } else { // 50% chance to be on right side (65-100%)
-        newLeftPercent = 65 + Math.random() * 30;
+      // More dynamic positioning
+      newTopPercent = 10 + Math.random() * 80; // 10% to 90% from top
+      newLeftPercent = 10 + Math.random() * 80; // 10% to 90% from left
+
+      // Avoid bottom center where chat input is typically focused
+      if (newTopPercent > 70 && newLeftPercent > 30 && newLeftPercent < 70) {
+        newTopPercent = 50 + Math.random() * 20; // Keep it higher if it's in the bottom-center horizontal zone
       }
       
       setPosition({
@@ -202,12 +231,13 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
 
     let intervalId: NodeJS.Timeout | null = null;
     if (status === 'idle' || status === 'presenting_text' || status === 'presenting_image') {
-      intervalId = setInterval(moveCharacter, 6000 + Math.random() * 6000); // Move every 6-12 seconds
+      intervalId = setInterval(moveCharacter, 5000 + Math.random() * 5000); // Move every 5-10 seconds
+      moveCharacter(); // Initial random move when becoming idle
     } else if (status === 'thinking_text' || status === 'thinking_image' || status === 'user_typing') {
-      // Move to a more prominent, but not obstructive, "thinking" position
-      // e.g., slightly to the top-side of where chat messages would typically appear
-      const thinkingLeft = Math.random() < 0.5 ? '25%' : '75%';
-      setPosition({ top: '20%', left: thinkingLeft });
+      // During active states, might move to a slightly less obstructive, but still visible "focus" area
+      const thinkingLeft = Math.random() < 0.5 ? (20 + Math.random() * 15) : (65 + Math.random() * 15); // 20-35% or 65-80%
+      const thinkingTop = 15 + Math.random() * 20; // 15-35% from top
+      setPosition({ top: `${thinkingTop}%`, left: `${thinkingLeft}%` });
     }
 
 
@@ -217,22 +247,20 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
   }, [status, isMounted]);
 
 
-  if (!isMounted) { // Avoid rendering server-side with random position that causes mismatch
+  if (!isMounted) {
     return null;
   }
 
   return (
     <div 
-      className="fixed z-10 transition-all duration-[2500ms] ease-out pointer-events-none" // z-10 to be behind chat input potentially, adjust if needed
+      className="fixed z-10 transition-all duration-[2000ms] sm:duration-[2500ms] ease-out pointer-events-none"
       style={{ 
         top: position.top, 
         left: position.left, 
         transform: 'translate(-50%, -50%)',
-        // Opacity and scale can be used for appear/disappear effects if desired
       }}
     >
       <AiCharacterSVG animationClass={currentVisuals.characterAnimationClass} />
     </div>
   );
 }
-

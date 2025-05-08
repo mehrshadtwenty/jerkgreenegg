@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 import defaultTheme from 'tailwindcss/defaultTheme';
 
@@ -69,13 +70,14 @@ export default {
         'galactic-purple-hsl': 'hsl(var(--galactic-purple-hsl))',
         'neon-pink-hsl': 'hsl(var(--neon-pink-hsl))',
         'fiery-orange-hsl': 'hsl(var(--fiery-orange-hsl))',
+        'turquoise-hsl': 'hsl(var(--turquoise-hsl))', // Added Turquoise
 
         // Legacy color names remapped or available
-        'sky-blue-hsl': 'hsl(var(--sky-blue-hsl))', // Remapped in globals.css
-        'rose-pink-hsl': 'hsl(var(--rose-pink-hsl))', // Remapped
-        'mystic-gold-hsl': 'hsl(var(--mystic-gold-hsl))', // Remapped
-        'amethyst-purple-hsl': 'hsl(var(--amethyst-purple-hsl))', // Remapped
-        'electric-lime-hsl': 'hsl(var(--electric-lime-hsl))', // Remapped
+        'sky-blue-hsl': 'hsl(var(--sky-blue-hsl))', 
+        'rose-pink-hsl': 'hsl(var(--rose-pink-hsl))', 
+        'mystic-gold-hsl': 'hsl(var(--mystic-gold-hsl))', 
+        'amethyst-purple-hsl': 'hsl(var(--amethyst-purple-hsl))',
+        'electric-lime-hsl': 'hsl(var(--electric-lime-hsl))',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -91,8 +93,7 @@ export default {
   				from: { height: 'var(--radix-accordion-content-height)' },
   				to: { height: '0' }
   			},
-        /* Lamp specific animations are defined in globals.css and used via classes */
-         'dreamy-bg-flow': { /* Renamed for clarity */
+        'dreamy-bg-flow': {
           '0%': { backgroundPosition: '0% 50%' },
           '100%': { backgroundPosition: '100% 50%' },
         },
@@ -100,14 +101,16 @@ export default {
           '0%': { opacity: '0', transform: 'scale(0.8)', filter: 'drop-shadow(0 0 0px hsl(var(--accent)/0))' },
           '70%': { opacity: '1', transform: 'scale(1.05)', filter: 'drop-shadow(0 0 15px hsl(var(--accent)/0.7))' },
           '100%': { opacity: '1', transform: 'scale(1)', filter: 'drop-shadow(0 0 5px hsl(var(--accent)/0.3))' },
-        }
+        },
+        // Character specific animations defined in globals.css and applied via classes
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-        'dreamy-bg-flow': 'dreamy-bg-flow 25s ease-in-out infinite alternate',
+        'dreamy-bg-flow': 'dreamy-bg-flow 25s ease-in-out infinite alternate', // Dreamy background animation
         'image-fade-in-sparkle': 'image-fade-in-sparkle 0.7s ease-out forwards',
-        /* Lamp specific animations applied via classes in globals.css */
+        // Character specific animations applied via classes in globals.css
+        // pulse-glow-character, character-bob-dynamic, etc. are in globals.css
   		},
       boxShadow: {
         'up-lg': '0 -10px 15px -3px rgba(0, 0, 0, 0.1), 0 -4px 6px -2px rgba(0, 0, 0, 0.05)',

@@ -1,38 +1,39 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, Lightbulb, Wand2, BookOpen, Smile } from "lucide-react"; // Added Smile icon
+import { Sparkles, HelpCircle, Bot, Wand2 } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-4xl mx-auto py-8"> {/* Added py-8 for spacing from header */}
       <header className="text-center space-y-2">
-        <Sparkles className="h-16 w-16 mx-auto text-primary animate-ping once" style={{ animationDuration: '1.5s' }} />
+        <Bot className="h-16 w-16 mx-auto text-primary animate-bounce" style={{ animationDuration: '1.5s' }} />
         <h1 className="text-5xl font-bold font-heading text-primary drop-shadow-lg">
-          About Tell Me If
+          About Tell Me If AI
         </h1>
         <p className="text-xl text-muted-foreground font-heading">
-          Where Curiosity Meets Magic!
+          Your Sassy, Multilingual AI Companion!
         </p>
       </header>
 
       <Card className="shadow-xl bg-card/70 sparkle-effect border-primary/30">
         <CardHeader>
           <CardTitle className="text-3xl font-heading text-center text-secondary-foreground flex items-center justify-center gap-2">
-            <Smile className="h-8 w-8 text-golden-yellow-hsl" /> {/* Replaced Wand2 with Smile */}
-            Welcome, Curious Soul!
+            <Sparkles className="h-8 w-8 text-golden-yellow-hsl" />
+            Welcome, Brave Questioner!
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-lg text-card-foreground leading-relaxed">
           <p>
-            Welcome to <strong>Tell Me If</strong>, where a mischievous AI character, full of life and charm, 
-            is ready to answer any question you dare to ask! Whether you’re probing the logic of 
-            the universe, imagining a topsy-turvy world, or tossing in a cheeky quip, 
-            our animated friend adapts to your tone and spins answers that inform, entertain, and 
-            ignite your imagination.
+            Welcome to <strong>Tell Me If</strong>, where a sassy AI, embodied by a cool humanoid trickster, 
+            waits to tackle any question you throw its way! From unraveling the logic of the cosmos 
+            (with a sarcastic smirk, of course) to spinning wild tales of upside-down worlds, 
+            this AI delivers cheeky, bold, and laugh-out-loud answers in <strong>any language you choose</strong>.
           </p>
           <p>
-            Ask “What if?” and watch our character conjure vivid visions of alternate realities, 
-            complete with stunning images crafted on the spot. Our goal is to spark your 
-            curiosity and infuse every question with a touch of magic. So, type in the box, ask away, and let the surprises unfold!
+            Ask “What if?” and click “Generate Image” to see your wild ideas come to life in vivid visuals, 
+            all while our character strikes a pose or two. Our mission? To keep you entertained, 
+            spark your curiosity, and maybe even make you snort with laughter. 
+            So, dive into the chat, ask anything, and brace for some epic sass!
           </p>
         </CardContent>
       </Card>
@@ -40,26 +41,26 @@ export default function AboutPage() {
       <Card className="shadow-xl bg-card/70 sparkle-effect border-secondary/30">
         <CardHeader>
           <CardTitle className="text-3xl font-heading text-center text-secondary-foreground flex items-center justify-center gap-2">
-            <BookOpen className="h-8 w-8 text-emerald-green-hsl" />
-            How to Wield the Magic
+            <HelpCircle className="h-8 w-8 text-emerald-green-hsl" />
+            How to Summon the Sass
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-lg text-card-foreground">
            <ul className="list-disc list-inside space-y-3 pl-4">
             <li>
-              <strong>Ask Away:</strong> Type your question in the “Tell me if…” box. Our character is all ears (sometimes literally!).
+              <strong>Spill the Beans:</strong> Type your question in the “Tell me if…” chat box. Our humanoid is all ears (when it decides to sprout them).
             </li>
             <li>
-              <strong>Expect the Unexpected:</strong> For logical queries, our character offers reasoned insights. For wild hypotheticals or creative ponderings, prepare for imaginative tales!
+              <strong>Expect the Unexpected (and a side of attitude):</strong> Get witty, logical-ish answers for serious queries, or hilariously bold takes on hypotheticals.
             </li>
             <li>
-              <strong>Visualize Your Whims:</strong> Want to see your "what if" scenario? Hit the “Imagine It” button, and our character will help craft an image to accompany its story.
+              <strong>Picture This:</strong> Click “Generate Image” for visuals that (mostly) match your chat. If the AI is taking too long (or you get bored), hit “Stop”.
             </li>
             <li>
-              <strong>Tone-Matching Companion:</strong> Our character mirrors your vibe. Be serious, silly, or sassy—it’s ready to match your energy with an appropriate (and often amusing) response.
+              <strong>Speak Your Language:</strong> Ask in any language; our AI is a polyglot with a universal dialect of cheekiness. It matches your vibe, so go wild!
             </li>
             <li>
-              <strong>Gallery of Wonders:</strong> Don't forget to visit the "Visions of the AI" gallery to revisit all the fantastic images conjured from your questions.
+              <strong>Gallery of "Art":</strong> Check out the "Visions of the AI" gallery for a collection of previously conjured images. Marvel at the digital da Vinci at work.
             </li>
           </ul>
         </CardContent>
@@ -68,19 +69,18 @@ export default function AboutPage() {
       <Card className="shadow-xl bg-card/70 sparkle-effect border-accent/30">
         <CardHeader>
           <CardTitle className="text-3xl font-heading text-center text-secondary-foreground flex items-center justify-center gap-2">
-             <Lightbulb className="h-8 w-8 text-neon-pink-hsl" />
-            Our Enchanted Purpose
+             <Wand2 className="h-8 w-8 text-neon-pink-hsl" />
+            Our Grand, Comical Purpose
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-lg text-card-foreground leading-relaxed">
           <p>
-            At <strong>Tell Me If</strong>, we believe in the power of questions to unlock creativity, 
-            foster fun, and maybe even make you chuckle. This is a place to play with ideas, 
-            explore the boundless realms of "what if," and interact with an AI that feels 
-            more like a quirky, magical friend than just lines of code.
+            At <strong>Tell Me If</strong>, we believe that questions are funnier with a dash of irreverence. 
+            This is a playground for ideas, a cosmic stage for "what ifs," and a chance to banter 
+            with an AI that’s more like a mischievous sidekick than a boring bot.
           </p>
           <p>
-            So go on, challenge our character, delight in its responses, and share the magic!
+            So go on, challenge our character, delight in its (often questionable) wisdom, and share the digital chaos!
           </p>
         </CardContent>
       </Card>
