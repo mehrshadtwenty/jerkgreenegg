@@ -3,9 +3,10 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   text?: string;
   imageUrl?: string;
-  isLoading?: boolean;
+  isLoadingText?: boolean; // For the initial text generation
+  isLoadingImage?: boolean; // For subsequent image generation request for this message
   timestamp: Date;
-  status?: AiStatus; // Optional: to show different lamp states for this message
+  originalQuestion?: string; // For AI messages, the user question that prompted this
 }
 
 export interface GalleryImage {

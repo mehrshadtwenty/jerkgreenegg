@@ -3,27 +3,24 @@
 import { useState, type FormEvent } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { Send, Sparkles } from 'lucide-react';
 
 interface ChatInputProps {
-  onSubmit: (question: string, generateImage: boolean) => Promise<void>;
+  onSubmit: (question: string) => Promise<void>; // Image generation is now separate
+  onGenerateImageRequest: () => void; // New handler for generating image for last response
   isLoading: boolean;
   onUserTypingChange: (isTyping: boolean) => void;
 }
 
-export function ChatInput({ onSubmit, isLoading, onUserTypingChange }: ChatInputProps) {
+export function ChatInput({ onSubmit, onGenerateImageRequest, isLoading, onUserTypingChange }: ChatInputProps) {
   const [question, setQuestion] = useState('');
-  const [generateImage, setGenerateImage] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!question.trim() || isLoading) return;
     onUserTypingChange(false); 
-    await onSubmit(question, generateImage);
+    await onSubmit(question); // No longer passes generateImage boolean
     setQuestion('');
-    // setGenerateImage(false); // Keep it checked if user wants to continue generating images
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -67,20 +64,17 @@ export function ChatInput({ onSubmit, isLoading, onUserTypingChange }: ChatInput
           <Send className="h-5 w-5" />
         </Button>
       </div>
-      <div className="mt-3 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <Checkbox 
-            id="generateImage" 
-            checked={generateImage}
-            onCheckedChange={(checked) => setGenerateImage(Boolean(checked))}
-            disabled={isLoading}
-            className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus:ring-accent"
-          />
-          <Label htmlFor="generateImage" className="text-sm font-medium text-muted-foreground flex items-center gap-1 cursor-pointer">
-            <Sparkles className="h-4 w-4 text-emerald-green-hsl" />
-            Imagine It?
-          </Label>
-        </div>
+      <div className="mt-3 flex items-center justify-start"> {/* Changed to justify-start */}
+        <Button
+          type="button" // Important: not a submit button
+          variant="link"
+          onClick={onGenerateImageRequest}
+          disabled={isLoading}
+          className="p-0 h-auto text-sm font-medium text-emerald-green-hsl hover:text-emerald-green-hsl/80 disabled:text-muted-foreground/70 flex items-center gap-1"
+        >
+          <Sparkles className="h-4 w-4" />
+          Generate Image for last response
+        </Button>
       </div>
     </form>
   );

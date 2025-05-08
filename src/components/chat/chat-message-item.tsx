@@ -22,7 +22,6 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
     <div className={cn('flex flex-col gap-2 py-3', alignment)}>
       <div className={cn('flex gap-3 items-end', isUser ? 'flex-row-reverse' : 'flex-row')}>
         <Avatar className="shadow-md">
-          {/* Updated AI avatar to a placeholder, data-ai-hint reflects new character type */}
           <AvatarImage src={isUser ? "https://picsum.photos/seed/useravatar/40/40" : "https://picsum.photos/seed/aicharacter/40/40"} alt={isUser ? "User" : "AI Character"} data-ai-hint={isUser ? "user avatar" : "humanoid character"} />
           <AvatarFallback className={cn(isUser ? "bg-accent text-accent-foreground" : "bg-golden-yellow-hsl text-primary-foreground")}>
             {isUser ? <User /> : <Bot />}
@@ -30,7 +29,7 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
         </Avatar>
         <Card className={cn('max-w-xs sm:max-w-md md:max-w-lg shadow-lg transform transition-all duration-300 hover:scale-[1.02]', bubbleColor, bubblePosition)}>
           <CardContent className="p-3 space-y-2">
-            {message.isLoading && !message.text && ( 
+            {message.isLoadingText && ( 
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                 <div className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -38,7 +37,8 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
               </div>
             )}
             {message.text && <p className="whitespace-pre-wrap">{message.text}</p>}
-             {message.isLoading && message.text && message.imageUrl === undefined && ( 
+            
+            {message.isLoadingImage && ( 
               <div className="flex items-center gap-2 mt-2 text-xs">
                 <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                 <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -46,7 +46,8 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
                 <span className="italic">Conjuring image...</span>
               </div>
             )}
-            {message.imageUrl && (
+
+            {message.imageUrl && !message.isLoadingImage && (
               <div className="chat-image-container mt-2 rounded-lg overflow-hidden border-2 border-primary/50 shadow-fantasy-glow-primary p-1 bg-black/20">
                 <Image 
                   src={message.imageUrl} 
@@ -55,7 +56,7 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
                   height={300} 
                   className="object-cover w-full h-auto rounded" 
                   data-ai-hint="fantasy art"
-                  priority={true} 
+                  priority={true} // Prioritize loading for latest images
                 />
               </div>
             )}
