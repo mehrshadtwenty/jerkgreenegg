@@ -153,7 +153,7 @@ body {
 }
 
 
-@keyframes pulse-glow-lamp {
+@keyframes pulse-glow-character {
   from {
     filter: drop-shadow(0 0 5px hsl(var(--primary) / 0.8)) drop-shadow(0 0 10px hsl(var(--accent) / 0.6));
   }
@@ -162,158 +162,153 @@ body {
   }
 }
 
-/* Magic Lamp SVG Styles & Animations */
-.magic-lamp-svg {
+/* AI Character SVG Styles & Animations */
+.ai-character-svg {
   overflow: visible;
   filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
 }
 
-.lamp-body-fill { fill: hsl(var(--primary)); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5; }
-.lamp-lid-fill { fill: hsl(var(--primary) / 0.9); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5; }
-.lamp-spout-fill { fill: hsl(var(--primary)); stroke: hsl(var(--primary-foreground) / 0.5); stroke-width: 0.5;}
-.lamp-knob-fill { fill: hsl(var(--primary-foreground)); }
+.character-body-fill { fill: hsl(var(--secondary)); stroke: hsl(var(--secondary-foreground) / 0.5); stroke-width: 0.5; }
+.character-head-fill { fill: hsl(var(--secondary) / 0.9); stroke: hsl(var(--secondary-foreground) / 0.5); stroke-width: 0.5; }
+.character-limbs-fill { fill: hsl(var(--secondary)); stroke: hsl(var(--secondary-foreground) / 0.5); stroke-width: 0.5; }
+.character-hands-feet-fill { fill: hsl(var(--primary)); } /* Accent color for hands/feet */
 
-.lamp-shadow-base-lid { fill: hsl(var(--card) / 0.4); }
-.lamp-shadow-spout { fill: hsl(var(--card) / 0.3); }
-
-.lamp-eye { fill: hsl(var(--pearl-white-hsl)); stroke: hsl(var(--primary-foreground)); stroke-width: 0.5; transition: transform 0.3s ease-in-out; }
-.lamp-pupil { fill: hsl(var(--primary-foreground)); transition: transform 0.2s ease-in-out; }
-.lamp-eyebrow { fill: none; stroke: hsl(var(--primary-foreground)); stroke-width: 2; stroke-linecap: round; transition: transform 0.3s ease-in-out; }
-.lamp-mouth { fill: none; stroke: hsl(var(--primary-foreground)); stroke-width: 1.5; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
-.lamp-ear { fill: hsl(var(--primary) / 0.8); stroke: hsl(var(--primary-foreground)/0.7); stroke-width: 1; transition: opacity 0.4s, transform 0.4s; }
-.lamp-hand { fill: hsl(var(--golden-yellow-hsl)/0.8); stroke: hsl(var(--primary-foreground)/0.6); stroke-width: 1; transition: opacity 0.4s, transform 0.4s; }
-
+.character-eye { fill: hsl(var(--pearl-white-hsl)); stroke: hsl(var(--foreground)); stroke-width: 0.5; transition: transform 0.3s ease-in-out; }
+.character-pupil { fill: hsl(var(--foreground)); transition: transform 0.2s ease-in-out; }
+.character-eyebrow { fill: none; stroke: hsl(var(--foreground)); stroke-width: 1.5; stroke-linecap: round; transition: transform 0.3s ease-in-out; }
+.character-mouth { fill: none; stroke: hsl(var(--foreground)); stroke-width: 1; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
+.character-ear { fill: hsl(var(--primary) / 0.8); stroke: hsl(var(--secondary-foreground)/0.7); stroke-width: 0.5; transition: opacity 0.4s, transform 0.4s; }
 
 /* Default hidden/initial states for animated parts */
-.lamp-ears-group {
+.character-ears-group {
   opacity: 0;
-  transform: scale(0.5) translateY(5px); /* Start smaller and slightly down */
-  transform-origin: 50% 100%; /* Animate from base of ears */
+  transform: scale(0.5) translateY(5px); 
+  transform-origin: 50% 100%; 
 }
-.lamp-hand-chin, .lamp-hands-presenting, .lamp-sparkles {
+.character-hand-chin, .character-hands-presenting, .character-sparkles {
   opacity: 0;
   transform-origin: center center;
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
 }
 
-.lamp-hand-chin {transform: translateY(10px) scale(0.8);}
-.lamp-hands-presenting {transform: scale(0.8) rotate(-5deg);}
+.character-hand-chin {transform: translateY(10px) scale(0.8);}
+.character-hands-presenting {transform: scale(0.8) rotate(-5deg);}
 
 
 /* IDLE State */
-.lamp-idle .magic-lamp-svg { animation: pulse-glow-lamp 2.5s infinite alternate, lamp-bob 3s infinite ease-in-out; }
-.lamp-idle .lamp-pupil { animation: lamp-blink 5s infinite, lamp-pupil-idle-roam 8s infinite ease-in-out; }
-.lamp-idle .lamp-eyebrow { transform: translateY(0px); }
-.lamp-idle .lamp-mouth { transform: scaleY(0.8); d: path("M50 95 Q60 98 70 95");} /* Gentle smile */
-.lamp-idle .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); } /* Ears hidden */
+.character-idle .ai-character-svg { animation: pulse-glow-character 2.5s infinite alternate, character-bob 3s infinite ease-in-out; }
+.character-idle .character-pupil { animation: character-blink 5s infinite, character-pupil-idle-roam 8s infinite ease-in-out; }
+.character-idle .character-eyebrow { transform: translateY(0px); }
+.character-idle .character-mouth { transform: scaleY(0.8); d: path("M25 43 Q30 46 35 43");} /* Gentle smile */
+.character-idle .character-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); } /* Ears hidden */
 
 
 /* USER TYPING State (Listening) */
-.lamp-typing .magic-lamp-svg { animation: pulse-glow-lamp 2s infinite alternate, lamp-bob-attentive 2s infinite ease-in-out; }
-.lamp-typing .lamp-ears-group { opacity: 1; transform: scale(1) translateY(0px) rotate(0deg); } /* Ears sprout and are attentive */
-.lamp-typing .lamp-eye { transform: scale(1.15); } /* Wider eyes */
-.lamp-typing .lamp-pupil { transform: translateX(0); animation: lamp-pupil-scan 4s infinite ease-in-out; }
-.lamp-typing .lamp-eyebrow { transform: translateY(-4px) rotate(-3deg); } /* Eyebrows up, curious */
-.lamp-typing .lamp-mouth { d: path("M50 96 Q60 102 70 96"); } /* Slightly more open mouth, curious */
+.character-typing .ai-character-svg { animation: pulse-glow-character 2s infinite alternate, character-bob-attentive 2s infinite ease-in-out; }
+.character-typing .character-ears-group { opacity: 1; transform: scale(1) translateY(0px) rotate(0deg); } /* Ears sprout and are attentive */
+.character-typing .character-eye { transform: scale(1.15); } /* Wider eyes */
+.character-typing .character-pupil { transform: translateX(0); animation: character-pupil-scan 4s infinite ease-in-out; }
+.character-typing .character-eyebrow { transform: translateY(-2px) rotate(-3deg); } /* Eyebrows up, curious */
+.character-typing .character-mouth { d: path("M25 44 Q30 49 35 44"); } /* Slightly more open mouth, curious */
 
 /* THINKING TEXT State */
-.lamp-thinking-text .magic-lamp-svg { animation: pulse-glow-lamp 1.5s infinite alternate; transform: rotate(-5deg) translateY(-5px); }
-.lamp-thinking-text .lamp-hand-chin { opacity: 1; transform: translateY(0) scale(1); }
-.lamp-thinking-text .lamp-eyebrow { transform: translateY(-2px) rotate(3deg); } /* One eyebrow raised */
-.lamp-thinking-text .lamp-mouth { d: path("M55 97 Q60 95 65 97"); } /* Hmm mouth */
-.lamp-thinking-text .lamp-pupil { animation: lamp-think-pupils 3s infinite ease-in-out; }
-.lamp-thinking-text .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); } /* Ears retract when thinking */
+.character-thinking-text .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate; transform: rotate(-3deg) translateY(-3px); } /* Gentle tilt */
+.character-thinking-text .character-hand-chin { opacity: 1; transform: translateY(0) scale(1); }
+.character-thinking-text .character-eyebrow { transform: translateY(-1px) rotate(3deg); } /* One eyebrow raised */
+.character-thinking-text .character-mouth { d: path("M27 45 Q30 43 33 45"); } /* Hmm mouth */
+.character-thinking-text .character-pupil { animation: character-think-pupils 3s infinite ease-in-out; }
+.character-thinking-text .character-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); } 
 
 /* THINKING IMAGE State */
-.lamp-thinking-image .magic-lamp-svg { animation: pulse-glow-lamp 1s infinite alternate, lamp-shake 0.5s 3 ease-in-out; } /* Shake a few times */
-.lamp-thinking-image .lamp-sparkles { opacity: 0.7; animation: lamp-sparkle-effect 1s infinite; }
-.lamp-thinking-image .lamp-eyebrow { transform: translateY(-5px) rotate(1deg); } /* Both up high, focused */
-.lamp-thinking-image .lamp-mouth { d: path("M50 95 Q60 105 70 95"); } /* Ooh mouth, concentrating */
-.lamp-thinking-image .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
+.character-thinking-image .ai-character-svg { animation: pulse-glow-character 1s infinite alternate, character-shake 0.5s 3 ease-in-out; } /* Shake a few times */
+.character-thinking-image .character-sparkles { opacity: 0.7; animation: character-sparkle-effect 1s infinite; }
+.character-thinking-image .character-eyebrow { transform: translateY(-3px) rotate(1deg); } /* Both up high, focused */
+.character-thinking-image .character-mouth { d: path("M25 43 Q30 50 35 43"); } /* Ooh mouth, concentrating */
+.character-thinking-image .character-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
 
 /* PRESENTING TEXT State */
-.lamp-presenting-text .magic-lamp-svg { animation: pulse-glow-lamp 2s infinite alternate; transform: scale(1.05) translateY(-3px); }
-.lamp-presenting-text .lamp-eyebrow { transform: translateY(0px); }
-.lamp-presenting-text .lamp-mouth { d: path("M45 95 Q60 103 75 95"); } /* Happy smile */
-.lamp-presenting-text .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
+.character-presenting-text .ai-character-svg { animation: pulse-glow-character 2s infinite alternate; transform: scale(1.02) translateY(-2px); } /* Slight confident bounce */
+.character-presenting-text .character-eyebrow { transform: translateY(0px); }
+.character-presenting-text .character-mouth { d: path("M23 43 Q30 48 37 43"); } /* Happy smile */
+.character-presenting-text .character-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
 
 /* PRESENTING IMAGE State */
-.lamp-presenting-image .magic-lamp-svg { animation: pulse-glow-lamp 1.8s infinite alternate; transform: scale(1.1) rotate(2deg); }
-.lamp-presenting-image .lamp-hands-presenting { opacity: 1; transform: scale(1) rotate(0deg) translateX(0); }
-.lamp-presenting-image .lamp-sparkles { opacity: 1; animation: lamp-sparkle-effect 0.8s infinite; }
-.lamp-presenting-image .lamp-eyebrow { transform: translateY(-3px) rotate(-2deg); } /* Excited eyebrows */
-.lamp-presenting-image .lamp-mouth { d: path("M45 95 Q60 108 75 95"); } /* Wide excited smile */
-.lamp-presenting-image .lamp-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
+.character-presenting-image .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate; transform: scale(1.05) rotate(1deg); } /* More expressive */
+.character-presenting-image .character-hands-presenting { opacity: 1; transform: scale(1) rotate(0deg) translateX(0); }
+.character-presenting-image .character-sparkles { opacity: 1; animation: character-sparkle-effect 0.8s infinite; }
+.character-presenting-image .character-eyebrow { transform: translateY(-2px) rotate(-2deg); } /* Excited eyebrows */
+.character-presenting-image .character-mouth { d: path("M23 43 Q30 52 37 43"); } /* Wide excited smile */
+.character-presenting-image .character-ears-group { opacity: 0; transform: scale(0.5) translateY(5px); }
 
 /* ERROR State */
-.lamp-error .magic-lamp-svg { transform: rotate(10deg) translateY(10px) scale(0.95); filter: grayscale(50%) brightness(0.8); animation: lamp-error-tremble 0.3s 3; }
-.lamp-error .lamp-eyebrow { transform: translateY(3px) rotate(15deg); } /* Sad eyebrows */
-.lamp-error .lamp-mouth { d: path("M50 100 Q60 90 70 100"); } /* Sad mouth */
-.lamp-error .lamp-eye { transform: scaleY(0.7); }
-.lamp-error .lamp-ears-group { opacity: 0.5; transform: scale(0.8) rotate(-10deg) translateY(3px); } /* Droopy ears */
+.character-error .ai-character-svg { transform: rotate(5deg) translateY(5px) scale(0.98); filter: grayscale(30%) brightness(0.9); animation: character-error-tremble 0.3s 3; } /* Sad slump */
+.character-error .character-eyebrow { transform: translateY(1px) rotate(10deg); } /* Sad eyebrows */
+.character-error .character-mouth { d: path("M25 47 Q30 40 35 47"); } /* Sad mouth */
+.character-error .character-eye { transform: scaleY(0.8); }
+.character-error .character-ears-group { opacity: 0.5; transform: scale(0.8) rotate(-10deg) translateY(3px); } /* Droopy ears */
 
 
-/* Keyframes for lamp parts */
-@keyframes lamp-bob {
+/* Keyframes for character parts */
+@keyframes character-bob {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-7px); }
+  50% { transform: translateY(-5px); }
 }
-@keyframes lamp-bob-attentive { /* More subtle bob when listening */
+@keyframes character-bob-attentive { 
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-3px) rotate(1deg); }
+  50% { transform: translateY(-2px) rotate(0.5deg); } /* More subtle */
 }
-@keyframes lamp-blink {
+@keyframes character-blink {
   0%, 90%, 100% { transform: scaleY(1); }
   95% { transform: scaleY(0.1); }
 }
-@keyframes lamp-pupil-scan { /* For typing/listening */
+@keyframes character-pupil-scan { 
   0%, 100% { transform: translateX(0px); }
-  25% { transform: translateX(-2px); }
+  25% { transform: translateX(-1px); }
   50% { transform: translateX(0px); }
-  75% { transform: translateX(2px); }
+  75% { transform: translateX(1px); }
 }
-@keyframes lamp-pupil-idle-roam { /* Gentle roaming for idle */
+@keyframes character-pupil-idle-roam { 
   0%, 100% { transform: translate(0px, 0px); }
-  20% { transform: translate(-1px, 0.5px); }
-  40% { transform: translate(0.5px, -0.5px); }
-  60% { transform: translate(1px, 0px); }
-  80% { transform: translate(-0.5px, 0.5px); }
+  20% { transform: translate(-0.5px, 0.2px); }
+  40% { transform: translate(0.2px, -0.2px); }
+  60% { transform: translate(0.5px, 0px); }
+  80% { transform: translate(-0.2px, 0.2px); }
 }
 
-@keyframes lamp-think-pupils { /* Darting eyes for thinking */
+@keyframes character-think-pupils { 
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-1.5px) translateX(-1px) rotate(-20deg); }
+  25% { transform: translateY(-1px) translateX(-0.5px) rotate(-15deg); }
   50% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-  75% { transform: translateY(1px) translateX(1.5px) rotate(20deg); }
+  75% { transform: translateY(0.5px) translateX(1px) rotate(15deg); }
 }
 
-@keyframes lamp-shake {
+@keyframes character-shake {
   0%, 100% { transform: translateX(0) rotate(0); }
-  25% { transform: translateX(-3px) rotate(-1.5deg); }
+  25% { transform: translateX(-2px) rotate(-1deg); }
   50% { transform: translateX(0) rotate(0); }
-  75% { transform: translateX(3px) rotate(1.5deg); }
+  75% { transform: translateX(2px) rotate(1deg); }
 }
 
-@keyframes lamp-error-tremble {
-  0% { transform: translate(1px, 1px) rotate(10deg); }
-  25% { transform: translate(-1px, -1px) rotate(9deg); }
-  50% { transform: translate(1px, -1px) rotate(11deg); }
-  75% { transform: translate(-1px, 1px) rotate(10deg); }
-  100% { transform: translate(1px, 1px) rotate(10deg); }
+@keyframes character-error-tremble {
+  0% { transform: translate(0.5px, 0.5px) rotate(5deg); }
+  25% { transform: translate(-0.5px, -0.5px) rotate(4.5deg); }
+  50% { transform: translate(0.5px, -0.5px) rotate(5.5deg); }
+  75% { transform: translate(-0.5px, 0.5px) rotate(5deg); }
+  100% { transform: translate(0.5px, 0.5px) rotate(5deg); }
 }
 
-@keyframes lamp-sparkle-effect {
-  0% { opacity: 0; transform: scale(0.5) translateY(5px); }
-  50% { opacity: 1; transform: scale(1.2) translateY(0px); }
-  100% { opacity: 0; transform: scale(0.5) translateY(-5px); }
+@keyframes character-sparkle-effect {
+  0% { opacity: 0; transform: scale(0.5) translateY(2px); }
+  50% { opacity: 1; transform: scale(1.1) translateY(0px); }
+  100% { opacity: 0; transform: scale(0.5) translateY(-2px); }
 }
-.lamp-sparkles .sparkle-1 { animation-delay: 0s; }
-.lamp-sparkles .sparkle-2 { animation-delay: 0.2s; }
-.lamp-sparkles .sparkle-3 { animation-delay: 0.4s; }
+.character-sparkles .sparkle-1 { animation-delay: 0s; }
+.character-sparkles .sparkle-2 { animation-delay: 0.2s; }
+.character-sparkles .sparkle-3 { animation-delay: 0.4s; }
 
 
-.lamp-container {
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease-in-out; /* For random movements - added cubic-bezier for bounciness */
+.character-container {
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease-in-out; /* For random movements */
 }
 
 /* Animation for image appearing in chat */
