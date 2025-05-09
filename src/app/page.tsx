@@ -215,7 +215,7 @@ export default function HomePage() {
       {/* Main Content Area: Chat and Gallery */}
       <div className="flex-grow flex flex-col overflow-hidden pt-16"> {/* pt for AppHeader */}
         {/* Chat Area */}
-        <div className="flex-grow flex flex-col max-w-3xl w-full mx-auto overflow-hidden">
+        <div className="relative z-20 flex-grow flex flex-col max-w-3xl w-full mx-auto overflow-hidden">
           <ScrollArea className="flex-grow p-4 space-y-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
@@ -298,7 +298,7 @@ export default function HomePage() {
 
         {/* Gallery Section - only rendered client side */}
         {isClient && (
-          <ScrollArea className="h-1/3 max-h-72 mt-4 border-t border-border/30 p-4 bg-card/30">
+          <ScrollArea className="relative z-20 h-1/3 max-h-72 mt-4 border-t border-border/30 p-4 bg-card/30">
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-2xl font-bold font-heading text-primary drop-shadow-sm flex items-center gap-2">
                 <GalleryHorizontalEnd className="h-7 w-7 text-secondary" />
@@ -331,3 +331,4 @@ export default function HomePage() {
     </div>
   );
 }
+
