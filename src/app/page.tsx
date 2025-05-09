@@ -62,7 +62,7 @@ export default function HomePage() {
   const saveToGallery = (newImage: GalleryImage) => {
     try {
       const currentGallery = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GALLERY_KEY) || '[]');
-      currentGallery.unshift(newImage);
+      currentGallery.unshift(newImage); // Add to the beginning
       localStorage.setItem(LOCAL_STORAGE_GALLERY_KEY, JSON.stringify(currentGallery.slice(0, 50))); // Limit gallery size
       setGalleryImages(currentGallery.slice(0, 50)); // Update state
     } catch (error) {
@@ -79,7 +79,7 @@ export default function HomePage() {
     if (!questionText.trim()) return;
 
     setIsLoading(true);
-    setIsUserTyping(false);
+    setIsUserTyping(false); // User has submitted, not typing anymore
     setAiStatus('thinking_text');
     setCurrentQuestion(''); // Clear textarea
 
@@ -114,13 +114,13 @@ export default function HomePage() {
       setMessages(prev => prev.map(msg =>
         msg.id === aiPlaceholderMessageId ? {
           ...msg,
-          text: "My magic circuits are a bit tangled! My humanoid form is glitching. Please try that again.",
+          text: "My circuits are fried, or maybe I'm just too lazy to answer that. Ask something else, preferably less stupid.",
           isLoadingText: false,
           timestamp: new Date()
         } : msg
       ));
       setAiStatus('error');
-      toast({ title: "AI Text Error", description: "Failed to get text response.", variant: "destructive" });
+      toast({ title: "AI Text Error", description: "The AI is having a moment. Probably your fault.", variant: "destructive" });
     } finally {
       setIsLoading(false);
       if (textareaRef.current) textareaRef.current.focus();
@@ -135,15 +135,15 @@ export default function HomePage() {
 
     if (!lastAiMessage || !lastAiMessage.originalQuestion) {
       toast({
-        title: "Nothing to Imagine",
-        description: "There's no suitable AI response to generate an image for, or the original question is missing.",
+        title: "What am I supposed to imagine, genius?",
+        description: "There's no proper AI response to base an image on. Try asking a question first, maybe a good one for a change.",
         variant: "default"
       });
       return;
     }
 
-    setIsLoading(true); // General loading state for UI disabling
-    setIsImageGenerating(true); // Specific state for image generation
+    setIsLoading(true); 
+    setIsImageGenerating(true);
     setAiStatus('thinking_image');
 
     setMessages(prev => prev.map(msg =>
@@ -152,9 +152,12 @@ export default function HomePage() {
 
     let imageErrorOccurred = null;
     try {
-      const imageResult = await generateImageFromQuestion({ question: lastAiMessage.originalQuestion });
+      // Use original question or a snippet of AI's response for more relevance
+      const imagePromptContext = lastAiMessage.originalQuestion; // Using original question for more direct context
+      const imageResult = await generateImageFromQuestion({ question: imagePromptContext });
+      
       if (imageResult.imageUrl) {
-        saveToGallery({ id: uuidv4(), prompt: lastAiMessage.originalQuestion, imageUrl: imageResult.imageUrl, timestamp: new Date() });
+        saveToGallery({ id: uuidv4(), prompt: imagePromptContext, imageUrl: imageResult.imageUrl, timestamp: new Date() });
       }
       setMessages(prev => prev.map(msg =>
         msg.id === lastAiMessage.id ? { ...msg, imageUrl: imageResult.imageUrl, isLoadingImage: false } : msg
@@ -164,10 +167,10 @@ export default function HomePage() {
       imageErrorOccurred = imageError;
       console.error("Error generating image:", imageError);
       setMessages(prev => prev.map(msg =>
-        msg.id === lastAiMessage.id ? { ...msg, isLoadingImage: false } : msg
+        msg.id === lastAiMessage.id ? { ...msg, isLoadingImage: false, text: (msg.text || "") + "\n\n(Image generation failed. My artistic circuits are probably too sophisticated for this crap.)" } : msg
       ));
       setAiStatus('error');
-      toast({ title: "AI Image Error", description: "Failed to generate image.", variant: "destructive" });
+      toast({ title: "AI Image Malfunction", description: "Couldn't generate an image. Maybe ask for something less... impossible?", variant: "destructive" });
     } finally {
       setIsLoading(false);
       setIsImageGenerating(false);
@@ -176,23 +179,43 @@ export default function HomePage() {
   };
 
   const handleStopImageGeneration = () => {
-    // This logic would ideally involve actually stopping the Genkit flow if possible.
-    // For now, it's a client-side stop of waiting and visual feedback.
     setIsImageGenerating(false);
-    setIsLoading(false); // Reset general loading state
+    setIsLoading(false); 
     setAiStatus('idle');
 
     setMessages(prev => prev.map(msg =>
-      msg.isLoadingImage ? { ...msg, isLoadingImage: false, text: (msg.text || "") + "\n\n(Hmph. Changed your mind, huh? Fine, no masterpiece for you... this time.)" } : msg
+      msg.isLoadingImage ? { ...msg, isLoadingImage: false, text: (msg.text || "") + "\n\n(Fine, I stopped. Your loss, Picasso.)" } : msg
     ));
 
-    toast({ title: "Image Generation Halted", description: "Alright, alright, I'll stop conjuring... for now! My creative genius was just warming up." });
+    toast({ title: "Image Generation Halted", description: "Alright, genius, I've stopped. My masterpiece can wait." });
   };
   
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentQuestion(e.target.value);
-    setIsUserTyping(e.target.value.trim().length > 0);
+    const typing = e.target.value.trim().length > 0;
+    if (typing && !isUserTyping) {
+      setAiStatus('user_typing'); // Set status when user starts typing
+    } else if (!typing && isUserTyping) {
+      setAiStatus('idle'); // Revert to idle if textarea is cleared
+    }
+    setIsUserTyping(typing);
   };
+  
+  const handleFocus = () => {
+    if (currentQuestion.trim().length > 0) {
+      setIsUserTyping(true);
+      setAiStatus('user_typing');
+    }
+  };
+
+  const handleBlur = () => {
+    setIsUserTyping(false);
+    // Only revert to idle if not already in another active AI state
+    if (aiStatus === 'user_typing') {
+      setAiStatus('idle');
+    }
+  };
+
 
   const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -200,17 +223,18 @@ export default function HomePage() {
   };
 
   const clearGallery = () => {
-    if (window.confirm("Are you sure you want to clear the entire gallery? This cannot be undone.")) {
+    if (window.confirm("You sure you wanna delete all this 'art'? Can't get it back, genius.")) {
       localStorage.removeItem(LOCAL_STORAGE_GALLERY_KEY);
       setGalleryImages([]);
-      toast({ title: "Gallery Cleared", description: "All images have been removed from your local gallery."});
+      toast({ title: "Gallery Nuked", description: "All images gone. Hope you didn't like 'em."});
     }
   };
 
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground">
-      <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} />
+      {/* AI Character Display is now z-0, so it's behind other elements */}
+      <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
       
       {/* Main Content Area: Chat and Gallery */}
       <div className="flex-grow flex flex-col overflow-hidden pt-16"> {/* pt for AppHeader */}
@@ -220,8 +244,8 @@ export default function HomePage() {
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
                 <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bot mx-auto mb-4 opacity-70"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
-                <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Query!</p>
-                <p className="text-muted-foreground text-sm">Go on, ask me something. Try not to bore me.</p>
+                <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
+                <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to death.</p>
               </div>
             ) : (
               messages.map((msg) => <ChatMessageItem key={msg.id} message={msg} />)
@@ -236,13 +260,13 @@ export default function HomePage() {
                 ref={textareaRef}
                 value={currentQuestion}
                 onChange={handleTextChange}
-                onFocus={() => setIsUserTyping(currentQuestion.trim().length > 0)}
-                onBlur={() => setIsUserTyping(false)}
-                placeholder="Tell me if…"
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                placeholder="Tell me if… (Don't be shy, ask your dumbest questions!)"
                 className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
                            border-2 border-primary/30 
                            focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
-                           rounded-lg shadow-inner resize-none" // resize-none to control height better
+                           rounded-lg shadow-inner resize-none"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -250,13 +274,13 @@ export default function HomePage() {
                   }
                 }}
                 disabled={isLoading || isImageGenerating}
-                rows={1} // Start with 1 row, auto-expands with content due to min-h
+                rows={1} 
                 aria-label="Your question"
               />
               <Button
                 type="submit"
                 size="icon"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground disabled:opacity-70 rounded-full shadow-md hover:shadow-fantasy-glow-accent w-9 h-9" // Adjusted size
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground disabled:opacity-70 rounded-full shadow-md hover:shadow-fantasy-glow-accent w-9 h-9"
                 disabled={isLoading || isImageGenerating || !currentQuestion.trim()}
                 aria-label="Send question"
               >
@@ -276,7 +300,7 @@ export default function HomePage() {
                   aria-disabled={isLoading || isImageGenerating}
                 >
                   <Sparkles className="inline-block h-4 w-4 mr-1" />
-                  Generate Image
+                  Generate Image (If you dare)
                 </span>
               </div>
               {isImageGenerating && (
@@ -288,7 +312,7 @@ export default function HomePage() {
                     tabIndex={0}
                   >
                     <StopCircle className="inline-block h-4 w-4 mr-1" />
-                    Stop
+                    Stop! (My genius is too much for you anyway)
                   </span>
                 </div>
               )}
@@ -298,15 +322,15 @@ export default function HomePage() {
 
         {/* Gallery Section - only rendered client side */}
         {isClient && (
-          <ScrollArea className="relative z-20 h-1/3 max-h-72 mt-4 border-t border-border/30 p-4 bg-card/30">
+          <ScrollArea className="relative z-10 h-1/3 max-h-72 mt-4 border-t border-border/30 p-4 bg-card/30"> {/* z-10 so it's above character but below chat input area */}
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-2xl font-bold font-heading text-primary drop-shadow-sm flex items-center gap-2">
                 <GalleryHorizontalEnd className="h-7 w-7 text-secondary" />
-                Visions of the AI
+                Visions of My AI Overlords (and some crap I made)
               </h2>
               {galleryImages.length > 0 && (
                 <Button variant="destructive" size="sm" onClick={clearGallery} className="font-heading text-xs">
-                  <Trash2 className="mr-1.5 h-4 w-4" /> Clear Gallery
+                  <Trash2 className="mr-1.5 h-4 w-4" /> Clear This Mess
                 </Button>
               )}
             </div>
@@ -315,8 +339,8 @@ export default function HomePage() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 lucide lucide-images opacity-60">
                   <path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 18-3-3c-.928-.899-2.34-.926-3.296-.074L9 19"/><path d="M14.5 11.5a1.5 1.5 0 0 1 0-3l.5-.5a1.5 1.5 0 0 1 3 0l.5.5a1.5 1.5 0 0 1 0 3l-.5.5a1.5 1.5 0 0 1-3 0Z"/><path d="m22 6-3-3c-.928-.899-2.34-.926-3.296-.074L9 8"/>
                 </svg>
-                <p className="text-lg font-semibold font-heading text-muted-foreground">The Gallery is Bare!</p>
-                <p className="text-muted-foreground text-xs">Ask me to "Generate Image" in the chat, and my masterpieces will appear here!</p>
+                <p className="text-lg font-semibold font-heading text-muted-foreground">Gallery's Empty. Shocking.</p>
+                <p className="text-muted-foreground text-xs">Click "Generate Image" in chat. Maybe you'll get lucky and I'll make something that doesn't suck.</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">

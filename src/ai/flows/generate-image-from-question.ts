@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateImageFromQuestionInputSchema = z.object({
-  question: z.string().describe('The hypothetical question to generate an image from.'),
+  question: z.string().describe('The hypothetical question or conversational context to generate an image from.'),
 });
 export type GenerateImageFromQuestionInput = z.infer<typeof GenerateImageFromQuestionInputSchema>;
 
@@ -25,11 +25,13 @@ export async function generateImageFromQuestion(input: GenerateImageFromQuestion
   return generateImageFromQuestionFlow(input);
 }
 
-// This prompt is now used directly by ai.generate, not as a definePrompt object for this flow.
+// Updated prompt for cooler and more relevant images
 const imageGenerationUserPrompt = (question: string) => 
-  `Generate a visually stunning, creative, and imaginative image that vividly represents the hypothetical scenario posed in the following question. The image should be fantastical, dreamlike, and align with a whimsical, magical theme. Emphasize vibrant colors and an expressive, artistic style.
-
-Question: "${question}"`;
+  `You are an AI image generator tasked with creating exceptionally cool, awesome, and visually striking artwork. 
+The image MUST be highly relevant to the user's question or the AI's preceding answer in the conversation. 
+The style should be imaginative, creative, and impactful, perfectly capturing the essence of the dialogue. 
+Make it look amazing and directly connected to the following context: "${question}"
+Ensure the image is fun, visually appealing, and directly reflects the theme or subject matter discussed.`;
 
 
 const generateImageFromQuestionFlow = ai.defineFlow(
@@ -40,20 +42,22 @@ const generateImageFromQuestionFlow = ai.defineFlow(
   },
   async input => {
     const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp', // Ensure this model supports image generation
+      model: 'googleai/gemini-2.0-flash-exp', 
       prompt: imageGenerationUserPrompt(input.question),
       config: {
-        responseModalities: ['TEXT', 'IMAGE'], // Must include IMAGE
-         // Adjust safety for creative image generation if needed, though defaults are usually fine
+        responseModalities: ['TEXT', 'IMAGE'], 
         safetySettings: [
            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-           // Other categories can be less restrictive for creative images if desired
+           { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+           { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+           { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
         ]
       },
     });
     if (!media || !media.url) {
-      throw new Error("Image generation failed or returned no URL.");
+      throw new Error("Image generation failed or returned no URL. The digital paint might be dry!");
     }
     return {imageUrl: media.url};
   }
 );
+

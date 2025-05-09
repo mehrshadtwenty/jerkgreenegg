@@ -53,6 +53,9 @@ body {
     --neon-pink-hsl: 320 100% 60%;
     --fiery-orange-hsl: 15 100% 58%; 
     --turquoise-hsl: 175 70% 50%; /* Added Turquoise */
+    --character-pink-hsl: 330 90% 70%; /* Main pink for character body */
+    --character-light-pink-hsl: 330 90% 85%; /* Lighter pink for head/accents */
+
 
     /* Legacy colors from original theme - remapped or can be used if specific shades needed */
     --sky-blue-hsl: var(--bright-blue-hsl); /* Remapped */
@@ -95,6 +98,9 @@ body {
     --input: 270 55% 18%;
     --input-foreground: 30 100% 95%;
     --ring: 15 100% 63%;
+
+    --character-pink-hsl: 330 85% 65%; 
+    --character-light-pink-hsl: 330 85% 80%;
   }
 }
 
@@ -164,177 +170,188 @@ body {
 
 @keyframes pulse-glow-character {
   from {
-    filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.8)) drop-shadow(0 0 15px hsl(var(--accent) / 0.6));
+    filter: drop-shadow(0 0 6px hsl(var(--primary) / 0.7)) drop-shadow(0 0 12px hsl(var(--accent) / 0.5));
   }
   to {
-    filter: drop-shadow(0 0 15px hsl(var(--primary))) drop-shadow(0 0 25px hsl(var(--accent) / 0.8));
+    filter: drop-shadow(0 0 12px hsl(var(--primary) / 0.9)) drop-shadow(0 0 20px hsl(var(--accent) / 0.7));
   }
 }
 
-/* AI Character SVG Styles & Animations - Updated for Humanoid */
+/* AI Character SVG Styles & Animations - Updated for Humanoid (Pink) */
 .ai-character-svg {
-  overflow: visible; /* Important for parts that might animate outside bounds slightly */
-  filter: drop-shadow(3px 5px 7px rgba(0,0,0,0.35)); /* Slightly larger shadow for larger character */
+  overflow: visible; 
+  filter: drop-shadow(2px 4px 5px rgba(0,0,0,0.3)); 
 }
 
-.character-body-fill { fill: hsl(var(--secondary)); stroke: hsl(var(--secondary-foreground) / 0.4); stroke-width: 0.6; }
-.character-head-fill { fill: hsl(var(--secondary) / 0.9); stroke: hsl(var(--secondary-foreground) / 0.4); stroke-width: 0.6; }
-.character-limbs-fill { fill: hsl(var(--secondary)); stroke: hsl(var(--secondary-foreground) / 0.4); stroke-width: 0.7; } /* Limbs slightly thicker */
-.character-hands-feet-fill { fill: hsl(var(--primary)); stroke: hsl(var(--primary-foreground) / 0.3); stroke-width: 0.3; } /* Accent color for hands/feet */
+.character-body-fill { fill: hsl(var(--character-pink-hsl)); stroke: hsl(var(--foreground) / 0.2); stroke-width: 0.5; }
+.character-head-fill { fill: hsl(var(--character-light-pink-hsl)); stroke: hsl(var(--foreground) / 0.2); stroke-width: 0.5; }
+.character-limbs-fill { fill: hsl(var(--character-pink-hsl)); stroke: hsl(var(--foreground) / 0.2); stroke-width: 0.6; }
+.character-hands-fill { fill: hsl(var(--character-light-pink-hsl)); stroke: hsl(var(--foreground) / 0.2); stroke-width: 0.3; }
 
-.character-eye { fill: hsl(var(--pearl-white-hsl)); stroke: hsl(var(--foreground)); stroke-width: 0.6; transition: transform 0.3s ease-in-out; }
+/* Shoe colors */
+.character-shoe-main-fill { fill: hsl(var(--ruby-red-hsl)); stroke: hsl(var(--foreground) / 0.2); stroke-width: 0.3; } /* Red part of shoe */
+.character-shoe-accent-fill { stroke: hsl(var(--pearl-white-hsl)); } /* White accents/laces */
+
+
+.character-eye { fill: hsl(var(--pearl-white-hsl)); stroke: hsl(var(--foreground)); stroke-width: 0.5; transition: transform 0.3s ease-in-out; }
 .character-pupil { fill: hsl(var(--foreground)); transition: transform 0.2s ease-in-out, d 0.2s ease-in-out; }
-.character-eyebrow { fill: none; stroke: hsl(var(--foreground)); stroke-width: 1.8; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
-.character-mouth { fill: none; stroke: hsl(var(--foreground)); stroke-width: 1.2; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
+.character-eyebrow { fill: none; stroke: hsl(var(--foreground)); stroke-width: 1.5; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
+.character-mouth { fill: none; stroke: hsl(var(--foreground)); stroke-width: 1; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
 
-/* Ears are now part of the main SVG, animated via opacity and transform */
-.character-ear { fill: hsl(var(--primary) / 0.8); stroke: hsl(var(--secondary-foreground)/0.7); stroke-width: 0.5; transition: opacity 0.4s, transform 0.4s; }
+.character-ear { fill: hsl(var(--character-light-pink-hsl) / 0.8); stroke: hsl(var(--foreground)/0.5); stroke-width: 0.4; transition: opacity 0.4s, transform 0.4s; }
 .character-ears-group {
   opacity: 0;
-  transform: scale(0.3) translateY(8px) rotate(-15deg); /* Start smaller and slightly off */
-  transform-origin: 50% 100%; /* Base of ear for sprouting */
+  transform: scale(0.3) translateY(6px) rotate(-15deg); 
+  transform-origin: 50% 100%; 
 }
 
 
 /* Default hidden/initial states for animated parts */
-.character-hand-chin, .character-hands-presenting, .character-sparkles {
+.character-hand-chin, .character-hands-presenting, .character-sparkles, .character-prop {
   opacity: 0;
-  transform-origin: center center; /* Adjust if hands pivot from shoulder */
+  transform-origin: center center; 
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
 }
 
-.character-hand-chin {transform: translateY(15px) translateX(5px) scale(0.8) rotate(-10deg);} /* Scheming pose */
-.character-hands-presenting {transform: scale(0.8) rotate(-5deg);} /* Excitedly presenting */
+.character-hand-chin {transform: translateY(10px) translateX(3px) scale(0.8) rotate(-8deg);} 
+.character-hands-presenting {transform: scale(0.8) rotate(-3deg);} 
 
 
 /* IDLE State */
-.character-idle .ai-character-svg { animation: pulse-glow-character 2.5s infinite alternate, character-bob-dynamic 3.5s infinite ease-in-out; }
-.character-idle .character-pupil { animation: character-blink 5s infinite, character-pupil-idle-roam 7s infinite ease-in-out; }
+.character-idle .ai-character-svg { animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; }
+.character-idle .character-pupil { animation: character-blink 4.5s infinite, character-pupil-idle-roam 6.5s infinite ease-in-out; }
 .character-idle .character-eyebrow-left { transform: translateY(0px) rotate(0deg); }
 .character-idle .character-eyebrow-right { transform: translateY(0px) rotate(0deg); }
-.character-idle .character-mouth { d: path("M30 30 Q35 33 40 30");} /* Neutral-ish smile */
-.character-idle .character-ears-group { opacity: 0; transform: scale(0.3) translateY(8px) rotate(-15deg); }
+.character-idle .character-mouth { d: path("M30 30 Q35 32 40 30");} /* Neutral-ish */
+.character-idle .character-ears-group { opacity: 0; transform: scale(0.3) translateY(6px) rotate(-15deg); }
+/* Specific idle actions using classes */
+.character-idle.is-scratching-head .character-hand-left-main { animation: scratch-head-anim 0.5s ease-in-out forwards; }
+.character-idle.is-shrugging .character-arm-left, .character-idle.is-shrugging .character-arm-right { animation: shrug-shoulders-anim 0.4s ease-in-out forwards; }
+.character-idle.is-juggling .character-prop-ball { opacity: 1; animation: juggle-ball-anim 1.5s infinite ease-in-out; } /* Simplified */
+.character-idle.is-sleeping .character-prop-zzz { opacity: 1; animation: zzz-float 1s infinite alternate; }
+.character-idle.is-sleeping .ai-character-svg { transform: rotate(5deg) translateY(10px) scale(0.95); } /* Slumped pose */
+.character-idle.is-eating .character-hand-right-main { animation: eat-anim 0.8s ease-in-out infinite; } /* Hand to mouth */
 
-/* New IDLE Animations - can be triggered by JS adding temporary classes or direct style manipulation for one-offs */
-.character-idle.wink .character-eye-left { transform: scaleY(0.2) translateY(2px); }
-.character-idle.wink .character-eyebrow-left { transform: translateY(1px) rotate(-5deg); }
-.character-idle.tongue_out .character-mouth { d: path("M30 30 Q35 38 40 30 L 38 35 L 32 35 Z"); } /* Simple tongue */
+
+/* USER TYPING State (Listening/Sitting) */
+/* This state will now involve a specific pose and position */
+.character-typing .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate, character-bob-attentive-sitting 2.5s infinite ease-in-out; transform: scale(0.9); } /* Slightly smaller when sitting */
+.character-typing .character-ears-group { opacity: 1; transform: scale(1) translateY(0px) rotate(0deg); } 
+.character-typing .character-eye { transform: scale(1.15); } 
+.character-typing .character-pupil { animation: character-pupil-scan 3s infinite ease-in-out; }
+.character-typing .character-eyebrow-left { transform: translateY(-2.5px) rotate(-7deg); } 
+.character-typing .character-eyebrow-right { transform: translateY(-2.5px) rotate(4deg); } 
+.character-typing .character-mouth { d: path("M30 30.5 Q35 34 40 30.5"); } 
+/* Add sitting pose specific transforms here, e.g. for legs/body, or use a dedicated <g> for sitting pose */
+.character-typing .character-leg-left { transform: rotate(-45deg) translate(-5px, 5px); transform-origin: top left; }
+.character-typing .character-leg-right { transform: rotate(45deg) translate(5px, 5px); transform-origin: top right; }
+.character-typing .character-body-fill { transform: translateY(5px); }
 
 
-/* USER TYPING State (Listening) */
-.character-typing .ai-character-svg { animation: pulse-glow-character 2s infinite alternate, character-bob-attentive 2s infinite ease-in-out; }
-.character-typing .character-ears-group { opacity: 1; transform: scale(1) translateY(0px) rotate(0deg); } /* Ears sprout and are attentive */
-.character-typing .character-eye { transform: scale(1.2); } /* Wider eyes */
-.character-typing .character-pupil { animation: character-pupil-scan 3.5s infinite ease-in-out; }
-.character-typing .character-eyebrow-left { transform: translateY(-3px) rotate(-8deg); } /* Eyebrows up, curious */
-.character-typing .character-eyebrow-right { transform: translateY(-3px) rotate(5deg); } /* Asymmetrical curiosity */
-.character-typing .character-mouth { d: path("M30 31 Q35 35 40 31"); } /* Slightly open, curious mouth */
-
-/* THINKING TEXT State (Pondering/Scheming) */
-.character-thinking-text .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate; transform: rotate(-4deg) translateY(-4px); } /* Scheming tilt */
-.character-thinking-text .character-hand-chin { opacity: 1; transform: translateY(0) translateX(0) scale(1) rotate(0deg); } /* Hand to chin */
-.character-thinking-text .character-eyebrow-left { transform: translateY(-1px) rotate(8deg); } /* One eyebrow raised high */
-.character-thinking-text .character-eyebrow-right { transform: translateY(0.5px) rotate(-3deg); }
-.character-thinking-text .character-mouth { d: path("M32 32 Q35 30 38 32"); } /* "Hmm" or smirk mouth */
-.character-thinking-text .character-pupil { animation: character-think-pupils 3s infinite ease-in-out; }
-.character-thinking-text .character-ears-group { opacity: 0.5; transform: scale(0.8) rotate(10deg); } /* Slightly perked or folded */
+/* THINKING TEXT State (Pondering/Scheming - hand on chin) */
+.character-thinking-text .ai-character-svg { animation: pulse-glow-character 1.3s infinite alternate; transform: rotate(-3deg) translateY(-3px); } 
+.character-thinking-text .character-hand-chin { opacity: 1; transform: translateY(0) translateX(0) scale(1) rotate(0deg); } 
+.character-thinking-text .character-eyebrow-left { transform: translateY(-0.5px) rotate(7deg); } 
+.character-thinking-text .character-eyebrow-right { transform: translateY(0.5px) rotate(-2deg); }
+.character-thinking-text .character-mouth { d: path("M32 31 Q35 29 38 31"); } 
+.character-thinking-text .character-pupil { animation: character-think-pupils 2.8s infinite ease-in-out; }
+.character-thinking-text .character-ears-group { opacity: 0.4; transform: scale(0.75) rotate(8deg); } 
 
 /* THINKING IMAGE State */
-.character-thinking-image .ai-character-svg { animation: pulse-glow-character 1s infinite alternate, character-shake-intense 0.4s 3 ease-in-out; } /* Intense shake */
-.character-thinking-image .character-sparkles { opacity: 0.8; animation: character-sparkle-effect 0.8s infinite; }
-.character-thinking-image .character-eyebrow { transform: translateY(-4px) rotate(2deg); } /* Both up high, focused */
-.character-thinking-image .character-mouth { d: path("M28 30 Q35 38 42 30"); } /* "Ooh" mouth, concentrating hard */
-.character-thinking-image .character-ears-group { opacity: 0.2; transform: scale(0.5) translateY(5px); } /* Less visible, focusing */
+.character-thinking-image .ai-character-svg { animation: pulse-glow-character 0.9s infinite alternate, character-shake-intense 0.35s 3 ease-in-out; } 
+.character-thinking-image .character-sparkles { opacity: 0.7; animation: character-sparkle-effect 0.7s infinite; }
+.character-thinking-image .character-eyebrow { transform: translateY(-3.5px) rotate(1.5deg); } 
+.character-thinking-image .character-mouth { d: path("M28 29 Q35 37 42 29"); } 
+.character-thinking-image .character-ears-group { opacity: 0.15; transform: scale(0.45) translateY(4px); } 
 
 /* PRESENTING TEXT State (Cheeky delivery) */
-.character-presenting-text .ai-character-svg { animation: pulse-glow-character 2s infinite alternate; transform: scale(1.03) translateY(-3px) rotate(1deg); } /* Confident, slightly smug pose */
-.character-presenting-text .character-eyebrow-left { transform: translateY(-1px) rotate(-5deg); }
-.character-presenting-text .character-eyebrow-right { transform: translateY(0px) rotate(3deg); }
-.character-presenting-text .character-mouth { d: path("M28 31 Q35 36 42 31"); } /* Wide, knowing smile/smirk */
-.character-presenting-text .character-ears-group { opacity: 0; transform: scale(0.3) translateY(8px); }
+.character-presenting-text .ai-character-svg { animation: pulse-glow-character 1.9s infinite alternate; transform: scale(1.02) translateY(-2px) rotate(0.5deg); } 
+.character-presenting-text .character-eyebrow-left { transform: translateY(-0.5px) rotate(-4deg); }
+.character-presenting-text .character-eyebrow-right { transform: translateY(0px) rotate(2.5deg); }
+.character-presenting-text .character-mouth { d: path("M28 30 Q35 35 42 30"); } 
+.character-presenting-text .character-ears-group { opacity: 0; transform: scale(0.3) translateY(6px); }
 
 /* PRESENTING IMAGE State (Excitedly "Take it!") */
-.character-presenting-image .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate; transform: scale(1.08) rotate(2deg) translateY(-5px); } /* More expressive and forward */
-.character-presenting-image .character-hands-presenting { opacity: 1; transform: scale(1.1) rotate(0deg) translate(-2px, -3px); } /* Hands forward, larger */
-.character-presenting-image .character-sparkles { opacity: 1; animation: character-sparkle-effect 0.7s infinite; }
-.character-presenting-image .character-eyebrow { transform: translateY(-3px) rotate(-3deg); } /* Excited eyebrows */
-.character-presenting-image .character-mouth { d: path("M27 30 Q35 40 43 30"); } /* Wide excited smile/shout */
-.character-presenting-image .character-ears-group { opacity: 0.7; transform: scale(0.9) rotate(5deg); } /* Perked up in excitement */
+.character-presenting-image .ai-character-svg { animation: pulse-glow-character 1.7s infinite alternate; transform: scale(1.05) rotate(1.5deg) translateY(-4px); } 
+.character-presenting-image .character-hands-presenting { opacity: 1; transform: scale(1.05) rotate(0deg) translate(-1px, -2px); } 
+.character-presenting-image .character-sparkles { opacity: 0.9; animation: character-sparkle-effect 0.6s infinite; }
+.character-presenting-image .character-eyebrow { transform: translateY(-2.5px) rotate(-2.5deg); } 
+.character-presenting-image .character-mouth { d: path("M27 29 Q35 39 43 29"); } 
+.character-presenting-image .character-ears-group { opacity: 0.6; transform: scale(0.85) rotate(4deg); } 
 
 /* ERROR State */
-.character-error .ai-character-svg { transform: rotate(8deg) translateY(8px) scale(0.95); filter: grayscale(40%) brightness(0.85); animation: character-error-tremble 0.3s 4; } /* More slumped */
-.character-error .character-eyebrow-left { transform: translateY(2px) rotate(15deg); } /* Sadder eyebrows */
-.character-error .character-eyebrow-right { transform: translateY(1.5px) rotate(-12deg); }
-.character-error .character-mouth { d: path("M30 35 Q35 28 40 35"); } /* Sadder mouth */
-.character-error .character-eye { transform: scaleY(0.7) scaleX(0.9); }
-.character-error .character-ears-group { opacity: 0.4; transform: scale(0.7) rotate(-15deg) translateY(5px); } /* Droopier ears */
+.character-error .ai-character-svg { transform: rotate(7deg) translateY(7px) scale(0.96); filter: grayscale(35%) brightness(0.9); animation: character-error-tremble 0.28s 4; } 
+.character-error .character-eyebrow-left { transform: translateY(1.5px) rotate(13deg); } 
+.character-error .character-eyebrow-right { transform: translateY(1px) rotate(-10deg); }
+.character-error .character-mouth { d: path("M30 34 Q35 27 40 34"); } 
+.character-error .character-eye { transform: scaleY(0.75) scaleX(0.92); }
+.character-error .character-ears-group { opacity: 0.35; transform: scale(0.65) rotate(-13deg) translateY(4px); } 
 
 
 /* Keyframes for character parts */
-@keyframes character-bob-dynamic { /* More lively bob for humanoid */
+@keyframes character-bob-dynamic { 
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  30% { transform: translateY(-8px) rotate(1.5deg); }
-  70% { transform: translateY(-2px) rotate(-1deg); }
+  30% { transform: translateY(-6px) rotate(1deg); }
+  70% { transform: translateY(-1.5px) rotate(-0.5deg); }
 }
-@keyframes character-bob-attentive { 
+@keyframes character-bob-attentive-sitting { 
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-3px) rotate(0.8deg); } 
+  50% { transform: translateY(-2px) rotate(0.5deg); } 
 }
 @keyframes character-blink {
-  0%, 92%, 100% { transform: scaleY(1); }
-  96% { transform: scaleY(0.1); }
+  0%, 93%, 100% { transform: scaleY(1); }
+  96.5% { transform: scaleY(0.1); }
 }
 @keyframes character-pupil-scan { 
   0%, 100% { transform: translate(0px, 0px); }
-  20% { transform: translate(-1.5px, 0.5px); } /* Larger scan range */
-  40% { transform: translate(0px, -0.2px); }
-  60% { transform: translate(1.5px, 0.2px); }
-  80% { transform: translate(-0.5px, 0.5px); }
+  20% { transform: translate(-1.2px, 0.3px); } 
+  40% { transform: translate(0px, -0.1px); }
+  60% { transform: translate(1.2px, 0.1px); }
+  80% { transform: translate(-0.4px, 0.3px); }
 }
 @keyframes character-pupil-idle-roam { 
   0%, 100% { transform: translate(0px, 0px); }
-  15% { transform: translate(-0.8px, 0.3px); }
-  35% { transform: translate(0.5px, -0.4px); }
-  55% { transform: translate(0.8px, 0.2px); }
-  75% { transform: translate(-0.3px, 0.4px); }
-  90% { transform: translate(0.2px, -0.1px); }
+  15% { transform: translate(-0.7px, 0.2px); }
+  35% { transform: translate(0.4px, -0.3px); }
+  55% { transform: translate(0.7px, 0.1px); }
+  75% { transform: translate(-0.2px, 0.3px); }
+  90% { transform: translate(0.1px, -0.05px); }
 }
 
 @keyframes character-think-pupils { 
   0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-  25% { transform: translateY(-1.5px) translateX(-1px) rotate(-20deg); } /* More exaggerated thinking */
-  50% { transform: translateY(0.5px) translateX(0.5px) rotate(5deg); }
-  75% { transform: translateY(1px) translateX(1.5px) rotate(20deg); }
+  25% { transform: translateY(-1.2px) translateX(-0.8px) rotate(-15deg); } 
+  50% { transform: translateY(0.4px) translateX(0.4px) rotate(4deg); }
+  75% { transform: translateY(0.8px) translateX(1.2px) rotate(15deg); }
 }
 
-@keyframes character-shake-intense { /* More vigorous shake */
+@keyframes character-shake-intense { 
   0%, 100% { transform: translateX(0) rotate(0); }
-  25% { transform: translateX(-4px) rotate(-2deg); }
+  25% { transform: translateX(-3px) rotate(-1.5deg); }
   50% { transform: translateX(0) rotate(0); }
-  75% { transform: translateX(4px) rotate(2deg); }
+  75% { transform: translateX(3px) rotate(1.5deg); }
 }
 
 @keyframes character-error-tremble {
-  0% { transform: translate(0.8px, 0.8px) rotate(8deg); }
-  25% { transform: translate(-0.8px, -0.8px) rotate(7.5deg); }
-  50% { transform: translate(0.8px, -0.8px) rotate(8.5deg); }
-  75% { transform: translate(-0.8px, 0.8px) rotate(8deg); }
-  100% { transform: translate(0.8px, 0.8px) rotate(8deg); }
+  0% { transform: translate(0.6px, 0.6px) rotate(7deg); }
+  25% { transform: translate(-0.6px, -0.6px) rotate(6.5deg); }
+  50% { transform: translate(0.6px, -0.6px) rotate(7.5deg); }
+  75% { transform: translate(-0.6px, 0.6px) rotate(7deg); }
+  100% { transform: translate(0.6px, 0.6px) rotate(7deg); }
 }
 
 @keyframes character-sparkle-effect {
-  0% { opacity: 0; transform: scale(0.4) translateY(3px); }
-  50% { opacity: 1; transform: scale(1.2) translateY(-2px); } /* Larger sparkle */
-  100% { opacity: 0; transform: scale(0.4) translateY(-5px); }
+  0% { opacity: 0; transform: scale(0.35) translateY(2.5px); }
+  50% { opacity: 0.9; transform: scale(1.1) translateY(-1.5px); } 
+  100% { opacity: 0; transform: scale(0.35) translateY(-4px); }
 }
 .character-sparkles .sparkle-1 { animation-delay: 0s; }
-.character-sparkles .sparkle-2 { animation-delay: 0.15s; }
-.character-sparkles .sparkle-3 { animation-delay: 0.3s; }
+.character-sparkles .sparkle-2 { animation-delay: 0.12s; }
+.character-sparkles .sparkle-3 { animation-delay: 0.24s; }
 
 
 .character-container {
-  /* Transition for main position changes, separate from internal animation transforms */
-  transition: top 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), left 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease-in-out; 
+  transition: top 1.8s cubic-bezier(0.68, -0.45, 0.27, 1.45), left 1.8s cubic-bezier(0.68, -0.45, 0.27, 1.45), opacity 0.4s ease-in-out; 
 }
 
 /* Animation for image appearing in chat */
@@ -347,15 +364,74 @@ body {
   70% {
     opacity: 1;
     transform: scale(1.05);
-    filter: drop-shadow(0 0 15px hsl(var(--accent)/0.7));
+    filter: drop-shadow(0 0 12px hsl(var(--accent)/0.6));
   }
   100% {
     opacity: 1;
     transform: scale(1);
-    filter: drop-shadow(0 0 5px hsl(var(--accent)/0.3));
+    filter: drop-shadow(0 0 4px hsl(var(--accent)/0.25));
   }
 }
 
 .chat-image-container {
-  animation: image-fade-in-sparkle 0.7s ease-out forwards;
+  animation: image-fade-in-sparkle 0.65s ease-out forwards;
 }
+
+/* New idle animations */
+@keyframes scratch-head-anim {
+  0% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-25px) translateX(-10px) rotate(-30deg); } /* Move hand to head */
+  100% { transform: translateY(0) rotate(0); }
+}
+
+@keyframes shrug-shoulders-anim { /* Apply to arm groups */
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes zzz-float {
+  0% { transform: translateY(0px) translateX(1px); opacity: 1; }
+  100% { transform: translateY(-5px) translateX(-1px); opacity: 0.7; }
+}
+
+@keyframes eat-anim { /* Apply to hand holding food item */
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-15px) translateX(-5px) rotate(-20deg); } /* Hand to mouth area */
+}
+
+/* Placeholder for juggle_ball_anim, play_cards_anim, draw_air_anim - these would involve more complex SVG part movements or prop animations */
+.character-idle.is-juggling .character-hand-left-main,
+.character-idle.is-juggling .character-hand-right-main {
+  animation: juggle-hands-anim 0.5s infinite alternate ease-in-out;
+}
+@keyframes juggle-hands-anim {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Basic sitting pose for .character-typing */
+.character-typing .character-leg-left {
+  transform: rotate(-60deg) translate(-10px, 8px) scaleY(0.8);
+  transform-origin: 25px 65px; /* Approx hip joint */
+}
+.character-typing .character-leg-right {
+  transform: rotate(60deg) translate(10px, 8px) scaleY(0.8);
+  transform-origin: 45px 65px; /* Approx hip joint */
+}
+.character-typing .character-body-fill {
+  transform: translateY(8px) scale(0.95);
+}
+.character-typing .character-arm-left, .character-typing .character-arm-right {
+    transform: translateY(5px) rotate(-10deg);
+}
+.character-typing .character-hands-fill {
+    transform: translateY(5px);
+}
+.character-typing .ai-character-svg {
+   animation: pulse-glow-character 1.8s infinite alternate, character-bob-attentive-sitting 2.5s infinite ease-in-out;
+   /* Adjust overall transform if needed when sitting */
+   /* transform: translateY(10px) scale(0.9); */
+}
+
+
