@@ -158,7 +158,7 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
           </g>
 
           <path d="M 18 30 Q 35 25 52 30" className="character-unibrow" />
-          <path d="M 20 65 Q 35 80 50 65 Q 35 75 20 65 Z" className="character-mouth" />
+          <path d="M 20 60 Q 35 75 50 60 Q 35 65 20 60 Z" className="character-mouth" /> 
           {/* Teeth removed as per user request */}
           <ellipse cx="35" cy="70" rx="10" ry="4" className="character-tongue" />
         </g>
@@ -177,8 +177,8 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
             <path d="M58 90 C 75 100, 70 120, 55 105" className="pickle-limb pickle-hand pickle-limb-right" />
           </g>
            {/* Added feet elements */}
-          <ellipse cx="25" cy="140" rx="10" ry="5" className="pickle-foot pickle-foot-left" />
-          <ellipse cx="45" cy="140" rx="10" ry="5" className="pickle-foot pickle-foot-right" />
+          <ellipse cx="25" cy="140" rx="10" ry="5" className="pickle-foot pickle-foot-left" fill="hsl(var(--character-pickle-limb-hsl))" stroke="hsl(var(--character-mouth-dark-hsl) / 0.6)" strokeWidth="0.5" />
+          <ellipse cx="45" cy="140" rx="10" ry="5" className="pickle-foot pickle-foot-right" fill="hsl(var(--character-pickle-limb-hsl))" stroke="hsl(var(--character-mouth-dark-hsl) / 0.6)" strokeWidth="0.5"/>
         </g>
         
         <g className="character-sparkles">
@@ -191,8 +191,8 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
             <circle cx="50" cy="120" r="8" fill="hsl(var(--turquoise-hsl))" className="character-prop-ball"/>
             <text x="35" y="25" className="character-prop-zzz" fill="hsl(var(--muted-foreground))" fontSize="10" textAnchor="middle">Zzz</text>
             {/* Props for new animations */}
-            <rect x="10" y="50" width="15" height="20" rx="2" fill="hsl(var(--ruby-red-hsl))" class="character-prop-card"/>
-            <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" class="character-prop-paintbrush"/>
+            <rect x="10" y="50" width="15" height="20" rx="2" fill="hsl(var(--ruby-red-hsl))" className="character-prop-card"/>
+            <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" className="character-prop-paintbrush"/>
         </g>
       </svg>
     </div>
@@ -255,7 +255,7 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       return { chatRect, galleryRect };
     };
     
-    const isOverlapping = (x: number, y: number, rect: DOMRect | { top: number, bottom: number, left: number, right: number }) => {
+    const isOverlapping = (x: number, y: number, rect: { top: number, bottom: number, left: number, right: number }) => {
         // x, y are center of character. Check if character's bounding box overlaps rect.
         const charBox = {
             top: y - charHeightPx / 2,
@@ -273,21 +273,17 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     if (effectiveStatus === 'user_typing') {
       // User typing: Character sits beside the chat area
       const { chatRect } = calculateSafeZones();
-      const chatCenterY = chatRect.top + (chatRect.bottom - chatRect.top) / 2;
-      
-      // Try left of chat first
       let targetX = chatRect.left - charWidthPx / 2 - 20; // 20px buffer
-      let targetY = chatCenterY;
+      let targetY = chatRect.top + (chatRect.bottom - chatRect.top) / 2; // Vertically centered with chat
 
-      if (targetX < charWidthPx / 2) { // Not enough space on left, try right
-          targetX = chatRect.right + charWidthPx / 2 + 20;
+      if (targetX < charWidthPx / 2 || targetX > window.innerWidth - charWidthPx / 2) { 
+          targetX = chatRect.right + charWidthPx / 2 + 20; // Try right side
       }
-      if (targetX > window.innerWidth - charWidthPx / 2) { // Still no space, default to top left
-          targetX = charWidthPx;
+      if (targetX < charWidthPx / 2 || targetX > window.innerWidth - charWidthPx / 2) { // If still out of bounds, default to top-left-ish
+          targetX = charWidthPx / 2 + 30; 
       }
-       if (targetY < charHeightPx / 2 || targetY > window.innerHeight - charHeightPx / 2) {
-          targetY = Math.max(charHeightPx / 2 + 10, Math.min(window.innerHeight - charHeightPx/2 -10, chatCenterY));
-       }
+       
+      targetY = Math.max(charHeightPx / 2 + 10, Math.min(window.innerHeight - charHeightPx/2 -10, targetY));
 
 
       newLeftPercentStr = `${(targetX / window.innerWidth) * 100}%`;
@@ -296,22 +292,31 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     } else { // All other states: Roam freely but avoid overlap
       const { chatRect, galleryRect } = calculateSafeZones();
       let attempts = 0;
-      let randomX, randomY;
+      let randomXPx, randomYPx;
 
       do {
-        randomX = charWidthPx / 2 + Math.random() * (window.innerWidth - charWidthPx);
-        randomY = charHeightPx / 2 + Math.random() * (window.innerHeight - charHeightPx);
+        randomXPx = charWidthPx / 2 + Math.random() * (window.innerWidth - charWidthPx);
+        randomYPx = charHeightPx / 2 + Math.random() * (window.innerHeight - charHeightPx);
         attempts++;
-      } while ((isOverlapping(randomX, randomY, chatRect) || isOverlapping(randomX, randomY, galleryRect)) && attempts < 20);
+      } while ((isOverlapping(randomXPx, randomYPx, chatRect) || isOverlapping(randomXPx, randomYPx, galleryRect)) && attempts < 30);
       
-      // If still overlapping after attempts, try to place it in a known "safer" zone like top-left
-      if (attempts >= 20 && (isOverlapping(randomX, randomY, chatRect) || isOverlapping(randomX, randomY, galleryRect))) {
-        randomX = charWidthPx / 2 + 20; // buffer from edge
-        randomY = charHeightPx / 2 + 70; // buffer from top header (approx 64px)
+      if (attempts >= 30 && (isOverlapping(randomXPx, randomYPx, chatRect) || isOverlapping(randomXPx, randomYPx, galleryRect))) {
+        // Fallback: Try to position it above the chat area if space, otherwise default top-left
+        if (chatRect.top > charHeightPx + 20) {
+            randomXPx = chatRect.left + (chatRect.right - chatRect.left) / 2;
+            randomYPx = chatRect.top - charHeightPx / 2 - 10;
+        } else {
+            randomXPx = charWidthPx / 2 + 20; 
+            randomYPx = charHeightPx / 2 + 70; // Approx header height + buffer
+        }
       }
+      // Ensure character stays within viewport bounds after fallback
+      randomXPx = Math.max(charWidthPx / 2, Math.min(window.innerWidth - charWidthPx / 2, randomXPx));
+      randomYPx = Math.max(charHeightPx / 2, Math.min(window.innerHeight - charHeightPx / 2, randomYPx));
 
-      newLeftPercentStr = `${(randomX / window.innerWidth) * 100}%`;
-      newTopPercentStr = `${(randomY / window.innerHeight) * 100}%`;
+
+      newLeftPercentStr = `${(randomXPx / window.innerWidth) * 100}%`;
+      newTopPercentStr = `${(randomYPx / window.innerHeight) * 100}%`;
     }
     
     const moveCharacter = () => {
@@ -353,3 +358,4 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     </div>
   );
 }
+
