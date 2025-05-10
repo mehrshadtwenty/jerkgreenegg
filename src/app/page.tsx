@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 
 
 const LOCAL_STORAGE_GALLERY_KEY = 'tellMeIfAiGallery';
+const MAX_GALLERY_IMAGES = 10; // Reduced from 50 to prevent quota issues
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -63,17 +64,46 @@ export default function HomePage() {
 
   const saveToGallery = (newImage: GalleryImage) => {
     try {
-      const currentGallery = JSON.parse(localStorage.getItem(LOCAL_STORAGE_GALLERY_KEY) || '[]');
+      const currentGalleryString = localStorage.getItem(LOCAL_STORAGE_GALLERY_KEY);
+      let currentGallery: GalleryImage[] = [];
+      if (currentGalleryString) {
+        try {
+          currentGallery = JSON.parse(currentGalleryString);
+          // Ensure it's an array
+          if (!Array.isArray(currentGallery)) {
+            currentGallery = [];
+          }
+        } catch (parseError) {
+          console.error("Failed to parse gallery from localStorage, resetting:", parseError);
+          currentGallery = [];
+        }
+      }
+      
       currentGallery.unshift(newImage); 
-      localStorage.setItem(LOCAL_STORAGE_GALLERY_KEY, JSON.stringify(currentGallery.slice(0, 50))); 
-      setGalleryImages(currentGallery.slice(0, 50)); 
-    } catch (error) {
+      const updatedGallery = currentGallery.slice(0, MAX_GALLERY_IMAGES); 
+      
+      localStorage.setItem(LOCAL_STORAGE_GALLERY_KEY, JSON.stringify(updatedGallery));
+      setGalleryImages(updatedGallery); 
+
+    } catch (error: any) { // Added ': any' to check error.name and error.code
       console.error("Failed to save to gallery in localStorage:", error);
-      toast({
-        title: "Storage Full of Crap Error",
-        description: "Couldn't save image to local gallery. Probably full of your other terrible ideas.",
-        variant: "destructive",
-      });
+      // Check for QuotaExceededError
+      if (error && (error.name === 'QuotaExceededError' || 
+                    error.code === 22 || // For older browsers
+                    (error.message && typeof error.message === 'string' && error.message.toLowerCase().includes('quota'))
+                   )) {
+        toast({
+          title: "Gallery Full, You Hoarding Moron!",
+          description: `Your pathetic local gallery is crammed with ${MAX_GALLERY_IMAGES} 'masterpieces'. No more room for your crap. Delete some or live with it.`,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Storage Full of Crap Error",
+          description: "Couldn't save image to local gallery. Probably full of your other terrible ideas, or you broke something else, genius.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
