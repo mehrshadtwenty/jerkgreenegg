@@ -114,7 +114,6 @@ export default function HomePage() {
 
     let imageErrorOccurred = null;
     try {
-      // Use the AI's actual answer text as the context for image generation.
       const imageContext = lastAiMessage.text; 
       const imageResult = await generateImageFromQuestion({ contextForImage: imageContext });
       
@@ -268,3 +267,4 @@ export default function HomePage() {
     </div>
   );
 }
+
