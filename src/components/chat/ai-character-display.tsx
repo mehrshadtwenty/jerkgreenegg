@@ -10,22 +10,24 @@ interface AiCharacterDisplayProps {
   isUserTyping: boolean;
 }
 
+// Status mapping for Pickle Rick
 const statusConfig: Record<AiStatus | 'user_typing', { characterAnimationClass: string }> = {
-  idle: { characterAnimationClass: 'character-idle' },
-  user_typing: { characterAnimationClass: 'character-typing' }, // Listening, will include sitting/attentive pose
-  thinking_text: { characterAnimationClass: 'character-thinking-text' }, // Scheming/Pondering with hand on chin
-  thinking_image: { characterAnimationClass: 'character-thinking-image' },
-  presenting_text: { characterAnimationClass: 'character-presenting-text' },
-  presenting_image: { characterAnimationClass: 'character-presenting-image' }, // Excitedly presenting
-  error: { characterAnimationClass: 'character-error' },
+  idle: { characterAnimationClass: 'character-idle pickle-float-bob' }, // Pickle Rick floats/bobs
+  user_typing: { characterAnimationClass: 'character-user_typing' }, // Attentive Pickle Rick, antenna animation
+  thinking_text: { characterAnimationClass: 'character-thinking_text' }, // Pickle Rick pondering
+  thinking_image: { characterAnimationClass: 'character-thinking_image' }, // Pickle Rick concentrating for image
+  presenting_text: { characterAnimationClass: 'character-presenting_text' }, // Smug Pickle Rick
+  presenting_image: { characterAnimationClass: 'character-presenting_image' }, // Excited Pickle Rick with image
+  error: { characterAnimationClass: 'character-error' }, // Glitching Pickle Rick
 };
 
-// Expanded Idle Animations
+// Expanded Idle Animations for Pickle Rick
 const idleAnimationTypes = [
-  'float_bob', 'jump_playful', 'dance_energetic', 'wink_cheeky', 'tongue_out_playful', 'dramatic_pose',
-  'disappear_reappear_sparkles', 'look_around_dynamic', 'quick_spin_showoff', 'happy_bounce_big', 
-  'scratch_head', 'shrug_confused', 'juggle_sparkles', 'play_cards_simple', 'draw_air', 'pretend_sleep', 'pretend_eat',
-  'wave_hello'
+  'float_bob', 'jump_playful', 'quick_spin_showoff', 'wink_cheeky', 'tongue_out_playful',
+  'disappear_reappear_sparkles', 'look_around_dynamic', 'shrug_confused', 
+  'pretend_sleep', // Zzz
+  'laser_eyes_briefly', // A quick flash from eyes
+  'maniacal_laugh_pose' // A specific pose suggesting laughter
 ];
 
 
@@ -40,69 +42,57 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
 
       const randType = idleAnimationTypes[Math.floor(Math.random() * idleAnimationTypes.length)];
       let duration = 500; 
-      let nextDelay = 3000 + Math.random() * 4000; 
+      let nextDelay = 4000 + Math.random() * 5000; 
 
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
       
-      // Default reset to base pose
-      const resetStyle = { transform: 'translateY(0) rotate(0deg) scale(1) rotateX(0deg) rotateY(0deg) scaleX(1) translateX(0)', opacity: 1, transition: 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out'};
-
+      const resetStyle = { transform: 'translateY(0) rotate(0deg) scale(1)', opacity: 1, transition: 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out'};
 
       switch(randType) {
         case 'jump_playful':
-          setRandomAnimationStyle({ transform: 'translateY(-30px) scale(1.1) rotate(3deg)', transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' });
-          duration = 200;
+          setRandomAnimationStyle({ transform: 'translateY(-20px) scale(1.05) rotate(2deg)', transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)' });
+          duration = 150;
           break;
-        case 'dance_energetic':
-          setRandomAnimationStyle({ transform: 'translateX(8px) rotate(6deg)', transition: 'transform 0.15s ease-in-out' });
-          resetTimeoutRef.current = setTimeout(() => {
-            setRandomAnimationStyle({ transform: 'translateX(-8px) rotate(-6deg)', transition: 'transform 0.15s ease-in-out' });
-            setTimeout(() => { setRandomAnimationStyle(resetStyle); }, 150);
-          }, 150);
-          duration = 450;
+        case 'quick_spin_showoff':
+          setRandomAnimationStyle({ transform: 'rotate(360deg) scale(1.1)', transition: 'transform 0.4s ease-out' });
+          duration = 400;
           break;
         case 'disappear_reappear_sparkles':
-          setRandomAnimationStyle({ opacity: 0, transform: 'scale(0.05) rotate(360deg)', transition: 'opacity 0.4s ease-in, transform 0.5s ease-in-out' });
-          duration = 500; 
+          setRandomAnimationStyle({ opacity: 0, transform: 'scale(0.1) rotate(180deg)', transition: 'opacity 0.3s ease-in, transform 0.4s ease-in-out' });
+          duration = 400; 
           resetTimeoutRef.current = setTimeout(() => { 
-            setRandomAnimationStyle({ opacity: 1, transform: 'scale(1) rotate(0deg)', transition: 'opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' });
-          }, 600); 
-          nextDelay = 3500; 
+            setRandomAnimationStyle({ opacity: 1, transform: 'scale(1) rotate(0deg)', transition: 'opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' });
+          }, 500); 
+          nextDelay = 4000; 
           break;
-        case 'look_around_dynamic':
-           setRandomAnimationStyle({ transform: 'translateX(10px) rotateY(20deg) rotateX(3deg)', transition: 'transform 0.3s ease-in-out'});
+        case 'look_around_dynamic': // Achieved by pupil and unibrow animation primarily
+           setRandomAnimationStyle({ transform: 'rotateY(15deg)', transition: 'transform 0.2s ease-in-out'});
            resetTimeoutRef.current = setTimeout(() => {
-             setRandomAnimationStyle({ transform: 'translateX(-10px) rotateY(-20deg) rotateX(-3deg)', transition: 'transform 0.3s ease-in-out'});
-             setTimeout(() => { setRandomAnimationStyle(resetStyle); }, 300);
-           }, 400);
-           duration = 1000;
+             setRandomAnimationStyle({ transform: 'rotateY(-15deg)', transition: 'transform 0.2s ease-in-out'});
+             setTimeout(() => { setRandomAnimationStyle(resetStyle); }, 200);
+           }, 300);
+           duration = 700;
           break;
-        case 'scratch_head':
-          // This will be handled by adding/removing a class or direct CSS manipulation for hand movement
-          // For now, a simple head tilt implies it.
-          setRandomAnimationStyle({ transform: 'rotate(5deg) translateY(-5px)', transition: 'transform 0.2s ease-in-out' });
-          duration = 200;
-          // Later, add a class like `.character-is-scratching-head` which animates a hand to the head
+        case 'shrug_confused': // Body tilt and unibrow animation
+          setRandomAnimationStyle({ transform: 'translateY(-3px) rotate(4deg)', transition: 'transform 0.15s ease-out' });
+          duration = 150;
           break;
-        case 'shrug_confused':
-          setRandomAnimationStyle({ transform: 'translateY(-5px) scale(1.02)', transition: 'transform 0.2s ease-out' });
-          // This would also involve eyebrow and mouth changes via CSS classes if more detailed
-          duration = 200;
+        case 'laser_eyes_briefly': // Placeholder: could be a sparkle effect on eyes or a class change
+          setRandomAnimationStyle({ filter: 'brightness(1.5) drop-shadow(0 0 3px hsl(var(--ruby-red-hsl)))' , transition: 'filter 0.1s ease-in-out'});
+          duration = 100;
           break;
-         // Other new animations like juggle, play_cards, draw_air, pretend_sleep, pretend_eat, wave_hello
-         // would follow similar patterns, potentially adding temporary classes for complex SVG part movements
-        case 'wave_hello':
-          // Placeholder for a wave animation, e.g., slight tilt and a class to animate one hand
-          setRandomAnimationStyle({ transform: 'rotate(-5deg) scaleX(0.98)', transition: 'transform 0.2s ease-in-out' });
+        case 'maniacal_laugh_pose':
+          setRandomAnimationStyle({ transform: 'rotate(-5deg) scale(1.02) translateY(-3px)', transition: 'transform 0.2s ease-out' });
+          // This would pair with mouth and unibrow changes in CSS
           duration = 200;
           break;
-        default: 
-          setRandomAnimationStyle({ transform: `translateY(${Math.random() * -10}px) rotate(${Math.random() * 4 - 2}deg)`, transition: 'transform 0.7s ease-in-out' });
-          duration = 700;
+        default: // Default float_bob handled by class, this adds subtle random tweaks
+          setRandomAnimationStyle({ transform: `translateY(${Math.random() * -5}px) rotate(${Math.random() * 3 - 1.5}deg)`, transition: 'transform 0.8s ease-in-out' });
+          duration = 800;
           break;
       }
       
-      if (randType !== 'disappear_reappear_sparkles' && randType !== 'dance_energetic' && randType !== 'look_around_dynamic') {
+      if (randType !== 'disappear_reappear_sparkles' && randType !== 'look_around_dynamic') {
         if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
         resetTimeoutRef.current = setTimeout(() => {
           setRandomAnimationStyle(resetStyle);
@@ -118,7 +108,7 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
     } else {
       if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current);
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
-      setRandomAnimationStyle({ transform: 'translateY(0) rotate(0deg) scale(1) rotateX(0deg) rotateY(0deg) scaleX(1) translateX(0)', opacity: 1, transition: 'transform 0.2s ease-out, opacity 0.2s ease-out' });
+      setRandomAnimationStyle({ transform: 'translateY(0) rotate(0deg) scale(1)', opacity: 1, transition: 'transform 0.2s ease-out, opacity 0.2s ease-out' });
     }
 
     return () => {
@@ -127,87 +117,76 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
     };
   }, [animationClass]);
 
-  // Slightly reduced size: e.g. w-44 h-60 sm:w-48 sm:h-68 md:w-56 md:h-78
+  // Slightly smaller Pickle Rick: w-28 h-40 sm:w-32 sm:h-44 md:w-36 md:h-48
+  // ViewBox adjusted for a typical pickle shape. Approx 50 wide, 80 tall.
   return (
-     <div className={cn("w-44 h-60 sm:w-48 sm:h-68 md:w-56 md:h-78 character-container", animationClass)} style={randomAnimationStyle}>
-      <svg viewBox="0 0 70 90" className="w-full h-full ai-character-svg"> {/* Adjusted viewBox for feet */}
-        <ellipse cx="35" cy="87" rx="20" ry="3.5" fill="hsla(var(--background), 0.25)" />
-
-        {/* Head */}
-        <circle cx="35" cy="22" r="14" className="character-head-fill" />
-
-        {/* Torso */}
-        <ellipse cx="35" cy="50" rx="16" ry="20" className="character-body-fill" />
+     <div className={cn("w-28 h-40 sm:w-32 sm:h-44 md:w-36 md:h-48 character-container", animationClass)} style={randomAnimationStyle}>
+      <svg viewBox="0 0 50 80" className="w-full h-full ai-character-svg">
+        <defs>
+          {/* Potential gradients for pickle body if desired */}
+        </defs>
         
-        {/* Ears (for sprouting) */}
-        <g className="character-ears-group">
-            <path d="M19 18 Q16 10, 21 2 Q23 10, 19 18Z" className="character-ear character-ear-left" transform="translate(-3 -2) rotate(-25 20 10)" />
-            <path d="M51 18 Q54 10, 49 2 Q47 10, 51 18Z" className="character-ear character-ear-right" transform="translate(3 -2) rotate(25 50 10)" />
-        </g>
+        {/* Shadow Ellipse */}
+        <ellipse cx="25" cy="78" rx="15" ry="2.5" fill="hsla(var(--background), 0.2)" />
+
+        {/* Main Pickle Body */}
+        <ellipse cx="25" cy="40" rx="18" ry="35" className="character-body-pickle" />
+        {/* Some pickle bumps/texture (optional) */}
+        <circle cx="15" cy="30" r="3" fill="hsl(var(--character-pickle-light-green-hsl))" opacity="0.5"/>
+        <circle cx="33" cy="50" r="2.5" fill="hsl(var(--character-pickle-light-green-hsl))" opacity="0.5"/>
+        <circle cx="20" cy="60" r="2" fill="hsl(var(--character-pickle-light-green-hsl))" opacity="0.5"/>
+
+        {/* Rick's Face */}
+        {/* Antenna for user_typing state */}
+        <path d="M25 5 Q23 2 25 0 Q27 2 25 5" className="character-antenna" />
 
         {/* Eyes */}
-        <g className="character-eyes-group">
-          <ellipse cx="29" cy="22" rx="4" ry="5" className="character-eye character-eye-left" />
-          <ellipse cx="41" cy="22" rx="4" ry="5" className="character-eye character-eye-right" />
-          <circle cx="29" cy="23" r="1.8" className="character-pupil character-pupil-left" />
-          <circle cx="41" cy="23" r="1.8" className="character-pupil character-pupil-right" />
+        <g className="character-eyes-group" transform="translate(0, -5)">
+          <circle cx="18" cy="25" r="6" className="character-eye-white character-eye-left" />
+          <circle cx="32" cy="25" r="6" className="character-eye-white character-eye-right" />
+          <circle cx="18" cy="25" r="2.5" className="character-pupil character-pupil-left" />
+          <circle cx="32" cy="25" r="2.5" className="character-pupil character-pupil-right" />
         </g>
 
-        {/* Eyebrows */}
-        <path d="M24 15 Q29 13 33 15" className="character-eyebrow character-eyebrow-left" />
-        <path d="M37 15 Q41 13 46 15" className="character-eyebrow character-eyebrow-right" />
+        {/* Unibrow - default path, controlled by CSS classes */}
+        <path d="M 15 15 Q 25 12 35 15" className="character-unibrow" />
 
-        {/* Mouth */}
-        <path d="M30 30 Q35 33 40 30" className="character-mouth" />
+        {/* Mouth - default path, controlled by CSS classes */}
+        {/* Example: path("M 18 35 Q 25 38 32 35") */}
+        <path d="M 18 35 Q 25 38 32 35" className="character-mouth" />
+        {/* Tongue (optional, can be shown with certain mouth shapes) */}
+        {/* <path d="M 22 36 Q 25 37 28 36" className="character-tongue" opacity="0" /> */}
 
-        {/* Arms - simplified path for now, can be more complex */}
-        <path d="M19 42 Q15 50 20 65" className="character-limbs-fill character-arm-left" strokeWidth="7" strokeLinecap="round" fill="none" /> 
-        <path d="M51 42 Q55 50 50 65" className="character-limbs-fill character-arm-right" strokeWidth="7" strokeLinecap="round" fill="none" />
 
-        {/* Hands - simple circles for now, can be detailed */}
-        <circle cx="18" cy="68" r="5" className="character-hands-fill character-hand-left-main" />
-        <circle cx="52" cy="68" r="5" className="character-hands-fill character-hand-right-main" />
-        
-        {/* Legs */}
-        <rect x="22" y="65" width="8" height="18" rx="4" className="character-limbs-fill character-leg-left" />
-        <rect x="40" y="65" width="8" height="18" rx="4" className="character-limbs-fill character-leg-right" />
-
-        {/* Feet in Shoes */}
-        <g className="character-foot" transform="translate(22, 80)"> {/* Left Foot */}
-          <ellipse cx="4" cy="3" rx="6" ry="3.5" className="character-shoe-main-fill" /> {/* Red part */}
-          <path d="M0 3 Q4 -1 8 3" className="character-shoe-accent-fill" strokeWidth="1.5" fill="none" /> {/* White lace/top */}
-        </g>
-        <g className="character-foot" transform="translate(40, 80)"> {/* Right Foot */}
-           <ellipse cx="4" cy="3" rx="6" ry="3.5" className="character-shoe-main-fill" /> {/* Red part */}
-           <path d="M0 3 Q4 -1 8 3" className="character-shoe-accent-fill" strokeWidth="1.5" fill="none" /> {/* White lace/top */}
-        </g>
-
-        {/* Hand for 'thinking' - initially hidden */}
-        <g className="character-hand-chin">
-             <circle cx="45" cy="35" r="5" className="character-hands-fill"/>
-        </g>
-        {/* Hands for 'presenting' - initially hidden */}
-        <g className="character-hands-presenting">
-            <circle cx="12" cy="60" r="6" className="character-hands-fill" />
-            <circle cx="58" cy="60" r="6" className="character-hands-fill" />
+        {/* Simplified Limbs (Arms) - for hand-on-chin and presenting */}
+        {/* These groups are toggled by opacity/transform in CSS */}
+        <g className="character-limbs-group">
+            {/* Left Arm (for chin) - part of character-hand-chin-group */}
+            <g className="character-hand-chin-group">
+                 <path d="M10 45 Q 5 50 12 55" className="pickle-arm" transform="rotate(-10 10 45)" />
+                 <circle cx="12" cy="56" r="3" className="pickle-hand" />
+            </g>
+            {/* Both Arms (for presenting) - part of character-hands-presenting-group */}
+            <g className="character-hands-presenting-group">
+                <path d="M10 45 Q0 55 10 65" className="pickle-arm" transform="rotate(-30 10 45)" />
+                <circle cx="9" cy="66" r="4" className="pickle-hand" />
+                <path d="M40 45 Q50 55 40 65" className="pickle-arm" transform="rotate(30 40 45)" />
+                <circle cx="41" cy="66" r="4" className="pickle-hand" />
+            </g>
         </g>
         
-        {/* Sparkles for effects */}
+        {/* Sparkles for effects - remains similar */}
         <g className="character-sparkles">
-            <circle cx="35" cy="5" r="2" fill="hsl(var(--accent))" className="sparkle-1"/>
-            <circle cx="15" cy="10" r="1.5" fill="hsl(var(--golden-yellow-hsl))" className="sparkle-2"/>
-            <circle cx="55" cy="12" r="1.8" fill="hsl(var(--neon-pink-hsl))" className="sparkle-3"/>
+            <circle cx="25" cy="10" r="1.5" fill="hsl(var(--accent))" className="sparkle-1"/>
+            <circle cx="10" cy="15" r="1" fill="hsl(var(--golden-yellow-hsl))" className="sparkle-2"/>
+            <circle cx="40" cy="12" r="1.2" fill="hsl(var(--neon-pink-hsl))" className="sparkle-3"/>
         </g>
 
-        {/* Elements for new animations - initially hidden or styled */}
-        <g className="character-prop character-prop-ball" style={{opacity: 0}}>
-            <circle cx="50" cy="60" r="4" fill="hsl(var(--turquoise-hsl))"/>
+        {/* Props for idle animations - simplified */}
+        <g className="character-prop-group">
+            <circle cx="35" cy="65" r="3" fill="hsl(var(--turquoise-hsl))" className="character-prop-ball" style={{opacity:0}}/>
+            <text x="25" y="15" className="character-prop-zzz" fill="hsl(var(--muted-foreground))" fontSize="6" textAnchor="middle" style={{opacity: 0}}>Zzz</text>
         </g>
-        <g className="character-prop character-prop-cards" style={{opacity: 0}}>
-            <rect x="10" y="55" width="5" height="8" fill="hsl(var(--pearl-white-hsl))" stroke="hsl(var(--foreground))" strokeWidth="0.5" transform="rotate(-15 12.5 59)"/>
-            <rect x="15" y="56" width="5" height="8" fill="hsl(var(--pearl-white-hsl))" stroke="hsl(var(--foreground))" strokeWidth="0.5" transform="rotate(5 17.5 60)"/>
-        </g>
-         <text x="35" y="15" className="character-prop character-prop-zzz" fill="hsl(var(--muted-foreground))" fontSize="8" textAnchor="middle" style={{opacity: 0}}>Zzz</text>
       </svg>
     </div>
   );
@@ -217,7 +196,7 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
   const effectiveStatus = isUserTyping && (status === 'idle' || status === 'presenting_text' || status === 'presenting_image' || status === 'error') ? 'user_typing' : status;
   const currentVisuals = statusConfig[effectiveStatus] || statusConfig.idle;
   const [isMounted, setIsMounted] = useState(false);
-  const [position, setPosition] = useState({ top: '50%', left: '50%', currentAnimationClass: currentVisuals.characterAnimationClass });
+  const [position, setPosition] = useState({ top: '10%', left: '10%', currentAnimationClass: currentVisuals.characterAnimationClass });
 
   useEffect(() => {
     setIsMounted(true);
@@ -226,38 +205,36 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
   useEffect(() => {
     if (!isMounted) return;
 
-    let newTopPercentStr = '50%';
-    let newLeftPercentStr = '50%';
+    let newTopPercentStr = '10%'; // Default to top-leftish area
+    let newLeftPercentStr = '10%';
 
     if (effectiveStatus === 'user_typing') {
-      // When user is typing, move character to a "listening post" e.g. bottom-left, slightly off screen edge
+      // Pickle Rick near chat input area but not overlapping - e.g., bottom-left of viewport, or side of chat
       newTopPercentStr = '75%'; 
-      newLeftPercentStr = '15%';
+      newLeftPercentStr = '10%'; // Keep to the left side, lower down
     } else if (effectiveStatus === 'thinking_text' || effectiveStatus === 'thinking_image') {
-      // During active AI thinking, might move to a slightly less obstructive, "focus" area
-      const thinkingLeft = Math.random() < 0.5 ? (20 + Math.random() * 10) : (70 + Math.random() * 10);
-      const thinkingTop = 20 + Math.random() * 15;
+      // Pickle Rick can move to a "focus" area, still avoiding center
+      const thinkingLeft = Math.random() < 0.5 ? (10 + Math.random() * 15) : (75 + Math.random() * 15); // Far left or far right
+      const thinkingTop = 15 + Math.random() * 20; // Upper part of screen
       newTopPercentStr = `${thinkingTop}%`;
       newLeftPercentStr = `${thinkingLeft}%`;
-    } else if (effectiveStatus === 'idle' || effectiveStatus === 'presenting_text' || effectiveStatus === 'presenting_image') {
-      // Free-roaming for idle and presenting states
-      // Ensure it doesn't overlap critical UI elements.
-      // This needs a more robust check (e.g., against chat area bounding box if possible)
-      // For now, a simple boundary check:
-      let randomTop = 10 + Math.random() * 80; // 10% to 90% from top
-      let randomLeft = 10 + Math.random() * 80; // 10% to 90% from left
+    } else if (effectiveStatus === 'idle' || effectiveStatus === 'presenting_text' || effectiveStatus === 'presenting_image' || effectiveStatus === 'error') {
+      // Free-roaming Pickle Rick, avoiding chat (center) and gallery (bottom center/full width)
+      let randomTop, randomLeft;
+      const sideOrTopRoll = Math.random();
 
-      // Try to avoid bottom center (approx where chat input might be)
-      if (randomTop > 65 && randomLeft > 30 && randomLeft < 70) {
-        randomTop = 30 + Math.random() * 20; // Keep it higher
+      if (sideOrTopRoll < 0.4) { // Top strip (wider to allow more movement here)
+        randomTop = 5 + Math.random() * 10;  // 5% to 15% from top (above chat)
+        randomLeft = 5 + Math.random() * 90; // Can roam almost full width here
+      } else if (sideOrTopRoll < 0.7) { // Left gutter
+        randomTop = 15 + Math.random() * 45; // 15% to 60% from top (main area, left of chat)
+        randomLeft = 5 + Math.random() * 15;  // 5% to 20% from left
+      } else { // Right gutter
+        randomTop = 15 + Math.random() * 45; // 15% to 60% from top (main area, right of chat)
+        randomLeft = 80 + Math.random() * 15; // 80% to 95% from left
       }
-      // Try to avoid far right lower quadrant (approx where gallery might be)
-      if (randomTop > 50 && randomLeft > 60) {
-          randomLeft = 20 + Math.random() * 30; // Move it more to the left or center
-      }
-
-      newTopPercentStr = `${randomTop}%`;
-      newLeftPercentStr = `${randomLeft}%`;
+      newTopPercentStr = `${Math.max(5, Math.min(85, randomTop))}%`; // Clamp values
+      newLeftPercentStr = `${Math.max(5, Math.min(95, randomLeft))}%`;
     }
     
     const moveCharacter = () => {
@@ -268,14 +245,14 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       }));
     };
     
-    const movementDelay = (effectiveStatus === 'idle' || effectiveStatus === 'presenting_text' || effectiveStatus === 'presenting_image') ? (5000 + Math.random() * 5000) : 500;
-    const intervalId = setTimeout(moveCharacter, movementDelay);
+    // Pickle Rick moves a bit more erratically/frequently
+    const movementDelay = (effectiveStatus === 'idle' || effectiveStatus === 'presenting_text' || effectiveStatus === 'presenting_image') ? (3500 + Math.random() * 3000) : 400;
+    const timeoutId = setTimeout(moveCharacter, movementDelay); // Changed from interval to timeout for single move then re-eval
     
-    // Update animation class based on effectiveStatus
     setPosition(prev => ({...prev, currentAnimationClass: currentVisuals.characterAnimationClass}));
 
     return () => {
-      clearTimeout(intervalId);
+      clearTimeout(timeoutId);
     };
   }, [effectiveStatus, isMounted, currentVisuals.characterAnimationClass]);
 
@@ -286,15 +263,15 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
 
   return (
     <div 
-      className="fixed z-0 transition-all duration-[2000ms] sm:duration-[2500ms] ease-out pointer-events-none" // z-0 to be behind chat/gallery
+      className="fixed z-0 pointer-events-none" 
       style={{ 
         top: position.top, 
         left: position.left, 
         transform: 'translate(-50%, -50%)',
+        // transition properties are now on .character-container in CSS for smoother application
       }}
     >
-      <AiCharacterSVG animationClass={position.currentAnimationClass} />
+      <AiCharacterSVG animationClass={cn(position.currentAnimationClass, effectiveStatus === 'idle' ? 'pickle-float-bob' : '')} />
     </div>
   );
 }
-
