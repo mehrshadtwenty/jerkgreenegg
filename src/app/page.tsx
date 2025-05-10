@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
-import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, ChevronDown, ChevronUp } from 'lucide-react'; // MessageSquareDashed removed
+import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, ChevronDown, ChevronUp } from 'lucide-react';
 import { ImageCard } from '@/components/gallery/image-card';
 import { cn } from '@/lib/utils';
 
@@ -180,11 +180,18 @@ export default function HomePage() {
   };
 
   const handleStopImageGeneration = () => {
+    // This function might still be called by other parts of the app or future error handling.
+    // For now, it will simply reset loading states and AI status.
+    // If there were specific ongoing Genkit calls for image generation to cancel,
+    // that logic would go here (e.g., using an AbortController if the flow supports it).
+    // However, Genkit flows as defined are typically fire-and-forget promises.
+    
     setIsImageGenerating(false);
     setIsLoading(false); 
     setAiStatus('idle');
 
-    setMessages(prev => prev.map(msg =>
+    // Reset isLoadingImage on any message that might have been stuck in that state
+    setMessages(prev => prev.map(msg => 
       msg.isLoadingImage ? { ...msg, isLoadingImage: false } : msg
     ));
 
@@ -240,7 +247,6 @@ export default function HomePage() {
           <ScrollArea className="flex-grow p-4 space-y-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
-                {/* MessageSquareDashed icon removed */}
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
                 <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death.</p>
               </div>
@@ -302,13 +308,13 @@ export default function HomePage() {
               {isImageGenerating && (
                 <div>
                   <span
-                    onClick={handleStopImageGeneration}
+                    onClick={handleStopImageGeneration} // Still allow manual stop if needed
                     className="text-link-style-stop"
                     role="button"
                     tabIndex={0}
                   >
                     <StopCircle className="inline-block h-4 w-4 mr-1" />
-                    Stop! (My genius is too much for your feeble mind anyway)
+                    Stop
                   </span>
                 </div>
               )}

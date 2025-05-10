@@ -212,7 +212,7 @@ body {
   transition: d 0.3s ease-in-out; 
 }
 .character-tongue { fill: hsl(var(--character-tongue-hsl)); transition: opacity 0.2s; }
-.character-teeth { fill: hsl(var(--character-teeth-hsl)); }
+.character-teeth { fill: hsl(var(--character-teeth-hsl)); } /* Kept for potential re-use if requested */
 
 .pickle-limb {
   fill: hsl(var(--character-pickle-limb-hsl));
@@ -229,7 +229,7 @@ body {
 .character-hand-chin-group .pickle-limb,
 .character-hands-presenting-group .pickle-limb,
 .character-sparkles, 
-.character-prop-group > * {
+.character-prop-group > * { /* Props like ball, zzz, card, paintbrush will be hidden by default */
   opacity: 0;
   transform-origin: center center; 
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
@@ -240,16 +240,18 @@ body {
 .character-hands-presenting-group .pickle-limb-right { transform: translateX(5px) scale(0.8) rotate(-15deg); }
 
 
-/* IDLE State - Pickle Rick */
+/* IDLE State - Pickle Rick (Base animations) */
 .character-idle .ai-character-svg { animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; }
 .character-idle .character-pupil { animation: character-blink 4.5s infinite, character-pupil-idle-roam 6.5s infinite ease-in-out; }
 .character-idle .character-unibrow { d: path("M 18 30 Q 35 25 52 30"); transform: translateY(0); } /* Neutral unibrow */
 .character-idle .character-mouth { d: path("M 20 60 Q 35 75 50 60 Q 35 65 20 60 Z"); } /* Neutral mouth (grin) */
 .character-idle .character-tongue { opacity: 0; }
-/* Placeholder for idle specific animations like scratching head, etc. */
-.character-idle.is-sleeping .character-prop-zzz { opacity: 1; animation: zzz-float 1s infinite alternate; }
-.character-idle.is-sleeping .ai-character-svg { transform: rotate(10deg) translateY(5px) scale(0.95); } /* Slumped Pickle */
-.character-idle.is-juggling .character-prop-ball { opacity: 1; animation: juggle-ball-anim 1.5s infinite ease-in-out; }
+
+/* Removed specific idle sub-animation styles like .is-sleeping, .is-juggling etc. */
+/* .character-idle.is-sleeping .character-prop-zzz { opacity: 1; animation: zzz-float 1s infinite alternate; } */
+/* .character-idle.is-sleeping .ai-character-svg { transform: rotate(10deg) translateY(5px) scale(0.95); } */
+/* .character-idle.is-juggling .character-prop-ball { opacity: 1; animation: juggle-ball-anim 1.5s infinite ease-in-out; } */
+/* .character-idle.is-juggling .character-body-pickle { animation: pickle-juggle-body-bob 1.5s infinite ease-in-out; } */
 
 
 /* USER TYPING State (Listening/Attentive Pickle) */
@@ -383,24 +385,22 @@ body {
   animation: image-fade-in-sparkle 0.65s ease-out forwards;
 }
 
-/* Idle animations for Pickle Rick */
-@keyframes zzz-float {
+/* Keyframes for props, which are now hidden by default unless specific states trigger them */
+/* These can be re-enabled if specific actions are re-introduced for the character */
+/* @keyframes zzz-float {
   0% { transform: translateY(0px) translateX(1px); opacity: 1; }
   100% { transform: translateY(-4px) translateX(-1px); opacity: 0.7; }
 }
 
-@keyframes juggle-ball-anim { /* Applied to the prop ball */
+@keyframes juggle-ball-anim { 
   0%, 100% { transform: translateY(0) scale(1); }
   25% { transform: translateY(-20px) scale(1.1) rotate(30deg); }
   50% { transform: translateY(5px) scale(0.9) rotate(-15deg); }
   75% { transform: translateY(-15px) scale(1.05) rotate(10deg); }
-}
-.character-idle.is-juggling .character-body-pickle {
-  animation: pickle-juggle-body-bob 1.5s infinite ease-in-out;
-}
-@keyframes pickle-juggle-body-bob {
+} */
+/* @keyframes pickle-juggle-body-bob {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   25% { transform: translateY(-3px) rotate(2deg); }
   50% { transform: translateY(0px) rotate(-1deg); }
   75% { transform: translateY(-2px) rotate(1deg); }
-}
+} */
