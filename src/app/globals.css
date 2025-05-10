@@ -60,9 +60,9 @@ body {
     --character-pickle-unibrow-hsl: 115 60% 30%; /* Darker green for unibrow */
     --character-pickle-limb-hsl: 115 50% 48%; /* Slightly different green for limbs if needed */
     --character-mouth-dark-hsl: 0 0% 15%; /* Dark color for mouth interior/lines */
-    --character-tongue-hsl: 0 60% 55%; /* Pinkish red for tongue */
+    --character-tongue-hsl: 0 70% 58%; /* Pinkish red for tongue */
     --character-teeth-hsl: var(--pearl-white-hsl);
-    --character-pickle-dark-green-hsl: 120 70% 25%; /* For icon stroke */
+    --character-pickle-dark-green-hsl: 120 70% 25%; /* For icon stroke and body spots */
 
 
     /* Legacy colors from original theme - remapped or can be used if specific shades needed */
@@ -193,7 +193,6 @@ body {
 }
 
 .character-body-pickle { 
-  /* fill is handled by gradient in SVG defs */
   stroke: hsl(var(--character-mouth-dark-hsl) / 0.5); 
   stroke-width: 0.5; 
 }
@@ -202,7 +201,7 @@ body {
 .character-unibrow { 
   fill: hsl(var(--character-pickle-unibrow-hsl)); 
   stroke: hsl(var(--character-mouth-dark-hsl) / 0.3);
-  stroke-width: 0.5;
+  stroke-width: 2; /* Made unibrow thicker */
   transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; 
 }
 .character-mouth { 
@@ -211,10 +210,14 @@ body {
   stroke-width: 0.3; 
   transition: d 0.3s ease-in-out; 
 }
-.character-tongue { fill: hsl(var(--character-tongue-hsl)); transition: opacity 0.2s; }
-.character-teeth { fill: hsl(var(--character-teeth-hsl)); } /* Kept for potential re-use if requested */
+.character-tongue { 
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out; 
+  transform-origin: 50% 80%; /* Set origin for tongue animation */
+}
 
-.pickle-limb {
+
+.pickle-limb { /* Base class for pickle limbs if re-added or for ears */
   fill: hsl(var(--character-pickle-limb-hsl));
   stroke: hsl(var(--character-mouth-dark-hsl) / 0.6);
   stroke-width: 0.5;
@@ -225,81 +228,96 @@ body {
 
 
 /* Default hidden/initial states for animated parts */
-.character-listening-ears,
-.character-hand-chin-group .pickle-limb,
-.character-hands-presenting-group .pickle-limb,
+.character-listening-ears .pickle-ear, /* target ears specifically */
+.character-hand-chin-group .pickle-hand, /* target hands specifically */
+.character-hands-presenting-group .pickle-hand,
 .character-sparkles, 
-.character-prop-group > * { /* Props like ball, zzz, card, paintbrush will be hidden by default */
+.character-prop-group > * { 
   opacity: 0;
   transform-origin: center center; 
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
 }
-.character-listening-ears { transform: scale(0.5); }
-.character-hand-chin-group .pickle-limb { transform: translateY(5px) scale(0.8) rotate(-10deg); }
+.character-listening-ears .pickle-ear { transform: scale(0.5); }
+.character-hand-chin-group .pickle-hand { transform: translateY(5px) scale(0.8) rotate(-10deg); }
 .character-hands-presenting-group .pickle-limb-left { transform: translateX(-5px) scale(0.8) rotate(15deg); }
 .character-hands-presenting-group .pickle-limb-right { transform: translateX(5px) scale(0.8) rotate(-15deg); }
 
 
 /* IDLE State - Pickle Rick (Base animations) */
-.character-idle .ai-character-svg { animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; }
+.character-idle .ai-character-svg:not(.is-teleporting .ai-character-svg) { /* Don't apply bob if teleporting */
+  animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; 
+}
 .character-idle .character-pupil { animation: character-blink 4.5s infinite, character-pupil-idle-roam 6.5s infinite ease-in-out; }
-.character-idle .character-unibrow { d: path("M 18 30 Q 35 25 52 30"); transform: translateY(0); } /* Neutral unibrow */
-.character-idle .character-mouth { d: path("M 20 60 Q 35 75 50 60 Q 35 65 20 60 Z"); } /* Neutral mouth (grin) */
-.character-idle .character-tongue { opacity: 0; }
+.character-idle:not(.is-tongue-out) .character-unibrow { d: path("M 18 30 Q 35 22 52 30"); transform: translateY(0); } 
+.character-idle:not(.is-tongue-out) .character-mouth { d: path("M 22 58 Q 35 72 48 58 Q 35 68 22 58 Z"); }
+.character-idle:not(.is-tongue-out) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
 
-/* Removed specific idle sub-animation styles like .is-sleeping, .is-juggling etc. */
-/* .character-idle.is-sleeping .character-prop-zzz { opacity: 1; animation: zzz-float 1s infinite alternate; } */
-/* .character-idle.is-sleeping .ai-character-svg { transform: rotate(10deg) translateY(5px) scale(0.95); } */
-/* .character-idle.is-juggling .character-prop-ball { opacity: 1; animation: juggle-ball-anim 1.5s infinite ease-in-out; } */
-/* .character-idle.is-juggling .character-body-pickle { animation: pickle-juggle-body-bob 1.5s infinite ease-in-out; } */
+/* Idle Tongue Out Variation */
+.character-idle.is-tongue-out .character-tongue { 
+  opacity: 1; 
+  transform: scale(1.1, 1.3) translateY(1px) rotate(-5deg); /* Make tongue visible and slightly out */
+}
+.character-idle.is-tongue-out .character-mouth { 
+  d: path("M 22 58 Q 35 65 48 58 Q 35 75 22 58 Z"); /* Mouth slightly more open for tongue */
+}
+.character-idle.is-tongue-out .character-unibrow { d: path("M 18 28 Q 35 20 52 28"); } /* Slightly playful unibrow */
+
+/* Idle Teleporting Variation */
+.character-idle.is-teleporting .ai-character-svg {
+  animation: character-teleport-anim 1.5s ease-in-out forwards, pulse-glow-character 1.5s infinite alternate; /* Forwards to hold last frame of teleport */
+}
+.character-idle.is-teleporting .character-sparkles {
+  opacity: 1 !important; 
+  animation: character-sparkle-effect 0.3s infinite; 
+}
 
 
 /* USER TYPING State (Listening/Attentive Pickle) */
 .character-user_typing .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate, character-bob-attentive 2.5s infinite ease-in-out; transform: scale(1.02) translateY(-2px); }
-.character-user_typing .character-listening-ears { opacity: 1; transform: scale(1); }
+.character-user_typing .character-listening-ears .pickle-ear { opacity: 1; transform: scale(1); } /* Make ears visible */
 .character-user_typing .character-eye-white { transform: scale(1.05); } 
 .character-user_typing .character-pupil { animation: character-pupil-scan 3s infinite ease-in-out; }
 .character-user_typing .character-unibrow { d: path("M 15 26 Q 35 18 55 26"); transform: translateY(-2px); } /* Raised unibrow */
-.character-user_typing .character-mouth { d: path("M 22 62 Q 35 78 48 62 Q 35 70 22 62 Z"); } /* Slightly more open/surprised mouth */
+.character-user_typing .character-mouth { d: path("M 22 60 Q 35 76 48 60 Q 35 72 22 60 Z"); } /* Slightly more open/surprised mouth */
 
 /* THINKING TEXT State (Pondering Pickle) */
 .character-thinking_text .ai-character-svg { animation: pulse-glow-character 1.3s infinite alternate; transform: rotate(-2deg) translateY(-2px); } 
-.character-thinking_text .character-hand-chin-group .pickle-limb { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); } 
+.character-thinking_text .character-hand-chin-group .pickle-hand { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); } /* Hand visible */
 .character-thinking_text .character-unibrow { d: path("M 20 32 Q 35 28 50 32"); } /* Furrowed/thinking unibrow */
-.character-thinking_text .character-mouth { d: path("M 25 60 Q 35 65 45 60 Q 35 62 25 60 Z"); } /* Hmm mouth, smaller grin */
+.character-thinking_text .character-mouth { d: path("M 25 58 Q 35 63 45 58 Q 35 60 25 58 Z"); } /* Hmm mouth, smaller grin */
 .character-thinking_text .character-pupil { animation: character-think-pupils 2.8s infinite ease-in-out; }
 
 /* THINKING IMAGE State (Intense Pickle Power) */
 .character-thinking_image .ai-character-svg { animation: pulse-glow-character 0.9s infinite alternate, character-shake-intense 0.35s 3 ease-in-out; } 
 .character-thinking_image .character-sparkles { opacity: 0.7; animation: character-sparkle-effect 0.7s infinite; }
 .character-thinking_image .character-unibrow { d: path("M 15 25 Q 35 15 55 25"); transform: translateY(-3px); } /* Very focused unibrow */
-.character-thinking_image .character-mouth { d: path("M 20 58 Q 35 78 50 58 Q 35 70 20 58 Z"); } /* Strained/effort mouth */
+.character-thinking_image .character-mouth { d: path("M 20 56 Q 35 76 50 56 Q 35 68 20 56 Z"); } /* Strained/effort mouth */
 
 /* PRESENTING TEXT State (Smug Pickle Delivery) */
 .character-presenting_text .ai-character-svg { animation: pulse-glow-character 1.9s infinite alternate; transform: scale(1.01) translateY(-1px) rotate(0.5deg); } 
 .character-presenting_text .character-unibrow { d: path("M 18 28 Q 35 22 52 29"); } /* Smirk unibrow */
-.character-presenting_text .character-mouth { d: path("M 20 60 Q 30 73 40 60 Q 30 63 20 60 Z"); } /* Smirk mouth, asymmetrical */
-.character-presenting_text .character-tongue { opacity: 0.5; transform: translateX(2px); }
+.character-presenting_text .character-mouth { d: path("M 20 58 Q 30 71 40 58 Q 30 61 20 58 Z"); } /* Smirk mouth, asymmetrical */
+.character-presenting_text .character-tongue { opacity: 0.5; transform: translateX(2px) scaleY(1.1); }
 
 
 /* PRESENTING IMAGE State (Excited Pickle "Voila!") */
 .character-presenting_image .ai-character-svg { animation: pulse-glow-character 1.7s infinite alternate; transform: scale(1.03) rotate(1deg) translateY(-3px); } 
-.character-presenting_image .character-hands-presenting-group .pickle-limb { opacity: 1; transform: scale(1.03) rotate(0deg) translate(0, -1px); } 
+.character-presenting_image .character-hands-presenting-group .pickle-hand { opacity: 1; transform: scale(1.03) rotate(0deg) translate(0, -1px); } /* Hands visible */
 .character-presenting_image .character-sparkles { opacity: 0.9; animation: character-sparkle-effect 0.6s infinite; }
 .character-presenting_image .character-unibrow { d: path("M 15 24 Q 35 16 55 24"); transform: translateY(-4px); } /* Excited unibrow */
-.character-presenting_image .character-mouth { d: path("M 18 62 Q 35 82 52 62 Q 35 75 18 62 Z"); } /* Wide happy mouth */
+.character-presenting_image .character-mouth { d: path("M 18 60 Q 35 80 52 60 Q 35 73 18 60 Z"); } /* Wide happy mouth */
 
 /* ERROR State (Glitching Pickle) */
 .character-error .ai-character-svg { transform: rotate(5deg) translateY(4px) scale(0.98); filter: grayscale(25%) brightness(0.95); animation: character-error-tremble 0.28s 4; } 
 .character-error .character-unibrow { d: path("M 19 34 Q 35 20 51 33"); } /* Worried/erratic unibrow */
-.character-error .character-mouth { d: path("M 22 65 Q 35 55 48 65 Q 35 60 22 65 Z"); } /* Wobbly mouth */
+.character-error .character-mouth { d: path("M 22 63 Q 35 53 48 63 Q 35 58 22 63 Z"); } /* Wobbly mouth */
 .character-error .character-eye-white { transform: scaleY(0.8) scaleX(0.95); }
 
 
 /* Keyframes for character parts */
 @keyframes character-bob-dynamic { 
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  30% { transform: translateY(-8px) rotate(2.5deg); } /* More pickle-like bob */
+  30% { transform: translateY(-8px) rotate(2.5deg); } 
   70% { transform: translateY(-2px) rotate(-1.2deg); }
 }
 @keyframes character-bob-attentive { 
@@ -357,6 +375,16 @@ body {
 .character-sparkles .sparkle-2 { animation-delay: 0.12s; }
 .character-sparkles .sparkle-3 { animation-delay: 0.24s; }
 
+@keyframes character-teleport-anim {
+  0% { opacity: 1; transform: scale(1) rotate(0deg); }
+  25% { opacity: 0.3; transform: scale(0.7) rotate(15deg); } /* Start fade out and shrink */
+  40% { opacity: 0; transform: scale(0.4) rotate(30deg); } /* Fully disappeared and smaller */
+  /* JS handles position change while opacity is 0 */
+  60% { opacity: 0; transform: scale(0.4) rotate(-30deg); } /* Still invisible at new potential spot */
+  75% { opacity: 0.3; transform: scale(0.7) rotate(-15deg); } /* Start fade in and grow */
+  100% { opacity: 1; transform: scale(1) rotate(0deg); } /* Fully reappeared */
+}
+
 
 .character-container {
   transition: top 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), left 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), opacity 0.3s ease-in-out; 
@@ -385,22 +413,11 @@ body {
   animation: image-fade-in-sparkle 0.65s ease-out forwards;
 }
 
-/* Keyframes for props, which are now hidden by default unless specific states trigger them */
-/* These can be re-enabled if specific actions are re-introduced for the character */
-/* @keyframes zzz-float {
-  0% { transform: translateY(0px) translateX(1px); opacity: 1; }
-  100% { transform: translateY(-4px) translateX(-1px); opacity: 0.7; }
+/* Props are generally hidden unless a specific state makes them visible */
+.character-prop-group > * {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
-
-@keyframes juggle-ball-anim { 
-  0%, 100% { transform: translateY(0) scale(1); }
-  25% { transform: translateY(-20px) scale(1.1) rotate(30deg); }
-  50% { transform: translateY(5px) scale(0.9) rotate(-15deg); }
-  75% { transform: translateY(-15px) scale(1.05) rotate(10deg); }
-} */
-/* @keyframes pickle-juggle-body-bob {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-3px) rotate(2deg); }
-  50% { transform: translateY(0px) rotate(-1deg); }
-  75% { transform: translateY(-2px) rotate(1deg); }
-} */
+/* Example: if a state '.is-juggling' was added:
+.character-idle.is-juggling .character-prop-ball { opacity: 1; animation: juggle-ball-anim 1.5s infinite; } 
+*/
