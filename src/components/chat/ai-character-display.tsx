@@ -134,21 +134,26 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
 
         <g className="character-face-group" transform="translate(0, -10)">
           <g className="character-eyes-group">
-            <ellipse cx="22" cy="45" rx="10" ry="12" className="character-eye-white character-eye-left" />
-            <ellipse cx="48" cy="45" rx="10" ry="12" className="character-eye-white character-eye-right" />
-            <circle cx="22" cy="45" r="4" className="character-pupil character-pupil-left" />
-            <circle cx="48" cy="45" r="4" className="character-pupil character-pupil-right" />
+            {/* Modified eyes: wider, slightly less tall, more intense */}
+            <ellipse cx="22" cy="45" rx="12" ry="10" className="character-eye-white character-eye-left" />
+            <ellipse cx="48" cy="45" rx="12" ry="10" className="character-eye-white character-eye-right" />
+            {/* Modified pupils: smaller */}
+            <circle cx="22" cy="45" r="2.5" className="character-pupil character-pupil-left" />
+            <circle cx="48" cy="45" r="2.5" className="character-pupil character-pupil-right" />
           </g>
 
           <path d="M 18 30 Q 35 25 52 30" className="character-unibrow" />
-
-          <path d="M 20 60 Q 35 75 50 60 Q 35 65 20 60 Z" className="character-mouth" />
+           {/* Modified mouth: wider, more characteristic Pickle Rick grin */}
+          <path d="M 18 60 C 22 78, 48 78, 52 60 Q 35 72 18 60 Z" className="character-mouth" />
+           {/* Modified teeth: thinner, taller, more numerous to fill the wider mouth */}
           <g className="character-teeth">
-              <rect x="23" y="60" width="4" height="5" rx="1"/>
-              <rect x="28" y="60" width="4" height="6" rx="1"/>
-              <rect x="33" y="60" width="4" height="6" rx="1"/>
-              <rect x="38" y="60" width="4" height="6" rx="1"/>
-              <rect x="43" y="60" width="4" height="5" rx="1"/>
+              <rect x="20" y="61" width="3" height="6" rx="0.5"/>
+              <rect x="24" y="61" width="3" height="7" rx="0.5"/>
+              <rect x="28" y="61" width="3" height="8" rx="0.5"/>
+              <rect x="32" y="61" width="3" height="9" rx="0.5"/> 
+              <rect x="36" y="61" width="3" height="8" rx="0.5"/>
+              <rect x="40" y="61" width="3" height="7" rx="0.5"/>
+              <rect x="44" y="61" width="3" height="6" rx="0.5"/>
           </g>
           <ellipse cx="35" cy="67" rx="8" ry="3" className="character-tongue" />
         </g>
