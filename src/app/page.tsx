@@ -113,16 +113,17 @@ export default function HomePage() {
     } catch (error) {
       textResultError = error;
       console.error("Error getting text answer:", error);
+      const errorMessage = (error instanceof Error && error.message) ? error.message : "My circuits are fried, or maybe I'm just too lazy to answer that. Ask something else, preferably less stupid, you absolute walnut.";
       setMessages(prev => prev.map(msg =>
         msg.id === aiPlaceholderMessageId ? {
           ...msg,
-          text: "My circuits are fried, or maybe I'm just too lazy to answer that. Ask something else, preferably less stupid, you absolute walnut.",
+          text: errorMessage,
           isLoadingText: false,
           timestamp: new Date()
         } : msg
       ));
       setAiStatus('error');
-      toast({ title: "AI Text Error - My Brain Hurts", description: "The AI is having a moment. Probably because your question was idiotic.", variant: "destructive" });
+      toast({ title: "AI Text Error - My Brain Hurts", description: "The AI is having a moment. Probably because your question was idiotic, or maybe I just don't give a flying fuck.", variant: "destructive" });
     } finally {
       setIsLoading(false);
       if (textareaRef.current) textareaRef.current.focus();
@@ -135,10 +136,10 @@ export default function HomePage() {
       m => m.role === 'assistant' && m.text && !m.isLoadingText && !m.isLoadingImage && !m.imageUrl
     );
 
-    if (!lastAiMessage || !lastAiMessage.originalQuestion) {
+    if (!lastAiMessage || !lastAiMessage.text) {
       toast({
-        title: "What am I supposed to imagine, genius?",
-        description: "There's no proper AI response to base an image on. Ask a question first, maybe one that doesn't suck for a change.",
+        title: "What the FUCK am I supposed to imagine, genius?",
+        description: "There's no AI answer to base an image on. Ask a question first, or at least wait for me to spew some bullshit, maybe one that doesn't suck donkey balls for a change.",
         variant: "default"
       });
       return;
@@ -154,11 +155,14 @@ export default function HomePage() {
 
     let imageErrorOccurred = null;
     try {
-      const imagePromptContext = lastAiMessage.originalQuestion; 
-      const imageResult = await generateImageFromQuestion({ question: imagePromptContext });
+      // Use the AI's actual answer text as the context for image generation.
+      const imageContext = lastAiMessage.text; 
+      const imageResult = await generateImageFromQuestion({ contextForImage: imageContext });
       
       if (imageResult.imageUrl) {
-        saveToGallery({ id: uuidv4(), prompt: imagePromptContext, imageUrl: imageResult.imageUrl, timestamp: new Date() });
+         // Use the AI's answer as the prompt for the gallery, or fallback to original question
+        const galleryPrompt = lastAiMessage.text || lastAiMessage.originalQuestion || "Some random shit I made";
+        saveToGallery({ id: uuidv4(), prompt: galleryPrompt, imageUrl: imageResult.imageUrl, timestamp: new Date() });
       }
       setMessages(prev => prev.map(msg =>
         msg.id === lastAiMessage.id ? { ...msg, imageUrl: imageResult.imageUrl, isLoadingImage: false } : msg
@@ -167,11 +171,12 @@ export default function HomePage() {
     } catch (imageError) {
       imageErrorOccurred = imageError;
       console.error("Error generating image:", imageError);
+      const errorMessage = (imageError instanceof Error && imageError.message) ? imageError.message : "Couldn't generate an image. My artistic talent is wasted on your crap prompts, or maybe the server hamster died. Who gives a shit?";
       setMessages(prev => prev.map(msg =>
         msg.id === lastAiMessage.id ? { ...msg, isLoadingImage: false } : msg
       ));
       setAiStatus('error');
-      toast({ title: "AI Image Malfunction - Shocking", description: "Couldn't generate an image. My artistic talent is wasted on your crap prompts.", variant: "destructive" });
+      toast({ title: "AI Image Malfunction - Shocking", description: errorMessage, variant: "destructive" });
     } finally {
       setIsLoading(false);
       setIsImageGenerating(false);
@@ -180,22 +185,15 @@ export default function HomePage() {
   };
 
   const handleStopImageGeneration = () => {
-    // This function might still be called by other parts of the app or future error handling.
-    // For now, it will simply reset loading states and AI status.
-    // If there were specific ongoing Genkit calls for image generation to cancel,
-    // that logic would go here (e.g., using an AbortController if the flow supports it).
-    // However, Genkit flows as defined are typically fire-and-forget promises.
-    
     setIsImageGenerating(false);
     setIsLoading(false); 
     setAiStatus('idle');
 
-    // Reset isLoadingImage on any message that might have been stuck in that state
     setMessages(prev => prev.map(msg => 
       msg.isLoadingImage ? { ...msg, isLoadingImage: false } : msg
     ));
 
-    toast({ title: "Image Generation Halted - You Quitter", description: "Alright, genius, I've stopped. My masterpiece can wait for someone less impatient." });
+    toast({ title: "Image Generation Halted - You Quitter", description: "Alright, genius, I've stopped. My masterpiece can wait for someone less impatient, or maybe never. I don't fucking care." });
   };
   
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -230,10 +228,10 @@ export default function HomePage() {
   };
 
   const clearGallery = () => {
-    if (window.confirm("You sure you wanna delete all this 'art', you cretin? Can't get it back.")) {
+    if (window.confirm("You sure you wanna delete all this 'art', you cretin? Can't get it back, and frankly, who'd want to?")) {
       localStorage.removeItem(LOCAL_STORAGE_GALLERY_KEY);
       setGalleryImages([]);
-      toast({ title: "Gallery Nuked. Good Riddance.", description: "All images gone. Not like they were Mona Lisas."});
+      toast({ title: "Gallery Nuked. Good Riddance.", description: "All images gone. Not like they were Mona Lisas. More like Mona Lisa's asshole."});
     }
   };
 
@@ -247,8 +245,9 @@ export default function HomePage() {
           <ScrollArea className="flex-grow p-4 space-y-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
+                {/* Removed SVG icon */}
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
-                <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death.</p>
+                <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death, you goddamn buffoon.</p>
               </div>
             ) : (
               messages.map((msg) => <ChatMessageItem key={msg.id} message={msg} />)
@@ -264,7 +263,7 @@ export default function HomePage() {
                 onChange={handleTextChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                placeholder="Tell me if… (Don't be shy, your questions can't get much dumber!)"
+                placeholder="Tell me if… (Don't be shy, your questions can't get much dumber, fuckface!)"
                 className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
                            border-2 border-primary/30 
                            focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
@@ -308,7 +307,7 @@ export default function HomePage() {
               {isImageGenerating && (
                 <div>
                   <span
-                    onClick={handleStopImageGeneration} // Still allow manual stop if needed
+                    onClick={handleStopImageGeneration} 
                     className="text-link-style-stop"
                     role="button"
                     tabIndex={0}
@@ -335,7 +334,7 @@ export default function HomePage() {
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setIsGalleryVisible(!isGalleryVisible)} 
-                    className="text-primary hover:text-accent"
+                    className="text-primary hover:text-accent w-10 h-10" // Made button larger
                     aria-label={isGalleryVisible ? "Hide gallery" : "Show gallery"}
                     aria-expanded={isGalleryVisible}
                   >
@@ -369,8 +368,8 @@ export default function HomePage() {
                       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 lucide lucide-images opacity-60">
                         <path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 18-3-3c-.928-.899-2.34-.926-3.296-.074L9 19"/><path d="M14.5 11.5a1.5 1.5 0 0 1 0-3l.5-.5a1.5 1.5 0 0 1 3 0l.5.5a1.5 1.5 0 0 1 0 3l-.5.5a1.5 1.5 0 0 1-3 0Z"/><path d="m22 6-3-3c-.928-.899-2.34-.926-3.296-.074L9 8"/>
                       </svg>
-                      <p className="text-lg font-semibold font-heading text-muted-foreground">Gallery's Empty. What a surprise, not.</p>
-                      <p className="text-muted-foreground text-xs">Click "Generate Image" in chat. Maybe you'll get lucky and I'll make something that doesn't completely suck. Doubt it.</p>
+                      <p className="text-lg font-semibold font-heading text-muted-foreground">Gallery's Empty. What a surprise, not. Probably because your ideas are shit.</p>
+                      <p className="text-muted-foreground text-xs">Click "Generate Image" in chat. Maybe you'll get lucky and I'll make something that doesn't completely suck. Doubt it, fucker.</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -388,3 +387,4 @@ export default function HomePage() {
     </div>
   );
 }
+
