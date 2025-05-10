@@ -143,19 +143,18 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
           </g>
 
           <path d="M 18 30 Q 35 25 52 30" className="character-unibrow" />
-           {/* Modified mouth: wider, more characteristic Pickle Rick grin */}
-          <path d="M 18 60 C 22 78, 48 78, 52 60 Q 35 72 18 60 Z" className="character-mouth" />
-           {/* Modified teeth: thinner, taller, more numerous to fill the wider mouth */}
+           {/* Modified mouth: wider, more characteristic Pickle Rick grin, slightly open */}
+          <path d="M 15 62 C 20 80, 50 80, 55 62 Q 35 75 15 62 Z" className="character-mouth" />
+           {/* Modified teeth: adjusted to fit the new mouth, appearing inside */}
           <g className="character-teeth">
-              <rect x="20" y="61" width="3" height="6" rx="0.5"/>
-              <rect x="24" y="61" width="3" height="7" rx="0.5"/>
-              <rect x="28" y="61" width="3" height="8" rx="0.5"/>
-              <rect x="32" y="61" width="3" height="9" rx="0.5"/> 
-              <rect x="36" y="61" width="3" height="8" rx="0.5"/>
-              <rect x="40" y="61" width="3" height="7" rx="0.5"/>
-              <rect x="44" y="61" width="3" height="6" rx="0.5"/>
+              <rect x="19" y="64" width="3.5" height="7" rx="1"/>
+              <rect x="24.5" y="64" width="3.5" height="8.5" rx="1"/>
+              <rect x="30" y="64" width="3.5" height="9.5" rx="1"/>
+              <rect x="35.5" y="64" width="3.5" height="9.5" rx="1"/>
+              <rect x="41" y="64" width="3.5" height="8.5" rx="1"/>
+              <rect x="46.5" y="64" width="3.5" height="7" rx="1"/>
           </g>
-          <ellipse cx="35" cy="67" rx="8" ry="3" className="character-tongue" />
+          <ellipse cx="35" cy="70" rx="10" ry="4" className="character-tongue" /> {/* Adjusted tongue for new mouth */}
         </g>
 
         <g className="character-listening-ears">
@@ -217,51 +216,66 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     const charWidthPx = 128; // Approximate character width
     const charHeightPx = 176; // Approximate character height
 
+    const chatAreaTop = 0; // Assuming chat is near the top part of its flexible space
+    const chatAreaBottom = window.innerHeight - galleryHeightThreshold - charHeightPx; // Approximate bottom of chat viewport area
+    const chatAreaLeft = (window.innerWidth - Math.min(window.innerWidth, chatWidthThreshold)) / 2;
+    const chatAreaRight = window.innerWidth - chatAreaLeft;
+
 
     if (effectiveStatus === 'user_typing') {
       // Near chat input area but not overlapping
-      // Try to position to the side of the chat area if possible
-      if (window.innerWidth > chatWidthThreshold + charWidthPx * 2) { // Enough space on sides
-         newLeftPercentStr = '15%'; // Left of chat
+      if (window.innerWidth > chatWidthThreshold + charWidthPx * 2.5) { // Enough space on sides
+         newLeftPercentStr = `${Math.max(5, chatAreaLeft / window.innerWidth * 100 - 10)}%`; // Left of chat
       } else {
          newLeftPercentStr = '10%'; // General left
       }
-      newTopPercentStr = `${Math.min(75, 100 - (galleryHeightThreshold + charHeightPx/2) / window.innerHeight * 100 - 5)}%`; // Above gallery
+      // Position above gallery, and try to be vertically centered in the remaining space if possible
+      const availableHeightForCharMovement = window.innerHeight - galleryHeightThreshold - charHeightPx - 64; // 64 for header
+      newTopPercentStr = `${Math.max(10, 64 / window.innerHeight * 100 + (availableHeightForCharMovement / 2) / window.innerHeight * 100)}%`; 
     } else if (effectiveStatus === 'thinking_text' || effectiveStatus === 'thinking_image') {
       // Focus area, avoiding center (chat)
       const thinkingLeftRoll = Math.random();
-      if (window.innerWidth > chatWidthThreshold + charWidthPx * 2) {
-          newLeftPercentStr = thinkingLeftRoll < 0.5 ? `${10 + Math.random() * 10}%` : `${80 + Math.random() * 10}%`; // Far left or far right
+      if (window.innerWidth > chatWidthThreshold + charWidthPx * 2.5) {
+          newLeftPercentStr = thinkingLeftRoll < 0.5 ? 
+            `${Math.max(5, (chatAreaLeft - charWidthPx) / window.innerWidth * 100 - 5)}%` : // Far left of chat
+            `${Math.min(95-(charWidthPx/window.innerWidth*100), (chatAreaRight + charWidthPx/2) / window.innerWidth * 100 + 5)}%`; // Far right of chat
       } else {
-          newLeftPercentStr = thinkingLeftRoll < 0.5 ? '10%' : '90%';
+          newLeftPercentStr = thinkingLeftRoll < 0.5 ? '10%' : `${90-(charWidthPx/window.innerWidth*100)}%`;
       }
-      newTopPercentStr = `${10 + Math.random() * 15}%`; // Upper part
+      newTopPercentStr = `${15 + Math.random() * 20}%`; // Upper part of screen
     } else if (effectiveStatus === 'idle' || effectiveStatus === 'presenting_text' || effectiveStatus === 'presenting_image' || effectiveStatus === 'error') {
       // Free-roaming, avoiding chat and gallery
       let randomTop, randomLeft;
-      const roll = Math.random();
-
-      const safeTopMax = 100 - (galleryHeightThreshold + charHeightPx) / window.innerHeight * 100 - 5; // Max top % to stay above gallery
       
-      if (window.innerWidth <= chatWidthThreshold + charWidthPx) { // Screen is narrow, character mostly top
-        randomTop = 5 + Math.random() * (Math.min(20, safeTopMax - 5)); // Upper area
-        randomLeft = 5 + Math.random() * 90; // Full width roam in that upper band
-      } else { // Screen has space on sides of chat
-        const chatLeftEdgePercent = (window.innerWidth - chatWidthThreshold) / 2 / window.innerWidth * 100;
-        const chatRightEdgePercent = 100 - chatLeftEdgePercent;
+      const safeTopMinPercent = 10; // Below header
+      const safeTopMaxPercent = 100 - (galleryHeightThreshold + charHeightPx + 20) / window.innerHeight * 100; // Above gallery, 20px buffer
 
-        if (roll < 0.33) { // Top strip (above chat)
-          randomTop = 5 + Math.random() * 10;
-          randomLeft = 5 + Math.random() * 90;
-        } else if (roll < 0.66) { // Left of chat
-          randomTop = Math.max(5, 5 + Math.random() * (safeTopMax - 5));
-          randomLeft = 5 + Math.random() * Math.max(5, chatLeftEdgePercent - (charWidthPx / window.innerWidth * 100) - 5);
-        } else { // Right of chat
-          randomTop = Math.max(5, 5 + Math.random() * (safeTopMax - 5));
-          randomLeft = Math.min(95, chatRightEdgePercent + 5 + Math.random() * (100 - (chatRightEdgePercent + 5) - (charWidthPx / window.innerWidth * 100) - 5));
+      if (window.innerWidth <= chatWidthThreshold + charWidthPx * 1.5) { // Screen is narrow
+        // Roam left or right column
+        randomLeft = Math.random() < 0.5 ? 
+          (5 + Math.random() * (15 - (charWidthPx / window.innerWidth * 100))) : 
+          (85 + Math.random() * (15 - (charWidthPx / window.innerWidth * 100)));
+        randomTop = safeTopMinPercent + Math.random() * (safeTopMaxPercent - safeTopMinPercent);
+      } else { // Screen has space on sides of chat
+        const chatLeftEdgePercent = chatAreaLeft / window.innerWidth * 100;
+        const chatRightEdgePercent = chatAreaRight / window.innerWidth * 100;
+
+        const canGoLeft = chatLeftEdgePercent > (charWidthPx / window.innerWidth * 100) + 10;
+        const canGoRight = (100 - chatRightEdgePercent) > (charWidthPx / window.innerWidth * 100) + 10;
+
+        const roll = Math.random();
+        if (canGoLeft && roll < 0.45) { // Left of chat
+            randomLeft = 5 + Math.random() * (chatLeftEdgePercent - (charWidthPx / window.innerWidth * 100) - 10);
+            randomTop = safeTopMinPercent + Math.random() * (safeTopMaxPercent - safeTopMinPercent);
+        } else if (canGoRight && roll < 0.9) { // Right of chat
+            randomLeft = chatRightEdgePercent + 5 + Math.random() * (95 - chatRightEdgePercent - (charWidthPx / window.innerWidth * 100) -5);
+            randomTop = safeTopMinPercent + Math.random() * (safeTopMaxPercent - safeTopMinPercent);
+        } else { // Top strip, if space permits or as fallback
+            randomLeft = 5 + Math.random() * (90 - (charWidthPx / window.innerWidth * 100));
+            randomTop = safeTopMinPercent + Math.random() * Math.min(15, safeTopMaxPercent - safeTopMinPercent); // Mostly upper part if in this fallback
         }
       }
-      newTopPercentStr = `${Math.max(5, Math.min(safeTopMax, randomTop))}%`;
+      newTopPercentStr = `${Math.max(safeTopMinPercent, Math.min(safeTopMaxPercent, randomTop))}%`;
       newLeftPercentStr = `${Math.max(5, Math.min(95 - (charWidthPx / window.innerWidth * 100), randomLeft))}%`;
     }
     

@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
-import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, MessageSquareDashed } from 'lucide-react';
+import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, MessageSquareDashed, ChevronDown, ChevronUp } from 'lucide-react';
 import { ImageCard } from '@/components/gallery/image-card';
 import { cn } from '@/lib/utils';
 
@@ -30,6 +30,8 @@ export default function HomePage() {
 
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [isClient, setIsClient] = useState(false);
+  const [isGalleryVisible, setIsGalleryVisible] = useState(true);
+
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -238,7 +240,6 @@ export default function HomePage() {
           <ScrollArea className="flex-grow p-4 space-y-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
-                {/* Robot icon removed, using a generic chat icon */}
                 <MessageSquareDashed className="h-16 w-16 text-muted-foreground opacity-70 mx-auto mb-4" />
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
                 <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death.</p>
@@ -316,34 +317,65 @@ export default function HomePage() {
         </div>
 
         {isClient && (
-          <ScrollArea className="relative z-10 h-1/3 max-h-72 mt-4 border-t border-border/30 p-4 bg-card/30"> 
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-2xl font-bold font-heading text-primary drop-shadow-sm flex items-center gap-2">
-                <GalleryHorizontalEnd className="h-7 w-7 text-secondary" />
-                Visions of My Infinite Genius (and some crap I made)
-              </h2>
-              {galleryImages.length > 0 && (
-                <Button variant="destructive" size="sm" onClick={clearGallery} className="font-heading text-xs">
-                  <Trash2 className="mr-1.5 h-4 w-4" /> Clear This Abomination
-                </Button>
-              )}
+          <div className="relative z-10 mt-4 border-t border-border/30 bg-card/30">
+            <div className="p-4 pb-2"> {/* Adjusted padding */}
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-2xl font-bold font-heading text-primary drop-shadow-sm flex items-center gap-2">
+                  <GalleryHorizontalEnd className="h-7 w-7 text-secondary" />
+                  Visions of My Infinite Genius (and some crap I made)
+                </h2>
+                <div className="flex items-center gap-2">
+                  {galleryImages.length > 0 && isGalleryVisible && (
+                    <Button variant="destructive" size="sm" onClick={clearGallery} className="font-heading text-xs">
+                      <Trash2 className="mr-1.5 h-4 w-4" /> Clear This Abomination
+                    </Button>
+                  )}
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setIsGalleryVisible(!isGalleryVisible)} 
+                    className="text-primary hover:text-accent"
+                    aria-label={isGalleryVisible ? "Hide gallery" : "Show gallery"}
+                    aria-expanded={isGalleryVisible}
+                  >
+                    {isGalleryVisible ? <ChevronUp className="h-6 w-6" /> : <ChevronDown className="h-6 w-6" />}
+                  </Button>
+                </div>
+              </div>
             </div>
-            {galleryImages.length === 0 ? (
-              <div className="text-center py-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 lucide lucide-images opacity-60">
-                  <path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 18-3-3c-.928-.899-2.34-.926-3.296-.074L9 19"/><path d="M14.5 11.5a1.5 1.5 0 0 1 0-3l.5-.5a1.5 1.5 0 0 1 3 0l.5.5a1.5 1.5 0 0 1 0 3l-.5.5a1.5 1.5 0 0 1-3 0Z"/><path d="m22 6-3-3c-.928-.899-2.34-.926-3.296-.074L9 8"/>
-                </svg>
-                <p className="text-lg font-semibold font-heading text-muted-foreground">Gallery's Empty. What a surprise, not.</p>
-                <p className="text-muted-foreground text-xs">Click "Generate Image" in chat. Maybe you'll get lucky and I'll make something that doesn't completely suck. Doubt it.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                {galleryImages.map((image) => (
-                  <ImageCard key={image.id} image={image} />
-                ))}
-              </div>
-            )}
-          </ScrollArea>
+            
+            <div 
+              className={cn(
+                "transition-all duration-500 ease-in-out overflow-hidden",
+                isGalleryVisible ? "max-h-[500px]" : "max-h-0" // Adjust 500px if needed
+              )}
+            >
+              <ScrollArea 
+                className={cn(
+                  "overflow-y-auto", // Horizontal scroll implicitly disabled by not adding horizontal ScrollBar
+                  galleryImages.length > 0 ? "h-auto max-h-72" : "h-auto max-h-40" // Dynamically adjust max-height
+                )}
+              >
+                <div className="p-4 pt-0"> {/* Content padding */}
+                  {galleryImages.length === 0 ? (
+                    <div className="text-center py-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 lucide lucide-images opacity-60">
+                        <path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 18-3-3c-.928-.899-2.34-.926-3.296-.074L9 19"/><path d="M14.5 11.5a1.5 1.5 0 0 1 0-3l.5-.5a1.5 1.5 0 0 1 3 0l.5.5a1.5 1.5 0 0 1 0 3l-.5.5a1.5 1.5 0 0 1-3 0Z"/><path d="m22 6-3-3c-.928-.899-2.34-.926-3.296-.074L9 8"/>
+                      </svg>
+                      <p className="text-lg font-semibold font-heading text-muted-foreground">Gallery's Empty. What a surprise, not.</p>
+                      <p className="text-muted-foreground text-xs">Click "Generate Image" in chat. Maybe you'll get lucky and I'll make something that doesn't completely suck. Doubt it.</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                      {galleryImages.map((image) => (
+                        <ImageCard key={image.id} image={image} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
         )}
       </div>
     </div>
