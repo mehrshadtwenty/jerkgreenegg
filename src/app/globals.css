@@ -55,12 +55,14 @@ body {
     --turquoise-hsl: 175 70% 50%; /* Added Turquoise */
     
     /* Pickle Rick Character Colors */
-    --character-pickle-green-hsl: 120 70% 35%;
-    --character-pickle-light-green-hsl: 120 60% 55%;
-    --character-rick-face-hsl: 200 15% 80%; /* Light greyish blue for Rick's skin if parts are exposed */
-    --character-rick-hair-hsl: 200 70% 70%; /* Light blue for Rick's hair if visible */
-    --character-unibrow-hsl: 210 10% 40%; /* Dark grey for unibrow */
-    --character-mouth-dark-hsl: 0 0% 20%; /* Dark color for mouth interior/lines */
+    --character-pickle-body-main-hsl: 115 55% 42%; /* Main pickle green */
+    --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter pickle green for highlights/gradient */
+    --character-pickle-unibrow-hsl: 115 60% 30%; /* Darker green for unibrow */
+    --character-pickle-limb-hsl: 115 50% 48%; /* Slightly different green for limbs if needed */
+    --character-mouth-dark-hsl: 0 0% 15%; /* Dark color for mouth interior/lines */
+    --character-tongue-hsl: 0 60% 55%; /* Pinkish red for tongue */
+    --character-teeth-hsl: var(--pearl-white-hsl);
+    --character-pickle-dark-green-hsl: 120 70% 25%; /* For icon stroke */
 
 
     /* Legacy colors from original theme - remapped or can be used if specific shades needed */
@@ -71,7 +73,7 @@ body {
     --electric-lime-hsl: var(--fiery-orange-hsl); /* Remapped to new accent */
 
 
-    --font-heading-family: "Merienda", serif; /* For Merienda font */
+    --font-heading-family: "Merienda", cursive;
   }
 
   .dark {
@@ -105,8 +107,9 @@ body {
     --input-foreground: 30 100% 95%;
     --ring: 15 100% 63%;
 
-    --character-pickle-green-hsl: 120 65% 30%;
-    --character-pickle-light-green-hsl: 120 55% 50%;
+    --character-pickle-body-main-hsl: 115 50% 38%;
+    --character-pickle-body-light-hsl: 115 55% 50%;
+    --character-pickle-unibrow-hsl: 115 55% 25%;
   }
 }
 
@@ -176,10 +179,10 @@ body {
 
 @keyframes pulse-glow-character {
   from {
-    filter: drop-shadow(0 0 5px hsl(var(--primary) / 0.6)) drop-shadow(0 0 10px hsl(var(--accent) / 0.4));
+    filter: drop-shadow(0 0 5px hsl(var(--primary) / 0.5)) drop-shadow(0 0 8px hsl(var(--accent) / 0.3));
   }
   to {
-    filter: drop-shadow(0 0 10px hsl(var(--primary) / 0.8)) drop-shadow(0 0 18px hsl(var(--accent) / 0.6));
+    filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.7)) drop-shadow(0 0 15px hsl(var(--accent) / 0.5));
   }
 }
 
@@ -189,142 +192,158 @@ body {
   filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.25)); 
 }
 
-.character-body-pickle { fill: hsl(var(--character-pickle-green-hsl)); stroke: hsl(var(--character-mouth-dark-hsl) / 0.5); stroke-width: 0.7; }
-.character-face-features { stroke: hsl(var(--character-mouth-dark-hsl)); } /* General stroke for face lines */
+.character-body-pickle { 
+  /* fill is handled by gradient in SVG defs */
+  stroke: hsl(var(--character-mouth-dark-hsl) / 0.5); 
+  stroke-width: 0.5; 
+}
 .character-eye-white { fill: hsl(var(--pearl-white-hsl)); }
-.character-pupil { fill: hsl(var(--character-mouth-dark-hsl)); transition: transform 0.2s ease-in-out, d 0.2s ease-in-out; }
-.character-unibrow { stroke: hsl(var(--character-unibrow-hsl)); stroke-width: 1.5; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
-.character-mouth { fill: hsl(var(--character-mouth-dark-hsl)); stroke: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.5; stroke-linecap: round; transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; }
-.character-tongue { fill: hsl(var(--neon-pink-hsl)/0.7); }
-.character-limbs { fill: hsl(var(--character-pickle-light-green-hsl)); stroke: hsl(var(--character-mouth-dark-hsl)/0.6); stroke-width: 0.5; }
-.character-hands { fill: hsl(var(--character-pickle-light-green-hsl)); } /* Simple hands integrated with limbs */
-.character-antenna { fill: hsl(var(--character-pickle-light-green-hsl)); stroke: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.5; opacity: 0; transform: scaleY(0); transform-origin: bottom; transition: opacity 0.3s, transform 0.3s; }
+.character-pupil { fill: hsl(var(--character-mouth-dark-hsl)); transition: transform 0.2s ease-in-out; }
+.character-unibrow { 
+  fill: hsl(var(--character-pickle-unibrow-hsl)); 
+  stroke: hsl(var(--character-mouth-dark-hsl) / 0.3);
+  stroke-width: 0.5;
+  transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; 
+}
+.character-mouth { 
+  fill: hsl(var(--character-mouth-dark-hsl)); 
+  stroke: hsl(var(--character-mouth-dark-hsl)); 
+  stroke-width: 0.3; 
+  transition: d 0.3s ease-in-out; 
+}
+.character-tongue { fill: hsl(var(--character-tongue-hsl)); transition: opacity 0.2s; }
+.character-teeth { fill: hsl(var(--character-teeth-hsl)); }
+
+.pickle-limb {
+  fill: hsl(var(--character-pickle-limb-hsl));
+  stroke: hsl(var(--character-mouth-dark-hsl) / 0.6);
+  stroke-width: 0.5;
+  opacity: 0;
+  transform-origin: center center;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
 
 
 /* Default hidden/initial states for animated parts */
-.character-hand-chin-group, .character-hands-presenting-group, .character-sparkles, .character-prop-group {
+.character-listening-ears,
+.character-hand-chin-group .pickle-limb,
+.character-hands-presenting-group .pickle-limb,
+.character-sparkles, 
+.character-prop-group > * {
   opacity: 0;
   transform-origin: center center; 
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
 }
+.character-listening-ears { transform: scale(0.5); }
+.character-hand-chin-group .pickle-limb { transform: translateY(5px) scale(0.8) rotate(-10deg); }
+.character-hands-presenting-group .pickle-limb-left { transform: translateX(-5px) scale(0.8) rotate(15deg); }
+.character-hands-presenting-group .pickle-limb-right { transform: translateX(5px) scale(0.8) rotate(-15deg); }
 
-.character-hand-chin-group {transform: translateY(5px) translateX(2px) scale(0.8) rotate(-5deg);} 
-.character-hands-presenting-group {transform: scale(0.8) rotate(-3deg);} 
 
-
-/* IDLE State */
+/* IDLE State - Pickle Rick */
 .character-idle .ai-character-svg { animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; }
 .character-idle .character-pupil { animation: character-blink 4.5s infinite, character-pupil-idle-roam 6.5s infinite ease-in-out; }
-.character-idle .character-unibrow { d: path("M 20 12 Q 25 10 30 12"); } /* Neutral unibrow */
-.character-idle .character-mouth { d: path("M 22 22 Q 25 24 28 22"); } /* Neutral mouth */
-.character-idle .character-antenna { opacity: 0; transform: scaleY(0); }
-/* Specific idle actions using classes - adapt as needed for Pickle Rick */
-.character-idle.is-scratching-head .character-arm-left { animation: pickle-scratch-head-anim 0.5s ease-in-out forwards; }
-.character-idle.is-shrugging .character-arm-left, .character-idle.is-shrugging .character-arm-right { animation: pickle-shrug-shoulders-anim 0.4s ease-in-out forwards; }
-.character-idle.is-juggling .character-prop-ball { opacity: 1; animation: juggle-ball-anim 1.5s infinite ease-in-out; }
+.character-idle .character-unibrow { d: path("M 18 30 Q 35 25 52 30"); transform: translateY(0); } /* Neutral unibrow */
+.character-idle .character-mouth { d: path("M 20 60 Q 35 75 50 60 Q 35 65 20 60 Z"); } /* Neutral mouth (grin) */
+.character-idle .character-tongue { opacity: 0; }
+/* Placeholder for idle specific animations like scratching head, etc. */
 .character-idle.is-sleeping .character-prop-zzz { opacity: 1; animation: zzz-float 1s infinite alternate; }
 .character-idle.is-sleeping .ai-character-svg { transform: rotate(10deg) translateY(5px) scale(0.95); } /* Slumped Pickle */
-.character-idle.is-eating .character-arm-right { animation: pickle-eat-anim 0.8s ease-in-out infinite; }
+.character-idle.is-juggling .character-prop-ball { opacity: 1; animation: juggle-ball-anim 1.5s infinite ease-in-out; }
 
 
 /* USER TYPING State (Listening/Attentive Pickle) */
-.character-user_typing .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate, character-bob-attentive 2.5s infinite ease-in-out; transform: scale(0.95); }
-.character-user_typing .character-antenna { opacity: 1; transform: scaleY(1); animation: antenna-twitch 1s infinite ease-in-out; } 
-.character-user_typing .character-eye-white { transform: scale(1.1); } 
+.character-user_typing .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate, character-bob-attentive 2.5s infinite ease-in-out; transform: scale(1.02) translateY(-2px); }
+.character-user_typing .character-listening-ears { opacity: 1; transform: scale(1); }
+.character-user_typing .character-eye-white { transform: scale(1.05); } 
 .character-user_typing .character-pupil { animation: character-pupil-scan 3s infinite ease-in-out; }
-.character-user_typing .character-unibrow { d: path("M 18 10 Q 25 6 32 10"); } /* Raised unibrow */
-.character-user_typing .character-mouth { d: path("M 22 23 Q 25 26 28 23"); } /* Slightly open/curious mouth */
-/* Pickle Rick leaning/sitting pose (simplified) */
-.character-user_typing .character-body-pickle { transform: translateY(3px) rotate(-5deg); }
-
+.character-user_typing .character-unibrow { d: path("M 15 26 Q 35 18 55 26"); transform: translateY(-2px); } /* Raised unibrow */
+.character-user_typing .character-mouth { d: path("M 22 62 Q 35 78 48 62 Q 35 70 22 62 Z"); } /* Slightly more open/surprised mouth */
 
 /* THINKING TEXT State (Pondering Pickle) */
 .character-thinking_text .ai-character-svg { animation: pulse-glow-character 1.3s infinite alternate; transform: rotate(-2deg) translateY(-2px); } 
-.character-thinking_text .character-hand-chin-group { opacity: 1; transform: translateY(0) translateX(0) scale(1) rotate(0deg); } 
-.character-thinking_text .character-unibrow { d: path("M 20 11 Q 25 13 30 11"); } /* Furrowed/thinking unibrow */
-.character-thinking_text .character-mouth { d: path("M 23 22.5 Q 25 21 27 22.5"); } /* Hmm mouth */
+.character-thinking_text .character-hand-chin-group .pickle-limb { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); } 
+.character-thinking_text .character-unibrow { d: path("M 20 32 Q 35 28 50 32"); } /* Furrowed/thinking unibrow */
+.character-thinking_text .character-mouth { d: path("M 25 60 Q 35 65 45 60 Q 35 62 25 60 Z"); } /* Hmm mouth, smaller grin */
 .character-thinking_text .character-pupil { animation: character-think-pupils 2.8s infinite ease-in-out; }
-.character-thinking_text .character-antenna { opacity: 0.5; transform: scaleY(0.7) rotate(10deg); } 
 
 /* THINKING IMAGE State (Intense Pickle Power) */
 .character-thinking_image .ai-character-svg { animation: pulse-glow-character 0.9s infinite alternate, character-shake-intense 0.35s 3 ease-in-out; } 
 .character-thinking_image .character-sparkles { opacity: 0.7; animation: character-sparkle-effect 0.7s infinite; }
-.character-thinking_image .character-unibrow { d: path("M 18 9 Q 25 5 32 9"); } /* Very focused unibrow */
-.character-thinking_image .character-mouth { d: path("M 20 24 Q 25 28 30 24"); } /* Gritted teeth/effort mouth */
-.character-thinking_image .character-antenna { opacity: 0.2; transform: scaleY(0.5) rotate(-15deg); } 
+.character-thinking_image .character-unibrow { d: path("M 15 25 Q 35 15 55 25"); transform: translateY(-3px); } /* Very focused unibrow */
+.character-thinking_image .character-mouth { d: path("M 20 58 Q 35 78 50 58 Q 35 70 20 58 Z"); } /* Strained/effort mouth */
 
 /* PRESENTING TEXT State (Smug Pickle Delivery) */
 .character-presenting_text .ai-character-svg { animation: pulse-glow-character 1.9s infinite alternate; transform: scale(1.01) translateY(-1px) rotate(0.5deg); } 
-.character-presenting_text .character-unibrow { d: path("M 19 11 Q 25 10 31 12"); } /* Smirk unibrow */
-.character-presenting_text .character-mouth { d: path("M 21 23 C 23 25, 27 25, 29 23"); } /* Smirk mouth */
-.character-presenting_text .character-antenna { opacity: 0; transform: scaleY(0); }
+.character-presenting_text .character-unibrow { d: path("M 18 28 Q 35 22 52 29"); } /* Smirk unibrow */
+.character-presenting_text .character-mouth { d: path("M 20 60 Q 30 73 40 60 Q 30 63 20 60 Z"); } /* Smirk mouth, asymmetrical */
+.character-presenting_text .character-tongue { opacity: 0.5; transform: translateX(2px); }
+
 
 /* PRESENTING IMAGE State (Excited Pickle "Voila!") */
 .character-presenting_image .ai-character-svg { animation: pulse-glow-character 1.7s infinite alternate; transform: scale(1.03) rotate(1deg) translateY(-3px); } 
-.character-presenting_image .character-hands-presenting-group { opacity: 1; transform: scale(1.03) rotate(0deg) translate(0, -1px); } 
+.character-presenting_image .character-hands-presenting-group .pickle-limb { opacity: 1; transform: scale(1.03) rotate(0deg) translate(0, -1px); } 
 .character-presenting_image .character-sparkles { opacity: 0.9; animation: character-sparkle-effect 0.6s infinite; }
-.character-presenting_image .character-unibrow { d: path("M 18 10 Q 25 7 32 10"); } /* Excited unibrow */
-.character-presenting_image .character-mouth { d: path("M 20 25 Q 25 30 30 25"); } /* Wide happy mouth */
-.character-presenting_image .character-antenna { opacity: 0.7; transform: scaleY(0.9) rotate(5deg); } 
+.character-presenting_image .character-unibrow { d: path("M 15 24 Q 35 16 55 24"); transform: translateY(-4px); } /* Excited unibrow */
+.character-presenting_image .character-mouth { d: path("M 18 62 Q 35 82 52 62 Q 35 75 18 62 Z"); } /* Wide happy mouth */
 
 /* ERROR State (Glitching Pickle) */
 .character-error .ai-character-svg { transform: rotate(5deg) translateY(4px) scale(0.98); filter: grayscale(25%) brightness(0.95); animation: character-error-tremble 0.28s 4; } 
-.character-error .character-unibrow { d: path("M 19 14 Q 25 9 31 13"); } /* Worried/erratic unibrow */
-.character-error .character-mouth { d: path("M 22 25 Q 25 20 28 25"); } /* Wobbly mouth */
+.character-error .character-unibrow { d: path("M 19 34 Q 35 20 51 33"); } /* Worried/erratic unibrow */
+.character-error .character-mouth { d: path("M 22 65 Q 35 55 48 65 Q 35 60 22 65 Z"); } /* Wobbly mouth */
 .character-error .character-eye-white { transform: scaleY(0.8) scaleX(0.95); }
-.character-error .character-antenna { opacity: 0.4; transform: scaleY(0.6) rotate(-20deg) translateX(-2px); animation: antenna-glitch 0.3s infinite; } 
 
 
 /* Keyframes for character parts */
 @keyframes character-bob-dynamic { 
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  30% { transform: translateY(-5px) rotate(1.5deg); }
-  70% { transform: translateY(-1px) rotate(-0.8deg); }
+  30% { transform: translateY(-8px) rotate(2.5deg); } /* More pickle-like bob */
+  70% { transform: translateY(-2px) rotate(-1.2deg); }
 }
 @keyframes character-bob-attentive { 
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-2px) rotate(0.3deg); } 
+  50% { transform: translateY(-3px) rotate(0.5deg); } 
 }
 @keyframes character-blink {
   0%, 93%, 100% { transform: scaleY(1); }
-  96.5% { transform: scaleY(0.05); }
+  96.5% { transform: scaleY(0.05); transform-origin: center; }
 }
 @keyframes character-pupil-scan { 
   0%, 100% { transform: translate(0px, 0px); }
-  20% { transform: translate(-1px, 0.2px); } 
-  40% { transform: translate(0px, -0.1px); }
-  60% { transform: translate(0.8px, 0.1px); }
-  80% { transform: translate(-0.3px, 0.2px); }
+  20% { transform: translate(-1.5px, 0.5px); } 
+  40% { transform: translate(0px, -0.3px); }
+  60% { transform: translate(1.2px, 0.3px); }
+  80% { transform: translate(-0.5px, 0.5px); }
 }
 @keyframes character-pupil-idle-roam { 
   0%, 100% { transform: translate(0px, 0px); }
-  15% { transform: translate(-0.6px, 0.1px); }
-  35% { transform: translate(0.3px, -0.2px); }
-  55% { transform: translate(0.5px, 0.1px); }
-  75% { transform: translate(-0.1px, 0.2px); }
-  90% { transform: translate(0.1px, -0.05px); }
+  15% { transform: translate(-1px, 0.2px); }
+  35% { transform: translate(0.6px, -0.4px); }
+  55% { transform: translate(0.8px, 0.2px); }
+  75% { transform: translate(-0.2px, 0.4px); }
+  90% { transform: translate(0.2px, -0.1px); }
 }
 
 @keyframes character-think-pupils { 
-  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-  25% { transform: translateY(-1px) translateX(-0.6px) rotate(-10deg); } 
-  50% { transform: translateY(0.3px) translateX(0.3px) rotate(3deg); }
-  75% { transform: translateY(0.6px) translateX(1px) rotate(10deg); }
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-1.5px) translateX(-1px); } 
+  50% { transform: translateY(0.5px) translateX(0.5px); }
+  75% { transform: translateY(1px) translateX(1.5px); }
 }
 
 @keyframes character-shake-intense { 
   0%, 100% { transform: translateX(0) rotate(0); }
-  25% { transform: translateX(-2.5px) rotate(-1deg); }
+  25% { transform: translateX(-3px) rotate(-1.5deg); }
   50% { transform: translateX(0) rotate(0); }
-  75% { transform: translateX(2.5px) rotate(1deg); }
+  75% { transform: translateX(3px) rotate(1.5deg); }
 }
 
 @keyframes character-error-tremble {
-  0% { transform: translate(0.5px, 0.5px) rotate(5deg); }
-  25% { transform: translate(-0.5px, -0.5px) rotate(4.5deg); }
-  50% { transform: translate(0.5px, -0.5px) rotate(5.5deg); }
-  75% { transform: translate(-0.5px, 0.5px) rotate(5deg); }
-  100% { transform: translate(0.5px, 0.5px) rotate(5deg); }
+  0% { transform: translate(0.8px, 0.8px) rotate(5deg); }
+  25% { transform: translate(-0.8px, -0.8px) rotate(4.5deg); }
+  50% { transform: translate(0.8px, -0.8px) rotate(5.5deg); }
+  75% { transform: translate(-0.8px, 0.8px) rotate(5deg); }
+  100% { transform: translate(0.8px, 0.8px) rotate(5deg); }
 }
 
 @keyframes character-sparkle-effect {
@@ -338,7 +357,6 @@ body {
 
 
 .character-container {
-  /* Slightly faster transition for Pickle Rick's zippy movements */
   transition: top 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), left 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), opacity 0.3s ease-in-out; 
 }
 
@@ -365,69 +383,24 @@ body {
   animation: image-fade-in-sparkle 0.65s ease-out forwards;
 }
 
-/* New idle animations for Pickle Rick */
-@keyframes pickle-scratch-head-anim { /* Applied to arm if exists */
-  0% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-15px) translateX(-5px) rotate(-25deg); } /* Arm to top of pickle */
-  100% { transform: translateY(0) rotate(0); }
-}
-
-@keyframes pickle-shrug-shoulders-anim { /* Applied to arm groups if they exist, or body wiggle */
-  0%, 100% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-4px) rotate(3deg); }
-}
-
+/* Idle animations for Pickle Rick */
 @keyframes zzz-float {
   0% { transform: translateY(0px) translateX(1px); opacity: 1; }
   100% { transform: translateY(-4px) translateX(-1px); opacity: 0.7; }
 }
 
-@keyframes pickle-eat-anim { /* Applied to arm with food prop, or just mouth animation */
-  0%, 100% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-10px) translateX(-3px) rotate(-15deg); } /* Hand to mouth area */
+@keyframes juggle-ball-anim { /* Applied to the prop ball */
+  0%, 100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-20px) scale(1.1) rotate(30deg); }
+  50% { transform: translateY(5px) scale(0.9) rotate(-15deg); }
+  75% { transform: translateY(-15px) scale(1.05) rotate(10deg); }
 }
-
-.character-idle.is-juggling .character-arm-left, /* Example if Pickle Rick has arms for juggling */
-.character-idle.is-juggling .character-arm-right {
-  animation: juggle-hands-anim 0.5s infinite alternate ease-in-out;
+.character-idle.is-juggling .character-body-pickle {
+  animation: pickle-juggle-body-bob 1.5s infinite ease-in-out;
 }
-@keyframes juggle-hands-anim {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-3px); }
-  100% { transform: translateY(0px); }
-}
-
-@keyframes antenna-twitch {
-  0%, 100% { transform: scaleY(1) rotate(0deg); }
-  25% { transform: scaleY(1.05) rotate(5deg); }
-  50% { transform: scaleY(0.95) rotate(-5deg); }
-  75% { transform: scaleY(1) rotate(3deg); }
-}
-@keyframes antenna-glitch {
-  0% { transform: scaleY(0.6) rotate(-20deg) translateX(-2px); }
-  33% { transform: scaleY(0.5) rotate(15deg) translateX(1px); }
-  66% { transform: scaleY(0.65) rotate(-10deg) translateX(-1.5px); }
-  100% { transform: scaleY(0.6) rotate(-20deg) translateX(-2px); }
-}
-
-/* Pickle Rick specific idle animation for floating/bobbing if he has no legs */
-.pickle-float-bob {
-  animation: pickle-float-bob-anim 4s infinite ease-in-out;
-}
-@keyframes pickle-float-bob-anim {
+@keyframes pickle-juggle-body-bob {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-8px) rotate(2deg); }
+  25% { transform: translateY(-3px) rotate(2deg); }
   50% { transform: translateY(0px) rotate(-1deg); }
-  75% { transform: translateY(-5px) rotate(0.5deg); }
-}
-
-/* Pickle Rick specific body parts if needed */
-.pickle-arm { /* Basic arm styling */
-  fill: hsl(var(--character-pickle-light-green-hsl));
-  stroke: hsl(var(--character-mouth-dark-hsl));
-  stroke-width: 1;
-  transition: transform 0.3s ease-out;
-}
-.pickle-hand { /* Basic hand styling */
-   fill: hsl(var(--character-pickle-light-green-hsl));
+  75% { transform: translateY(-2px) rotate(1deg); }
 }

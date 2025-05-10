@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
-import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd } from 'lucide-react';
+import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, MessageSquareDashed } from 'lucide-react';
 import { ImageCard } from '@/components/gallery/image-card';
 import { cn } from '@/lib/utils';
 
@@ -165,8 +165,6 @@ export default function HomePage() {
     } catch (imageError) {
       imageErrorOccurred = imageError;
       console.error("Error generating image:", imageError);
-      // Image generation failed, do not append text to the message.
-      // The toast notification will inform the user.
       setMessages(prev => prev.map(msg =>
         msg.id === lastAiMessage.id ? { ...msg, isLoadingImage: false } : msg
       ));
@@ -184,7 +182,6 @@ export default function HomePage() {
     setIsLoading(false); 
     setAiStatus('idle');
 
-    // Do not append text message if image generation is stopped by user.
     setMessages(prev => prev.map(msg =>
       msg.isLoadingImage ? { ...msg, isLoadingImage: false } : msg
     ));
@@ -237,12 +234,12 @@ export default function HomePage() {
       <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
       
       <div className="flex-grow flex flex-col overflow-hidden pt-16"> 
-        {/* Chat Area - Max width changed to 2xl */}
         <div className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden">
           <ScrollArea className="flex-grow p-4 space-y-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bot mx-auto mb-4 opacity-70"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                {/* Robot icon removed, using a generic chat icon */}
+                <MessageSquareDashed className="h-16 w-16 text-muted-foreground opacity-70 mx-auto mb-4" />
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
                 <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death.</p>
               </div>
@@ -298,7 +295,7 @@ export default function HomePage() {
                   aria-disabled={isLoading || isImageGenerating}
                 >
                   <Sparkles className="inline-block h-4 w-4 mr-1" />
-                  Generate Image (If you've got the guts, pipsqueak)
+                  Generate Image
                 </span>
               </div>
               {isImageGenerating && (

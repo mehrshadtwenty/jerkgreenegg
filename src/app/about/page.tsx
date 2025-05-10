@@ -1,27 +1,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, Sparkles, Wand2 } from "lucide-react"; // Replaced HelpCircle with Wand2 for variety
+import { Sparkles } from "lucide-react"; 
 
 export default function AboutPage() {
   return (
     <div className="space-y-6 max-w-2xl mx-auto py-12 px-4">
-      <header className="text-center space-y-3">
-        {/* Using a SVG similar to Pickle Rick's portal for thematic flair */}
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 100 100" className="mx-auto text-primary animate-pulse" style={{animationDuration: '2s'}}>
-          <defs>
-            <radialGradient id="picklePortalGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-              <stop offset="0%" style={{stopColor: "hsl(var(--emerald-green-hsl))", stopOpacity: 0}} />
-              <stop offset="40%" style={{stopColor: "hsl(var(--emerald-green-hsl))", stopOpacity: 0.3}} />
-              <stop offset="60%" style={{stopColor: "hsl(var(--golden-yellow-hsl))", stopOpacity: 0.5}} />
-              <stop offset="80%" style={{stopColor: "hsl(var(--turquoise-hsl))", stopOpacity: 0.7}} />
-              <stop offset="100%" style={{stopColor: "hsl(var(--galactic-purple-hsl))", stopOpacity: 1}} />
-            </radialGradient>
-          </defs>
-          <circle cx="50" cy="50" r="45" fill="url(#picklePortalGradient)" stroke="hsl(var(--primary))" strokeWidth="3" />
-          <path d="M50,5 A45,45 0 0,1 50,95" fill="none" stroke="hsl(var(--primary)/0.5)" strokeWidth="2" strokeDasharray="5,5">
-            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="10s" repeatCount="indefinite" />
-          </path>
-        </svg>
+      <header className="text-center space-y-3 pt-8"> {/* Added padding top for spacing after icon removal */}
         <h1 className="text-5xl font-bold font-heading text-primary drop-shadow-lg">
           About Tell Me If AI
         </h1>
@@ -50,3 +34,4 @@ export default function AboutPage() {
     </div>
   );
 }
+
