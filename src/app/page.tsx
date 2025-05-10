@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useRef, FormEvent } from 'react';
-import type { ChatMessage, AiStatus, GalleryImage } from '@/lib/types';
+import type { ChatMessage, AiStatus } from '@/lib/types';
 import { ChatMessageItem } from '@/components/chat/chat-message-item';
 import { AiCharacterDisplay } from '@/components/chat/ai-character-display';
 import { answerUserQuestion } from '@/ai/flows/answer-user-question';
@@ -12,13 +12,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
-import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, ChevronDown, ChevronUp } from 'lucide-react';
-import { ImageCard } from '@/components/gallery/image-card';
+import { Send, Sparkles, StopCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-
-const LOCAL_STORAGE_GALLERY_KEY = 'tellMeIfAiGallery';
-const MAX_GALLERY_IMAGES = 10; // Reduced from 50 to prevent quota issues
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -29,30 +25,8 @@ export default function HomePage() {
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState('');
 
-  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
-  const [isClient, setIsClient] = useState(false);
-  const [isGalleryVisible, setIsGalleryVisible] = useState(true);
-
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    setIsClient(true);
-    try {
-      const storedImages = localStorage.getItem(LOCAL_STORAGE_GALLERY_KEY);
-      if (storedImages) {
-        setGalleryImages(JSON.parse(storedImages));
-      }
-    } catch (error) {
-      console.error("Failed to load gallery from localStorage:", error);
-      toast({
-        title: "Storage Error, Dumbass",
-        description: "Couldn't load your shitty 'art' from local gallery. Big surprise.",
-        variant: "destructive",
-      });
-    }
-  }, [toast]);
   
   useEffect(() => {
     scrollToBottom();
@@ -60,51 +34,6 @@ export default function HomePage() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const saveToGallery = (newImage: GalleryImage) => {
-    try {
-      const currentGalleryString = localStorage.getItem(LOCAL_STORAGE_GALLERY_KEY);
-      let currentGallery: GalleryImage[] = [];
-      if (currentGalleryString) {
-        try {
-          currentGallery = JSON.parse(currentGalleryString);
-          // Ensure it's an array
-          if (!Array.isArray(currentGallery)) {
-            currentGallery = [];
-          }
-        } catch (parseError) {
-          console.error("Failed to parse gallery from localStorage, resetting:", parseError);
-          currentGallery = [];
-        }
-      }
-      
-      currentGallery.unshift(newImage); 
-      const updatedGallery = currentGallery.slice(0, MAX_GALLERY_IMAGES); 
-      
-      localStorage.setItem(LOCAL_STORAGE_GALLERY_KEY, JSON.stringify(updatedGallery));
-      setGalleryImages(updatedGallery); 
-
-    } catch (error: any) { // Added ': any' to check error.name and error.code
-      console.error("Failed to save to gallery in localStorage:", error);
-      // Check for QuotaExceededError
-      if (error && (error.name === 'QuotaExceededError' || 
-                    error.code === 22 || // For older browsers
-                    (error.message && typeof error.message === 'string' && error.message.toLowerCase().includes('quota'))
-                   )) {
-        toast({
-          title: "Gallery Full, You Hoarding Moron!",
-          description: `Your pathetic local gallery is crammed with ${MAX_GALLERY_IMAGES} 'masterpieces'. No more room for your crap. Delete some or live with it.`,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Storage Full of Crap Error",
-          description: "Couldn't save image to local gallery. Probably full of your other terrible ideas, or you broke something else, genius.",
-          variant: "destructive",
-        });
-      }
-    }
   };
 
   const handleNewMessageSubmit = async (questionText: string) => {
@@ -189,13 +118,8 @@ export default function HomePage() {
       const imageContext = lastAiMessage.text; 
       const imageResult = await generateImageFromQuestion({ contextForImage: imageContext });
       
-      if (imageResult.imageUrl) {
-         // Use the AI's answer as the prompt for the gallery, or fallback to original question
-        const galleryPrompt = lastAiMessage.text || lastAiMessage.originalQuestion || "Some random shit I made";
-        saveToGallery({ id: uuidv4(), prompt: galleryPrompt, imageUrl: imageResult.imageUrl, timestamp: new Date() });
-      }
       setMessages(prev => prev.map(msg =>
-        msg.id === lastAiMessage.id ? { ...msg, imageUrl: imageResult.imageUrl, isLoadingImage: false } : msg
+        msg.id === lastAiMessage.id ? { ...msg, imageUrl: imageResult.imageUrl, isLoadingImage: false, originalQuestion: lastAiMessage.originalQuestion || lastAiMessage.text } : msg
       ));
       setAiStatus('presenting_image');
     } catch (imageError) {
@@ -257,15 +181,6 @@ export default function HomePage() {
     handleNewMessageSubmit(currentQuestion);
   };
 
-  const clearGallery = () => {
-    if (window.confirm("You sure you wanna delete all this 'art', you cretin? Can't get it back, and frankly, who'd want to?")) {
-      localStorage.removeItem(LOCAL_STORAGE_GALLERY_KEY);
-      setGalleryImages([]);
-      toast({ title: "Gallery Nuked. Good Riddance.", description: "All images gone. Not like they were Mona Lisas. More like Mona Lisa's asshole."});
-    }
-  };
-
-
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground">
       <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
@@ -275,7 +190,6 @@ export default function HomePage() {
           <ScrollArea className="flex-grow p-4 space-y-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
-                {/* Removed SVG icon */}
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
                 <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death, you goddamn buffoon.</p>
               </div>
@@ -350,69 +264,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {isClient && (
-          <div id="gallery-area-wrapper" className="relative z-10 mt-4 border-t border-border/30 bg-card/30">
-            <div className="p-4 pb-2">
-              <div className="flex justify-between items-center mb-3">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-2xl font-bold font-heading text-primary drop-shadow-sm flex items-center gap-2">
-                    <GalleryHorizontalEnd className="h-7 w-7 text-secondary" />
-                    Visions of My Infinite Genius (and some crap I made)
-                  </h2>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => setIsGalleryVisible(!isGalleryVisible)} 
-                    className="text-primary hover:text-accent w-10 h-10" // Made button larger
-                    aria-label={isGalleryVisible ? "Hide gallery" : "Show gallery"}
-                    aria-expanded={isGalleryVisible}
-                  >
-                    {isGalleryVisible ? <ChevronUp className="h-8 w-8" /> : <ChevronDown className="h-8 w-8" />}
-                  </Button>
-                </div>
-                
-                {galleryImages.length > 0 && isGalleryVisible && (
-                  <Button variant="destructive" size="sm" onClick={clearGallery} className="font-heading text-xs">
-                    <Trash2 className="mr-1.5 h-4 w-4" /> Clear This Abomination
-                  </Button>
-                )}
-              </div>
-            </div>
-            
-            <div 
-              className={cn(
-                "transition-all duration-500 ease-in-out overflow-hidden",
-                isGalleryVisible ? "max-h-[500px]" : "max-h-0" 
-              )}
-            >
-              <ScrollArea 
-                className={cn(
-                  "overflow-y-auto", 
-                  galleryImages.length > 0 ? "h-auto max-h-72" : "h-auto max-h-40" 
-                )}
-              >
-                <div className="p-4 pt-0"> 
-                  {galleryImages.length === 0 ? (
-                    <div className="text-center py-6">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 lucide lucide-images opacity-60">
-                        <path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 18-3-3c-.928-.899-2.34-.926-3.296-.074L9 19"/><path d="M14.5 11.5a1.5 1.5 0 0 1 0-3l.5-.5a1.5 1.5 0 0 1 3 0l.5.5a1.5 1.5 0 0 1 0 3l-.5.5a1.5 1.5 0 0 1-3 0Z"/><path d="m22 6-3-3c-.928-.899-2.34-.926-3.296-.074L9 8"/>
-                      </svg>
-                      <p className="text-lg font-semibold font-heading text-muted-foreground">Gallery's Empty. What a surprise, not. Probably because your ideas are shit.</p>
-                      <p className="text-muted-foreground text-xs">Click "Generate Image" in chat. Maybe you'll get lucky and I'll make something that doesn't completely suck. Doubt it, fucker.</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                      {galleryImages.map((image) => (
-                        <ImageCard key={image.id} image={image} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
