@@ -25,7 +25,8 @@ const statusConfig: Record<AiStatus | 'user_typing', { characterAnimationClass: 
 const idleAnimationTypes = [
   'default_bob', 'jump_playful', 'quick_spin_showoff', 
   'disappear_reappear_sparkles', 'look_around_dynamic', 
-  'shrug_confused', 'maniacal_laugh_pose', 'juggle_ball', 'sleeping'
+  'shrug_confused', 'maniacal_laugh_pose', 'juggle_ball', 'sleeping',
+  'scratch_head', 'kick_air', 'paint_canvas', 'play_card_trick'
 ];
 
 
@@ -79,6 +80,22 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
           setCurrentIdleSubAnimation('is-sleeping');
           nextDelay = 5000; // Sleep for longer
           break;
+        case 'scratch_head':
+          setCurrentIdleSubAnimation('is-scratching-head');
+          nextDelay = 1800;
+          break;
+        case 'kick_air':
+          setCurrentIdleSubAnimation('is-kicking-air');
+          nextDelay = 1500;
+          break;
+        case 'paint_canvas':
+          setCurrentIdleSubAnimation('is-painting');
+          nextDelay = 3500;
+          break;
+        case 'play_card_trick':
+          setCurrentIdleSubAnimation('is-card-tricking');
+          nextDelay = 3000;
+          break;
         case 'default_bob':
         default:
           setCurrentIdleSubAnimation('is-bobbing'); // Default bobbing
@@ -112,10 +129,10 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
     };
   }, [animationClass, currentIdleSubAnimation]);
 
-  // Adjusted size: w-24 h-36 sm:w-28 sm:h-40 md:w-32 md:h-44
+  // Adjusted size: w-20 h-32 sm:w-24 sm:h-36 md:w-28 md:h-40
   // ViewBox for Pickle Rick: approx 70 wide, 150 tall.
   return (
-     <div className={cn("w-24 h-36 sm:w-28 sm:h-40 md:w-32 md:h-44 character-container", animationClass, currentIdleSubAnimation)}>
+     <div className={cn("w-20 h-32 sm:w-24 sm:h-36 md:w-28 md:h-40 character-container", animationClass, currentIdleSubAnimation)}>
       <svg viewBox="0 0 70 150" className="w-full h-full ai-character-svg">
         <defs>
           <radialGradient id="pickleBodyGradient" cx="50%" cy="50%" r="70%" fx="30%" fy="30%">
@@ -134,42 +151,34 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
 
         <g className="character-face-group" transform="translate(0, -10)">
           <g className="character-eyes-group">
-            {/* Modified eyes: wider, slightly less tall, more intense */}
             <ellipse cx="22" cy="45" rx="12" ry="10" className="character-eye-white character-eye-left" />
             <ellipse cx="48" cy="45" rx="12" ry="10" className="character-eye-white character-eye-right" />
-            {/* Modified pupils: smaller */}
             <circle cx="22" cy="45" r="2.5" className="character-pupil character-pupil-left" />
             <circle cx="48" cy="45" r="2.5" className="character-pupil character-pupil-right" />
           </g>
 
           <path d="M 18 30 Q 35 25 52 30" className="character-unibrow" />
-           {/* Modified mouth: wider, more characteristic Pickle Rick grin, slightly open */}
-          <path d="M 15 62 C 20 80, 50 80, 55 62 Q 35 75 15 62 Z" className="character-mouth" />
-           {/* Modified teeth: adjusted to fit the new mouth, appearing inside */}
-          <g className="character-teeth">
-              <rect x="19" y="64" width="3.5" height="7" rx="1"/>
-              <rect x="24.5" y="64" width="3.5" height="8.5" rx="1"/>
-              <rect x="30" y="64" width="3.5" height="9.5" rx="1"/>
-              <rect x="35.5" y="64" width="3.5" height="9.5" rx="1"/>
-              <rect x="41" y="64" width="3.5" height="8.5" rx="1"/>
-              <rect x="46.5" y="64" width="3.5" height="7" rx="1"/>
-          </g>
-          <ellipse cx="35" cy="70" rx="10" ry="4" className="character-tongue" /> {/* Adjusted tongue for new mouth */}
+          <path d="M 20 65 Q 35 80 50 65 Q 35 75 20 65 Z" className="character-mouth" />
+          {/* Teeth removed as per user request */}
+          <ellipse cx="35" cy="70" rx="10" ry="4" className="character-tongue" />
         </g>
 
         <g className="character-listening-ears">
-          <path d="M10 35 Q 5 25 12 18" className="pickle-limb" fill="hsl(var(--character-pickle-body-light-hsl))"/>
-          <path d="M60 35 Q 65 25 58 18" className="pickle-limb" fill="hsl(var(--character-pickle-body-light-hsl))"/>
+          <path d="M10 35 Q 5 25 12 18" className="pickle-limb pickle-ear" fill="hsl(var(--character-pickle-body-light-hsl))"/>
+          <path d="M60 35 Q 65 25 58 18" className="pickle-limb pickle-ear" fill="hsl(var(--character-pickle-body-light-hsl))"/>
         </g>
 
         <g className="character-limbs-group">
           <g className="character-hand-chin-group">
-            <path d="M15 80 C 5 90, 10 105, 25 95" className="pickle-limb" />
+            <path d="M15 80 C 5 90, 10 105, 25 95" className="pickle-limb pickle-hand" />
           </g>
           <g className="character-hands-presenting-group">
-            <path d="M12 90 C -5 100, 0 120, 15 105" className="pickle-limb pickle-limb-left" />
-            <path d="M58 90 C 75 100, 70 120, 55 105" className="pickle-limb pickle-limb-right" />
+            <path d="M12 90 C -5 100, 0 120, 15 105" className="pickle-limb pickle-hand pickle-limb-left" />
+            <path d="M58 90 C 75 100, 70 120, 55 105" className="pickle-limb pickle-hand pickle-limb-right" />
           </g>
+           {/* Added feet elements */}
+          <ellipse cx="25" cy="140" rx="10" ry="5" className="pickle-foot pickle-foot-left" />
+          <ellipse cx="45" cy="140" rx="10" ry="5" className="pickle-foot pickle-foot-right" />
         </g>
         
         <g className="character-sparkles">
@@ -181,6 +190,9 @@ const AiCharacterSVG = ({ animationClass }: { animationClass: string }) => {
         <g className="character-prop-group">
             <circle cx="50" cy="120" r="8" fill="hsl(var(--turquoise-hsl))" className="character-prop-ball"/>
             <text x="35" y="25" className="character-prop-zzz" fill="hsl(var(--muted-foreground))" fontSize="10" textAnchor="middle">Zzz</text>
+            {/* Props for new animations */}
+            <rect x="10" y="50" width="15" height="20" rx="2" fill="hsl(var(--ruby-red-hsl))" class="character-prop-card"/>
+            <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" class="character-prop-paintbrush"/>
         </g>
       </svg>
     </div>
@@ -191,15 +203,23 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
   const effectiveStatus = isUserTyping && (status === 'idle' || status === 'presenting_text' || status === 'presenting_image' || status === 'error') ? 'user_typing' : status;
   const currentVisuals = statusConfig[effectiveStatus] || statusConfig.idle;
   const [isMounted, setIsMounted] = useState(false);
-  // Ensure initial animation class is set
   const [position, setPosition] = useState({ top: '10%', left: '10%', currentAnimationClass: statusConfig.idle.characterAnimationClass });
+  
+  // Refs for chat and gallery areas to avoid overlap
+  const chatAreaRef = useRef<HTMLDivElement | null>(null);
+  const galleryAreaRef = useRef<HTMLDivElement | null>(null);
 
 
   useEffect(() => {
     setIsMounted(true);
-     // Set initial animation class when component mounts
     setPosition(prev => ({...prev, currentAnimationClass: currentVisuals.characterAnimationClass}));
-  }, []); // currentVisuals dependency removed to avoid loop on initial setup
+
+    // Attempt to get references to chat and gallery areas after mount
+    // These IDs would need to be present on the respective wrapper divs in page.tsx
+    chatAreaRef.current = document.getElementById('chat-area-wrapper');
+    galleryAreaRef.current = document.getElementById('gallery-area-wrapper');
+
+  }, []); 
 
   useEffect(() => {
     if (!isMounted) return;
@@ -207,76 +227,91 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     let newTopPercentStr = '10%'; 
     let newLeftPercentStr = '10%';
 
-    // Define viewport-relative bounding box for chat area (approximate)
-    // Chat: max-w-2xl (64rem = 1024px), centered. Gallery below it.
-    // Character dimensions: md:w-32 (8rem = 128px)
-    const chatWidthThreshold = 1024; // px
-    const galleryHeightThreshold = window.innerHeight * 0.33; // Gallery takes bottom 1/3
+    const charWidthPx = 100; // Approximate character width (md:w-28 -> 7rem -> 112px, using 100 for buffer)
+    const charHeightPx = 160; // Approximate character height (md:h-40 -> 10rem -> 160px)
 
-    const charWidthPx = 128; // Approximate character width
-    const charHeightPx = 176; // Approximate character height
+    const calculateSafeZones = () => {
+      let chatRect = { top: 0, bottom: window.innerHeight * 0.6, left: 0, right: window.innerWidth };
+      let galleryRect = { top: window.innerHeight * 0.65, bottom: window.innerHeight, left: 0, right: window.innerWidth };
 
-    const chatAreaTop = 0; // Assuming chat is near the top part of its flexible space
-    const chatAreaBottom = window.innerHeight - galleryHeightThreshold - charHeightPx; // Approximate bottom of chat viewport area
-    const chatAreaLeft = (window.innerWidth - Math.min(window.innerWidth, chatWidthThreshold)) / 2;
-    const chatAreaRight = window.innerWidth - chatAreaLeft;
+      if (chatAreaRef.current) {
+        const rect = chatAreaRef.current.getBoundingClientRect();
+        chatRect = {
+          top: rect.top,
+          bottom: rect.bottom,
+          left: rect.left,
+          right: rect.right,
+        };
+      }
+      if (galleryAreaRef.current) {
+        const rect = galleryAreaRef.current.getBoundingClientRect();
+        galleryRect = {
+          top: rect.top,
+          bottom: rect.bottom,
+          left: rect.left,
+          right: rect.right,
+        };
+      }
+      return { chatRect, galleryRect };
+    };
+    
+    const isOverlapping = (x: number, y: number, rect: DOMRect | { top: number, bottom: number, left: number, right: number }) => {
+        // x, y are center of character. Check if character's bounding box overlaps rect.
+        const charBox = {
+            top: y - charHeightPx / 2,
+            bottom: y + charHeightPx / 2,
+            left: x - charWidthPx / 2,
+            right: x + charWidthPx / 2,
+        };
+        return !(charBox.right < rect.left || 
+                 charBox.left > rect.right || 
+                 charBox.bottom < rect.top || 
+                 charBox.top > rect.bottom);
+    };
 
 
     if (effectiveStatus === 'user_typing') {
-      // Near chat input area but not overlapping
-      if (window.innerWidth > chatWidthThreshold + charWidthPx * 2.5) { // Enough space on sides
-         newLeftPercentStr = `${Math.max(5, chatAreaLeft / window.innerWidth * 100 - 10)}%`; // Left of chat
-      } else {
-         newLeftPercentStr = '10%'; // General left
-      }
-      // Position above gallery, and try to be vertically centered in the remaining space if possible
-      const availableHeightForCharMovement = window.innerHeight - galleryHeightThreshold - charHeightPx - 64; // 64 for header
-      newTopPercentStr = `${Math.max(10, 64 / window.innerHeight * 100 + (availableHeightForCharMovement / 2) / window.innerHeight * 100)}%`; 
-    } else if (effectiveStatus === 'thinking_text' || effectiveStatus === 'thinking_image') {
-      // Focus area, avoiding center (chat)
-      const thinkingLeftRoll = Math.random();
-      if (window.innerWidth > chatWidthThreshold + charWidthPx * 2.5) {
-          newLeftPercentStr = thinkingLeftRoll < 0.5 ? 
-            `${Math.max(5, (chatAreaLeft - charWidthPx) / window.innerWidth * 100 - 5)}%` : // Far left of chat
-            `${Math.min(95-(charWidthPx/window.innerWidth*100), (chatAreaRight + charWidthPx/2) / window.innerWidth * 100 + 5)}%`; // Far right of chat
-      } else {
-          newLeftPercentStr = thinkingLeftRoll < 0.5 ? '10%' : `${90-(charWidthPx/window.innerWidth*100)}%`;
-      }
-      newTopPercentStr = `${15 + Math.random() * 20}%`; // Upper part of screen
-    } else if (effectiveStatus === 'idle' || effectiveStatus === 'presenting_text' || effectiveStatus === 'presenting_image' || effectiveStatus === 'error') {
-      // Free-roaming, avoiding chat and gallery
-      let randomTop, randomLeft;
+      // User typing: Character sits beside the chat area
+      const { chatRect } = calculateSafeZones();
+      const chatCenterY = chatRect.top + (chatRect.bottom - chatRect.top) / 2;
       
-      const safeTopMinPercent = 10; // Below header
-      const safeTopMaxPercent = 100 - (galleryHeightThreshold + charHeightPx + 20) / window.innerHeight * 100; // Above gallery, 20px buffer
+      // Try left of chat first
+      let targetX = chatRect.left - charWidthPx / 2 - 20; // 20px buffer
+      let targetY = chatCenterY;
 
-      if (window.innerWidth <= chatWidthThreshold + charWidthPx * 1.5) { // Screen is narrow
-        // Roam left or right column
-        randomLeft = Math.random() < 0.5 ? 
-          (5 + Math.random() * (15 - (charWidthPx / window.innerWidth * 100))) : 
-          (85 + Math.random() * (15 - (charWidthPx / window.innerWidth * 100)));
-        randomTop = safeTopMinPercent + Math.random() * (safeTopMaxPercent - safeTopMinPercent);
-      } else { // Screen has space on sides of chat
-        const chatLeftEdgePercent = chatAreaLeft / window.innerWidth * 100;
-        const chatRightEdgePercent = chatAreaRight / window.innerWidth * 100;
-
-        const canGoLeft = chatLeftEdgePercent > (charWidthPx / window.innerWidth * 100) + 10;
-        const canGoRight = (100 - chatRightEdgePercent) > (charWidthPx / window.innerWidth * 100) + 10;
-
-        const roll = Math.random();
-        if (canGoLeft && roll < 0.45) { // Left of chat
-            randomLeft = 5 + Math.random() * (chatLeftEdgePercent - (charWidthPx / window.innerWidth * 100) - 10);
-            randomTop = safeTopMinPercent + Math.random() * (safeTopMaxPercent - safeTopMinPercent);
-        } else if (canGoRight && roll < 0.9) { // Right of chat
-            randomLeft = chatRightEdgePercent + 5 + Math.random() * (95 - chatRightEdgePercent - (charWidthPx / window.innerWidth * 100) -5);
-            randomTop = safeTopMinPercent + Math.random() * (safeTopMaxPercent - safeTopMinPercent);
-        } else { // Top strip, if space permits or as fallback
-            randomLeft = 5 + Math.random() * (90 - (charWidthPx / window.innerWidth * 100));
-            randomTop = safeTopMinPercent + Math.random() * Math.min(15, safeTopMaxPercent - safeTopMinPercent); // Mostly upper part if in this fallback
-        }
+      if (targetX < charWidthPx / 2) { // Not enough space on left, try right
+          targetX = chatRect.right + charWidthPx / 2 + 20;
       }
-      newTopPercentStr = `${Math.max(safeTopMinPercent, Math.min(safeTopMaxPercent, randomTop))}%`;
-      newLeftPercentStr = `${Math.max(5, Math.min(95 - (charWidthPx / window.innerWidth * 100), randomLeft))}%`;
+      if (targetX > window.innerWidth - charWidthPx / 2) { // Still no space, default to top left
+          targetX = charWidthPx;
+      }
+       if (targetY < charHeightPx / 2 || targetY > window.innerHeight - charHeightPx / 2) {
+          targetY = Math.max(charHeightPx / 2 + 10, Math.min(window.innerHeight - charHeightPx/2 -10, chatCenterY));
+       }
+
+
+      newLeftPercentStr = `${(targetX / window.innerWidth) * 100}%`;
+      newTopPercentStr = `${(targetY / window.innerHeight) * 100}%`;
+
+    } else { // All other states: Roam freely but avoid overlap
+      const { chatRect, galleryRect } = calculateSafeZones();
+      let attempts = 0;
+      let randomX, randomY;
+
+      do {
+        randomX = charWidthPx / 2 + Math.random() * (window.innerWidth - charWidthPx);
+        randomY = charHeightPx / 2 + Math.random() * (window.innerHeight - charHeightPx);
+        attempts++;
+      } while ((isOverlapping(randomX, randomY, chatRect) || isOverlapping(randomX, randomY, galleryRect)) && attempts < 20);
+      
+      // If still overlapping after attempts, try to place it in a known "safer" zone like top-left
+      if (attempts >= 20 && (isOverlapping(randomX, randomY, chatRect) || isOverlapping(randomX, randomY, galleryRect))) {
+        randomX = charWidthPx / 2 + 20; // buffer from edge
+        randomY = charHeightPx / 2 + 70; // buffer from top header (approx 64px)
+      }
+
+      newLeftPercentStr = `${(randomX / window.innerWidth) * 100}%`;
+      newTopPercentStr = `${(randomY / window.innerHeight) * 100}%`;
     }
     
     const moveCharacter = () => {
@@ -290,16 +325,13 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     const movementDelay = (effectiveStatus === 'idle' || effectiveStatus === 'presenting_text' || effectiveStatus === 'presenting_image') ? (3000 + Math.random() * 2500) : 400;
     const timeoutId = setTimeout(moveCharacter, movementDelay); 
     
-    // Ensure currentAnimationClass is updated immediately when effectiveStatus changes
     if (position.currentAnimationClass !== currentVisuals.characterAnimationClass) {
        setPosition(prev => ({...prev, currentAnimationClass: currentVisuals.characterAnimationClass}));
     }
 
-
     return () => {
       clearTimeout(timeoutId);
     };
-  // position.currentAnimationClass removed from deps to prevent re-triggering movement on class change only
   }, [effectiveStatus, isMounted, currentVisuals.characterAnimationClass]);
 
 
@@ -315,9 +347,9 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
         left: position.left, 
         transform: 'translate(-50%, -50%)',
       }}
+      aria-hidden="true" // Decorative element
     >
       <AiCharacterSVG animationClass={cn(position.currentAnimationClass)} />
     </div>
   );
 }
-

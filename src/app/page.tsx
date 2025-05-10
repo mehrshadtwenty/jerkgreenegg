@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
-import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, MessageSquareDashed, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, Sparkles, StopCircle, Trash2, GalleryHorizontalEnd, ChevronDown, ChevronUp } from 'lucide-react'; // MessageSquareDashed removed
 import { ImageCard } from '@/components/gallery/image-card';
 import { cn } from '@/lib/utils';
 
@@ -236,11 +236,11 @@ export default function HomePage() {
       <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
       
       <div className="flex-grow flex flex-col overflow-hidden pt-16"> 
-        <div className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden">
+        <div id="chat-area-wrapper" className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden">
           <ScrollArea className="flex-grow p-4 space-y-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
-                <MessageSquareDashed className="h-16 w-16 text-muted-foreground opacity-70 mx-auto mb-4" />
+                {/* MessageSquareDashed icon removed */}
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
                 <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death.</p>
               </div>
@@ -317,19 +317,14 @@ export default function HomePage() {
         </div>
 
         {isClient && (
-          <div className="relative z-10 mt-4 border-t border-border/30 bg-card/30">
-            <div className="p-4 pb-2"> {/* Adjusted padding */}
+          <div id="gallery-area-wrapper" className="relative z-10 mt-4 border-t border-border/30 bg-card/30">
+            <div className="p-4 pb-2">
               <div className="flex justify-between items-center mb-3">
-                <h2 className="text-2xl font-bold font-heading text-primary drop-shadow-sm flex items-center gap-2">
-                  <GalleryHorizontalEnd className="h-7 w-7 text-secondary" />
-                  Visions of My Infinite Genius (and some crap I made)
-                </h2>
-                <div className="flex items-center gap-2">
-                  {galleryImages.length > 0 && isGalleryVisible && (
-                    <Button variant="destructive" size="sm" onClick={clearGallery} className="font-heading text-xs">
-                      <Trash2 className="mr-1.5 h-4 w-4" /> Clear This Abomination
-                    </Button>
-                  )}
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-bold font-heading text-primary drop-shadow-sm flex items-center gap-2">
+                    <GalleryHorizontalEnd className="h-7 w-7 text-secondary" />
+                    Visions of My Infinite Genius (and some crap I made)
+                  </h2>
                   <Button 
                     variant="ghost" 
                     size="icon" 
@@ -338,25 +333,31 @@ export default function HomePage() {
                     aria-label={isGalleryVisible ? "Hide gallery" : "Show gallery"}
                     aria-expanded={isGalleryVisible}
                   >
-                    {isGalleryVisible ? <ChevronUp className="h-6 w-6" /> : <ChevronDown className="h-6 w-6" />}
+                    {isGalleryVisible ? <ChevronUp className="h-8 w-8" /> : <ChevronDown className="h-8 w-8" />}
                   </Button>
                 </div>
+                
+                {galleryImages.length > 0 && isGalleryVisible && (
+                  <Button variant="destructive" size="sm" onClick={clearGallery} className="font-heading text-xs">
+                    <Trash2 className="mr-1.5 h-4 w-4" /> Clear This Abomination
+                  </Button>
+                )}
               </div>
             </div>
             
             <div 
               className={cn(
                 "transition-all duration-500 ease-in-out overflow-hidden",
-                isGalleryVisible ? "max-h-[500px]" : "max-h-0" // Adjust 500px if needed
+                isGalleryVisible ? "max-h-[500px]" : "max-h-0" 
               )}
             >
               <ScrollArea 
                 className={cn(
-                  "overflow-y-auto", // Horizontal scroll implicitly disabled by not adding horizontal ScrollBar
-                  galleryImages.length > 0 ? "h-auto max-h-72" : "h-auto max-h-40" // Dynamically adjust max-height
+                  "overflow-y-auto", 
+                  galleryImages.length > 0 ? "h-auto max-h-72" : "h-auto max-h-40" 
                 )}
               >
-                <div className="p-4 pt-0"> {/* Content padding */}
+                <div className="p-4 pt-0"> 
                   {galleryImages.length === 0 ? (
                     <div className="text-center py-6">
                       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 lucide lucide-images opacity-60">
@@ -381,4 +382,3 @@ export default function HomePage() {
     </div>
   );
 }
-
