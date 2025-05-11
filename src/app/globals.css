@@ -233,9 +233,9 @@ body {
 .character-idle .character-pupil { animation: character-blink 4.5s infinite, character-pupil-idle-roam 6.5s infinite ease-in-out; }
 
 /* Default idle face unless overridden by variations */
-.character-idle:not(.is-tongue-out):not(.is-sleeping):not(.is-laughing):not(.is-poker-face) .character-unibrow { d: path("M 18 30 Q 35 22 52 30"); transform: translateY(0); } 
-.character-idle:not(.is-tongue-out):not(.is-sleeping):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 22 58 Q 35 72 48 58 Q 35 68 22 58 Z"); }
-.character-idle:not(.is-tongue-out):not(.is-sleeping):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-unibrow { d: path("M 18 30 Q 35 22 52 30"); transform: translateY(0); } 
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 22 58 Q 35 72 48 58 Q 35 68 22 58 Z"); }
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
 
 
 /* Idle Tongue Out Variation */
@@ -256,14 +256,6 @@ body {
   opacity: 1 !important; 
   animation: character-sparkle-effect 0.3s infinite; 
 }
-
-/* Idle Sleeping Variation */
-.character-idle.is-sleeping .character-unibrow { d: path("M 20 35 Q 35 32 50 35"); } /* Relaxed, slightly lowered */
-.character-idle.is-sleeping .character-eye-white { transform: scaleY(0.2) translateY(5px); } /* Eyes mostly closed */
-.character-idle.is-sleeping .character-pupil { opacity: 0; }
-.character-idle.is-sleeping .character-mouth { d: path("M 28 60 Q 35 63 42 60"); } /* Slight, soft mouth line */
-.character-idle.is-sleeping .character-prop-zzz { opacity: 1; animation: character-zzz-float 2s infinite ease-in-out; }
-
 
 /* Idle Laughing Variation */
 .character-idle.is-laughing .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate, character-shake-gentle 0.5s infinite ease-in-out; }
@@ -422,10 +414,6 @@ body {
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-@keyframes character-zzz-float {
-  0%, 100% { transform: translateY(0) translateX(0) rotate(-5deg); }
-  50% { transform: translateY(-5px) translateX(2px) rotate(5deg); }
-}
 
 @keyframes character-shake-gentle {
   0%, 100% { transform: translateX(0) rotate(0); }
@@ -433,5 +421,3 @@ body {
   50% { transform: translateX(0) rotate(0); }
   75% { transform: translateX(1px) rotate(0.5deg); }
 }
-
-    
