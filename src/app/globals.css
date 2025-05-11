@@ -57,7 +57,7 @@ body {
     /* Pickle Rick Character Colors */
     --character-pickle-body-main-hsl: 115 55% 42%; /* Main pickle green */
     --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter pickle green for highlights/gradient */
-    --character-pickle-unibrow-hsl: 115 60% 20%; /* Darker green for unibrow - MODIFIED */
+    --character-pickle-unibrow-hsl: 115 60% 15%; /* Darker green for unibrow - MODIFIED from 20% to 15% for darker */
     --character-pickle-limb-hsl: 115 50% 48%; /* Slightly different green for limbs if needed */
     --character-mouth-dark-hsl: 0 0% 15%; /* Dark color for mouth interior/lines */
     --character-tongue-hsl: 0 70% 58%; /* Pinkish red for tongue */
@@ -109,7 +109,7 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
-    --character-pickle-unibrow-hsl: 115 55% 15%; /* MODIFIED */
+    --character-pickle-unibrow-hsl: 115 55% 10%; /* MODIFIED from 15% to 10% for darker */
   }
 }
 
@@ -241,11 +241,11 @@ body {
 .character-idle .ai-character-svg:not(.is-teleporting .ai-character-svg) { /* Don't apply bob if teleporting */
   animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; 
 }
-.character-idle .character-pupil { animation: character-blink 4.5s infinite; } /* Removed character-pupil-idle-roam */
+.character-idle .character-pupil { animation: character-blink 4.5s infinite; }
 
 /* Default idle face unless overridden by variations */
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-unibrow { d: path("M 18 30 Q 35 22 52 30"); transform: translateY(0); } 
-.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 22 58 Q 35 72 48 58 Q 35 68 22 58 Z"); }
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 22 58 Q 35 68 48 58 Q 35 64 22 58 Z"); } /* Default slightly smiling mouth */
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
 
 
@@ -271,12 +271,12 @@ body {
 /* Idle Laughing Variation (Smile) */
 .character-idle.is-laughing .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate, character-shake-gentle 0.5s infinite ease-in-out; }
 .character-idle.is-laughing .character-unibrow { d: path("M 15 25 C 25 15, 45 15, 55 25"); } /* Arched high for laughter */
-.character-idle.is-laughing .character-eye-white { transform: scaleY(0.6) translateY(2px); } /* Squinting eyes */
-.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 80 55 55 Q 35 70 15 55 Z"); } /* Wide open laughing mouth */
+.character-idle.is-laughing .character-eye-white { transform: scaleY(0.8) translateY(1px); } /* Squinting eyes slightly */
+.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 80 55 55 Q 35 70 15 55 Z"); } /* Wider open laughing mouth */
 
 
 /* Idle Poker Face Variation */
-.character-idle.is-poker-face .character-unibrow { d: path("M 18 30 Q 35 30 52 30"); } /* Straight, neutral unibrow */
+.character-idle.is-poker-face .character-unibrow { d: path("M 18 30 L 52 30"); } /* Straight, neutral unibrow */
 .character-idle.is-poker-face .character-eye-white { transform: scale(1); } /* Normal eyes */
 .character-idle.is-poker-face .character-pupil { transform: translate(0,0); animation: none; } /* Still pupils */
 .character-idle.is-poker-face .character-mouth { d: path("M 25 60 L 45 60"); } /* Straight line mouth */
@@ -344,10 +344,10 @@ body {
 }
 
 @keyframes character-think-pupils { 
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  25% { transform: translateY(-1.5px) translateX(-1px); } 
-  50% { transform: translateY(0.5px) translateX(0.5px); }
-  75% { transform: translateY(1px) translateX(1.5px); }
+  0%, 100% { transform: translateX(0px); } /* No vertical movement */
+  25% { transform: translateX(-0.5px); } /* Slight left */
+  50% { transform: translateX(0px); }
+  75% { transform: translateX(0.5px); }  /* Slight right */
 }
 
 @keyframes character-shake-intense { 
@@ -424,11 +424,8 @@ body {
   50% { transform: translateX(0) rotate(0); }
   75% { transform: translateX(1px) rotate(0.5deg); }
 }
-/* Remove any unused or problematic keyframes like character-pupil-idle-roam if it was causing bugs */
-/* @keyframes character-pupil-idle-roam { ... } */
 
 /* Additional Character Prop styling */
-/* Example: Zzz text for sleeping (if re-added) */
 .character-prop-zzz {
   font-family: 'Comic Sans MS', 'Chalkduster', 'cursive';
   font-weight: bold;
@@ -457,3 +454,11 @@ body {
   0%, 100% { transform: translateY(0) rotate(0); }
   50% { transform: translateY(-3px) rotate(5deg); }
 }
+
+/* Ensure Pickle Rick does not go over chat area by setting a lower z-index */
+/* This can be adjusted if needed, but typically fixed elements have higher z-index */
+.character-container {
+  z-index: 10; /* Lower than chat area wrapper (z-20) */
+}
+
+    
