@@ -57,7 +57,7 @@ body {
     /* Pickle Rick Character Colors */
     --character-pickle-body-main-hsl: 115 55% 42%; /* Main pickle green */
     --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter pickle green for highlights/gradient */
-    --character-pickle-unibrow-hsl: 115 60% 30%; /* Darker green for unibrow */
+    --character-pickle-unibrow-hsl: 115 60% 20%; /* Darker green for unibrow - MODIFIED */
     --character-pickle-limb-hsl: 115 50% 48%; /* Slightly different green for limbs if needed */
     --character-mouth-dark-hsl: 0 0% 15%; /* Dark color for mouth interior/lines */
     --character-tongue-hsl: 0 70% 58%; /* Pinkish red for tongue */
@@ -109,7 +109,7 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
-    --character-pickle-unibrow-hsl: 115 55% 25%;
+    --character-pickle-unibrow-hsl: 115 55% 15%; /* MODIFIED */
   }
 }
 
@@ -174,6 +174,17 @@ body {
   .text-link-style-stop {
      @apply text-destructive hover:text-destructive/80 underline cursor-pointer font-medium text-sm;
   }
+  /* Added for new character props */
+  .character-prop-hidden {
+    opacity: 0 !important;
+    transform: scale(0.5) !important;
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
+  }
+  .character-prop-visible {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
+  }
 }
 
 
@@ -230,7 +241,7 @@ body {
 .character-idle .ai-character-svg:not(.is-teleporting .ai-character-svg) { /* Don't apply bob if teleporting */
   animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; 
 }
-.character-idle .character-pupil { animation: character-blink 4.5s infinite, character-pupil-idle-roam 6.5s infinite ease-in-out; }
+.character-idle .character-pupil { animation: character-blink 4.5s infinite; } /* Removed character-pupil-idle-roam */
 
 /* Default idle face unless overridden by variations */
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-unibrow { d: path("M 18 30 Q 35 22 52 30"); transform: translateY(0); } 
@@ -257,7 +268,7 @@ body {
   animation: character-sparkle-effect 0.3s infinite; 
 }
 
-/* Idle Laughing Variation */
+/* Idle Laughing Variation (Smile) */
 .character-idle.is-laughing .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate, character-shake-gentle 0.5s infinite ease-in-out; }
 .character-idle.is-laughing .character-unibrow { d: path("M 15 25 C 25 15, 45 15, 55 25"); } /* Arched high for laughter */
 .character-idle.is-laughing .character-eye-white { transform: scaleY(0.6) translateY(2px); } /* Squinting eyes */
@@ -330,14 +341,6 @@ body {
   40% { transform: translate(0px, -0.3px); }
   60% { transform: translate(1.2px, 0.3px); }
   80% { transform: translate(-0.5px, 0.5px); }
-}
-@keyframes character-pupil-idle-roam { 
-  0%, 100% { transform: translate(0px, 0px); }
-  15% { transform: translate(-1px, 0.2px); }
-  35% { transform: translate(0.6px, -0.4px); }
-  55% { transform: translate(0.8px, 0.2px); }
-  75% { transform: translate(-0.2px, 0.4px); }
-  90% { transform: translate(0.2px, -0.1px); }
 }
 
 @keyframes character-think-pupils { 
@@ -420,4 +423,37 @@ body {
   25% { transform: translateX(-1px) rotate(-0.5deg); }
   50% { transform: translateX(0) rotate(0); }
   75% { transform: translateX(1px) rotate(0.5deg); }
+}
+/* Remove any unused or problematic keyframes like character-pupil-idle-roam if it was causing bugs */
+/* @keyframes character-pupil-idle-roam { ... } */
+
+/* Additional Character Prop styling */
+/* Example: Zzz text for sleeping (if re-added) */
+.character-prop-zzz {
+  font-family: 'Comic Sans MS', 'Chalkduster', 'cursive';
+  font-weight: bold;
+  animation: character-prop-zzz-float 1.5s infinite ease-in-out alternate;
+}
+@keyframes character-prop-zzz-float {
+  from { transform: translateY(0px) rotate(-5deg); opacity: 0.7; }
+  to { transform: translateY(-5px) rotate(5deg); opacity: 1; }
+}
+
+/* Example: Paintbrush prop */
+.character-prop-paintbrush {
+  transform-origin: bottom left;
+  animation: character-prop-paint-sway 2s infinite ease-in-out;
+}
+@keyframes character-prop-paint-sway {
+  0%, 100% { transform: rotate(-10deg) translateX(-2px); }
+  50% { transform: rotate(10deg) translateX(2px); }
+}
+
+/* Example: Card prop */
+.character-prop-card {
+  animation: character-prop-card-float 2.5s infinite ease-in-out;
+}
+@keyframes character-prop-card-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-3px) rotate(5deg); }
 }

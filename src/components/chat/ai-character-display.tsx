@@ -24,11 +24,10 @@ const statusConfig: Record<AiStatus | 'user_typing', { characterAnimationClass: 
 };
 
 const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: string, idleVariation: IdleVariation }) => {
-  // ViewBox for Pickle Rick: 0 0 70 100 (original aspect ratio)
-  // Adjusted size: base w-20 h-auto (aspect-ratio will handle height)
+  // Adjusted size: base w-16 h-auto (aspect-ratio will handle height) - MODIFIED from w-20
   return (
      <div className={cn(
-        "w-20 h-auto character-container", 
+        "w-16 h-auto character-container",  // MODIFIED from w-20
          animationClass,
          idleVariation === 'tongue_out' && 'is-tongue-out',
          idleVariation === 'teleporting' && 'is-teleporting',
@@ -81,9 +80,10 @@ const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: str
 
         {/* Group for props like cards, paintbrush, etc. Hidden by default. */}
         <g className="character-prop-group">
-            {/* Placeholder for props - these will be styled and animated by CSS */}
+            {/* Example props */}
             {/* <rect x="10" y="50" width="15" height="20" rx="2" fill="hsl(var(--ruby-red-hsl))" className="character-prop-card"/>
-            <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" className="character-prop-paintbrush"/> */}
+            <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" className="character-prop-paintbrush"/>
+            <text x="35" y="25" className="character-prop-zzz" fill="hsl(var(--muted-foreground))" fontSize="10" textAnchor="middle">Zzz</text> */}
         </g>
       </svg>
     </div>
@@ -127,12 +127,11 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       if (movementTimeoutRef.current) clearTimeout(movementTimeoutRef.current);
       
       // Approximate character dimensions (can be refined)
-      // Based on w-20 (80px at base font size) and aspect ratio, let's say ~115px height
-      const charWidthPx = 80; 
-      const charHeightPx = 115; 
+      // Based on w-16 (64px at base font size) and aspect ratio, let's say ~92px height (64 * 100/70)
+      const charWidthPx = 64; // Updated from 80
+      const charHeightPx = Math.round(charWidthPx * (100/70)); // Maintain aspect ratio
 
       const calculateSafeZones = () => {
-        // Default "forbidden" zone if chat area isn't found - a generous center area.
         let forbiddenRect = { 
             top: window.innerHeight * 0.25, 
             bottom: window.innerHeight * 0.75, 
@@ -142,9 +141,7 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
         
         if (chatAreaRef.current) {
           const rect = chatAreaRef.current.getBoundingClientRect();
-           // Define the forbidden zone around the chat area, ensuring character doesn't overlap too much
-           // The character's position is its center, so adjust for half its width/height
-           const padding = 10; // Small padding
+           const padding = 10; 
            forbiddenRect = { 
             top: rect.top - charHeightPx / 2 - padding, 
             bottom: rect.bottom + charHeightPx / 2 + padding, 
@@ -168,9 +165,7 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       let randomXPx = 0, randomYPx = 0;
       const maxAttempts = 50;
       
-      // Try to find a position outside the forbidden zone
       do {
-        // Random position within viewport, ensuring character center is fully visible
         randomXPx = (charWidthPx / 2) + Math.random() * (window.innerWidth - charWidthPx);
         randomYPx = (charHeightPx / 2) + Math.random() * (window.innerHeight - charHeightPx);
         attempts++;
@@ -178,17 +173,15 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
         isOverlappingForbiddenZone(randomXPx, randomYPx, forbiddenRect) && attempts < maxAttempts
       );
       
-      // If a non-overlapping position is found, use it
       if (attempts < maxAttempts) { 
           newLeftPercentStr = `${(randomXPx / window.innerWidth) * 100}%`;
           newTopPercentStr = `${(randomYPx / window.innerHeight) * 100}%`;
       } else {
-          // Fallback: if too many attempts, place it along the edges, away from the center bias of the forbidden zone
-          const edgeMarginPercent = 5; // % from edge
-          if (Math.random() < 0.5) { // Top or Bottom edge
+          const edgeMarginPercent = 5; 
+          if (Math.random() < 0.5) { 
             newTopPercentStr = Math.random() < 0.5 ? `${edgeMarginPercent}%` : `${100 - edgeMarginPercent}%`;
             newLeftPercentStr = `${(Math.random() * (100 - 2 * edgeMarginPercent)) + edgeMarginPercent}%`;
-          } else { // Left or Right edge
+          } else { 
             newLeftPercentStr = Math.random() < 0.5 ? `${edgeMarginPercent}%` : `${100 - edgeMarginPercent}%`;
             newTopPercentStr = `${(Math.random() * (100 - 2 * edgeMarginPercent)) + edgeMarginPercent}%`;
           }
@@ -202,10 +195,9 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
         }));
       };
 
-      // Movement delay, shorter if teleporting
-      let movementDelayMs = 2500 + Math.random() * 3000; // 2.5s to 5.5s
+      let movementDelayMs = 2500 + Math.random() * 3000; 
       if (effectiveStatus === 'idle' && idleVariation === 'teleporting') {
-        movementDelayMs = 750; // Quicker move after teleport
+        movementDelayMs = 750; 
       }
       
       movementTimeoutRef.current = setTimeout(doMove, movementDelayMs);
@@ -235,30 +227,26 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
           let nextIdleVariation: IdleVariation = 'default';
           const rand = Math.random();
 
-          // Adjusted probabilities after removing 'sleeping'
-          if (rand < 0.30) nextIdleVariation = 'default';        // 30%
-          else if (rand < 0.55) nextIdleVariation = 'tongue_out'; // 25%
-          else if (rand < 0.75) nextIdleVariation = 'laughing';     // 20%
-          else if (rand < 0.90) nextIdleVariation = 'poker_face';   // 15%
-          else nextIdleVariation = 'teleporting';      // 10%
+          // Cycle through default, tongue_out, laughing (smile), poker_face, teleporting
+          if (rand < 0.20) nextIdleVariation = 'default';         // 20%
+          else if (rand < 0.40) nextIdleVariation = 'tongue_out';  // 20%
+          else if (rand < 0.60) nextIdleVariation = 'laughing';    // 20% (serves as smile)
+          else if (rand < 0.80) nextIdleVariation = 'poker_face';  // 20%
+          else nextIdleVariation = 'teleporting';       // 20%
 
           setIdleVariation(prevVariation => {
-            // If next is teleporting, schedule reset to default face after teleport animation
             if (nextIdleVariation === 'teleporting') {
               if (idleFaceChangeTimeoutRef.current) clearTimeout(idleFaceChangeTimeoutRef.current);
-              // Teleport animation is 1.5s, reset face shortly after
               idleFaceChangeTimeoutRef.current = setTimeout(() => setIdleVariation('default'), 1500); 
               return 'teleporting';
             }
-            // Otherwise, just set the new face variation
             return nextIdleVariation;
           });
           
-          // Schedule next idle variation change
-          idleVariationTimeoutRef.current = setTimeout(scheduleIdleVariation, 5000 + Math.random() * 5000); // 5s to 10s
+          idleVariationTimeoutRef.current = setTimeout(scheduleIdleVariation, 5000 + Math.random() * 5000); 
       };
 
-      scheduleIdleVariation(); // Initial call to start the cycle
+      scheduleIdleVariation(); 
 
       return () => {
           if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
@@ -268,25 +256,23 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
 
 
   if (!isMounted) {
-    // Prevent SSR or rendering before mount to avoid layout shifts / hydration issues with random positioning
     return null;
   }
 
   return (
     <div 
-      className="fixed z-0 pointer-events-none" // Character is behind chat but visible
+      className="fixed z-0 pointer-events-none" 
       style={{ 
         top: position.top, 
         left: position.left, 
-        transform: 'translate(-50%, -50%)', // Center the character on the coordinates
+        transform: 'translate(-50%, -50%)', 
       }}
       aria-hidden="true"
     >
       <AiCharacterSVG 
         animationClass={cn(position.currentAnimationClass)}
-        idleVariation={status === 'idle' ? idleVariation : 'default'} // Only apply idle face variations when status is idle
+        idleVariation={status === 'idle' ? idleVariation : 'default'} 
       />
     </div>
   );
 }
-
