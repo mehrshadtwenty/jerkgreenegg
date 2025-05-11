@@ -28,7 +28,7 @@ const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: str
   // New smaller size: base w-24 h-36, sm:w-28 h-42, md:w-32 h-48
   return (
      <div className={cn(
-        "w-24 h-36 sm:w-28 sm:h-42 md:w-32 md:h-48 character-container", 
+        "w-24 h-36 sm:w-28 sm:h-[11.6rem] md:w-32 md:h-[13.3rem] character-container", // Corrected h-42 and h-48 to rem
          animationClass,
          idleVariation === 'tongue_out' && 'is-tongue-out',
          idleVariation === 'teleporting' && 'is-teleporting',
@@ -62,7 +62,7 @@ const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: str
           </g>
           <path d="M 18 30 Q 35 22 52 30" strokeWidth="3" strokeLinecap="round" className="character-unibrow" />
           {/* Adjusted mouth for more natural look - this path will be overridden by animation states */}
-          <path d="M 25 60 Q 35 70 45 60 Q 35 65 25 60 Z" className="character-mouth" /> 
+          <path d="M 22 58 Q 35 72 48 58 Q 35 68 22 58 Z" className="character-mouth" />  
           <path d="M 30 65 Q 35 62 40 65" className="character-tongue" fill="hsl(var(--character-tongue-hsl))" stroke="hsl(var(--character-mouth-dark-hsl))" strokeWidth="0.5" />
         </g>
         
@@ -73,8 +73,9 @@ const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: str
         </g>
 
         <g className="character-prop-group">
-            <circle cx="50" cy="90" r="8" fill="hsl(var(--turquoise-hsl))" className="character-prop-ball"/>
+            {/* Zzz prop for sleeping */}
             <text x="35" y="25" className="character-prop-zzz" fill="hsl(var(--muted-foreground))" fontSize="10" textAnchor="middle">Zzz</text>
+            {/* Props for new animations */}
             <rect x="10" y="50" width="15" height="20" rx="2" fill="hsl(var(--ruby-red-hsl))" className="character-prop-card"/>
             <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" className="character-prop-paintbrush"/>
         </g>
@@ -117,7 +118,6 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     const scheduleMovement = () => {
       if (movementTimeoutRef.current) clearTimeout(movementTimeoutRef.current);
       
-      // New smaller size: md:w-32 (128px), md:h-48 (192px)
       const charWidthPx = 128; 
       const charHeightPx = 192; 
 
@@ -126,9 +126,7 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
         
         if (chatAreaRef.current) {
           const rect = chatAreaRef.current.getBoundingClientRect();
-           // Define the chat area as a forbidden zone. The character's center should not be within this zone.
-           // Add some padding to the forbidden zone so the character doesn't touch the edges of the chat.
-           const padding = 20; // pixels
+           const padding = 20; 
            chatRect = { 
             top: rect.top - charHeightPx / 2 - padding, 
             bottom: rect.bottom + charHeightPx / 2 + padding, 
@@ -142,7 +140,6 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       };
       
       const isOverlappingForbiddenZone = (centerX: number, centerY: number, forbiddenRect: { top: number, bottom: number, left: number, right: number }) => {
-          // Check if the character's *center point* (centerX, centerY) falls within the forbiddenRect
           return centerX > forbiddenRect.left && centerX < forbiddenRect.right &&
                  centerY > forbiddenRect.top && centerY < forbiddenRect.bottom;
       };
@@ -154,27 +151,22 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       let attempts = 0;
       let randomXPx = 0, randomYPx = 0;
       
-      // Generate random *center* positions for the character
       do {
         randomXPx = Math.random() * window.innerWidth;
         randomYPx = Math.random() * window.innerHeight;
         attempts++;
       } while (
-        isOverlappingForbiddenZone(randomXPx, randomYPx, chatRect) && attempts < 50 // Increased attempts
+        isOverlappingForbiddenZone(randomXPx, randomYPx, chatRect) && attempts < 50 
       );
       
-      // If a non-overlapping spot is found, use it.
-      // Otherwise, it will stick to its previous position or a default if this is the first run.
-      // The actual new position will be set so that (randomXPx, randomYPx) is the center.
       if (attempts < 50) { 
           newLeftPercentStr = `${(randomXPx / window.innerWidth) * 100}%`;
           newTopPercentStr = `${(randomYPx / window.innerHeight) * 100}%`;
       } else {
-          // Fallback: try to place it on an edge, preferring top/bottom if sides are too constrained by chat
-          if (Math.random() < 0.5) { // Try top or bottom
+          if (Math.random() < 0.5) { 
             newTopPercentStr = Math.random() < 0.5 ? `${(charHeightPx / 2 / window.innerHeight) * 100 + 2}%` : `${100 - (charHeightPx / 2 / window.innerHeight) * 100 - 2}%`;
             newLeftPercentStr = `${(Math.random() * (window.innerWidth - charWidthPx) + charWidthPx/2) / window.innerWidth * 100}%`;
-          } else { // Try left or right
+          } else { 
             newLeftPercentStr = Math.random() < 0.5 ? `${(charWidthPx / 2 / window.innerWidth) * 100 + 2}%` : `${100 - (charWidthPx / 2 / window.innerWidth) * 100 - 2}%`;
             newTopPercentStr = `${(Math.random() * (window.innerHeight - charHeightPx) + charHeightPx/2) / window.innerHeight * 100}%`;
           }
@@ -190,57 +182,11 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
 
       let movementDelayMs = 2500 + Math.random() * 3000; 
       if (effectiveStatus === 'idle' && idleVariation === 'teleporting') {
-        movementDelayMs = 750; // Faster movement if teleporting
+        movementDelayMs = 750; 
       }
       
       movementTimeoutRef.current = setTimeout(doMove, movementDelayMs);
     };
-
-    // Separate useEffect for idle variations (face changes, teleporting)
-    useEffect(() => {
-        if (effectiveStatus !== 'idle' || !isMounted) {
-            if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
-            if (idleFaceChangeTimeoutRef.current) clearTimeout(idleFaceChangeTimeoutRef.current);
-            setIdleVariation('default'); // Reset to default when not idle
-            return;
-        }
-
-        const scheduleIdleVariation = () => {
-            if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
-            
-            let nextIdleVariation: IdleVariation = 'default';
-            const rand = Math.random();
-
-            // More diverse idle states beyond just teleporting
-            if (rand < 0.25) nextIdleVariation = 'default';        // 25%
-            else if (rand < 0.45) nextIdleVariation = 'tongue_out'; // 20%
-            else if (rand < 0.60) nextIdleVariation = 'sleeping';     // 15%
-            else if (rand < 0.75) nextIdleVariation = 'laughing';     // 15%
-            else if (rand < 0.90) nextIdleVariation = 'poker_face';   // 15%
-            else nextIdleVariation = 'teleporting';      // 10%
-
-            setIdleVariation(prevVariation => {
-              // If teleporting, do it, then switch to default after animation
-              if (nextIdleVariation === 'teleporting') {
-                if (idleFaceChangeTimeoutRef.current) clearTimeout(idleFaceChangeTimeoutRef.current);
-                idleFaceChangeTimeoutRef.current = setTimeout(() => setIdleVariation('default'), 1500); // Duration of teleport animation
-                return 'teleporting';
-              }
-              return nextIdleVariation;
-            });
-            
-            // Schedule the next change
-            idleVariationTimeoutRef.current = setTimeout(scheduleIdleVariation, 5000 + Math.random() * 5000); // Changes every 5-10 seconds
-        };
-
-        scheduleIdleVariation(); // Start the cycle
-
-        return () => {
-            if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
-            if (idleFaceChangeTimeoutRef.current) clearTimeout(idleFaceChangeTimeoutRef.current);
-        };
-    }, [effectiveStatus, isMounted]);
-
 
     scheduleMovement();
     
@@ -248,7 +194,51 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       if (movementTimeoutRef.current) clearTimeout(movementTimeoutRef.current);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [effectiveStatus, isMounted]); // Removed idleVariation from deps to let its own timer handle it
+  }, [effectiveStatus, isMounted, idleVariation]); // Re-added idleVariation to ensure movement logic reacts to teleportation
+
+
+  // Separate useEffect for idle variations (face changes, teleporting)
+  useEffect(() => {
+      if (effectiveStatus !== 'idle' || !isMounted) {
+          if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
+          if (idleFaceChangeTimeoutRef.current) clearTimeout(idleFaceChangeTimeoutRef.current);
+          setIdleVariation('default'); // Reset to default when not idle
+          return;
+      }
+
+      const scheduleIdleVariation = () => {
+          if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
+          
+          let nextIdleVariation: IdleVariation = 'default';
+          const rand = Math.random();
+
+          if (rand < 0.25) nextIdleVariation = 'default';        // 25%
+          else if (rand < 0.45) nextIdleVariation = 'tongue_out'; // 20%
+          else if (rand < 0.60) nextIdleVariation = 'sleeping';     // 15%
+          else if (rand < 0.75) nextIdleVariation = 'laughing';     // 15%
+          else if (rand < 0.90) nextIdleVariation = 'poker_face';   // 15%
+          else nextIdleVariation = 'teleporting';      // 10%
+
+          setIdleVariation(prevVariation => {
+            if (nextIdleVariation === 'teleporting') {
+              if (idleFaceChangeTimeoutRef.current) clearTimeout(idleFaceChangeTimeoutRef.current);
+              idleFaceChangeTimeoutRef.current = setTimeout(() => setIdleVariation('default'), 1500); 
+              return 'teleporting';
+            }
+            return nextIdleVariation;
+          });
+          
+          idleVariationTimeoutRef.current = setTimeout(scheduleIdleVariation, 5000 + Math.random() * 5000); 
+      };
+
+      scheduleIdleVariation(); 
+
+      return () => {
+          if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
+          if (idleFaceChangeTimeoutRef.current) clearTimeout(idleFaceChangeTimeoutRef.current);
+      };
+  }, [effectiveStatus, isMounted]);
+
 
   if (!isMounted) {
     return null;
@@ -260,7 +250,7 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       style={{ 
         top: position.top, 
         left: position.left, 
-        transform: 'translate(-50%, -50%)', // Center the character based on its top/left
+        transform: 'translate(-50%, -50%)', 
       }}
       aria-hidden="true"
     >
