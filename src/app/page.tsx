@@ -206,7 +206,7 @@ export default function HomePage() {
                 onChange={handleTextChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                placeholder="Tell me if… (Don't be shy, your questions can't get much dumber, fuckface!)"
+                placeholder="Spit out your dumbass 'what if' fantasies, let's see what shit I can conjure!"
                 className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
                            border-2 border-primary/30 
                            focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
