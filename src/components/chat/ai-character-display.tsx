@@ -10,7 +10,8 @@ interface AiCharacterDisplayProps {
   isUserTyping: boolean;
 }
 
-type IdleVariation = 'default' | 'tongue_out' | 'teleporting' | 'laughing' | 'poker_face';
+type IdleVariation = 'default' | 'tongue_out' | 'laughing' | 'poker_face' | 'teleporting';
+
 
 // Status mapping for Pickle Rick
 const statusConfig: Record<AiStatus | 'user_typing', { characterAnimationClass: string }> = {
@@ -24,10 +25,10 @@ const statusConfig: Record<AiStatus | 'user_typing', { characterAnimationClass: 
 };
 
 const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: string, idleVariation: IdleVariation }) => {
-  // Adjusted size: base w-16 h-auto (aspect-ratio will handle height) - MODIFIED from w-20
+  // Adjusted size: base w-32 h-auto (aspect-ratio will handle height) - MODIFIED from w-16
   return (
      <div className={cn(
-        "w-16 h-auto character-container",  // MODIFIED from w-20
+        "w-32 h-auto character-container",  // MODIFIED from w-16
          animationClass,
          idleVariation === 'tongue_out' && 'is-tongue-out',
          idleVariation === 'teleporting' && 'is-teleporting',
@@ -80,10 +81,10 @@ const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: str
 
         {/* Group for props like cards, paintbrush, etc. Hidden by default. */}
         <g className="character-prop-group">
-            {/* Example props */}
-            {/* <rect x="10" y="50" width="15" height="20" rx="2" fill="hsl(var(--ruby-red-hsl))" className="character-prop-card"/>
-            <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" className="character-prop-paintbrush"/>
-            <text x="35" y="25" className="character-prop-zzz" fill="hsl(var(--muted-foreground))" fontSize="10" textAnchor="middle">Zzz</text> */}
+            {/* Example props: Card for card game, Paintbrush for drawing, Zzz for sleeping */}
+            <rect x="10" y="50" width="15" height="20" rx="2" fill="hsl(var(--ruby-red-hsl))" className="character-prop-card character-prop-hidden"/>
+            <path d="M55 60 L 65 50 L 60 45 Z" fill="hsl(var(--emerald-green-hsl))" className="character-prop-paintbrush character-prop-hidden"/>
+            <text x="35" y="25" className="character-prop-zzz character-prop-hidden" fill="hsl(var(--muted-foreground))" fontSize="10" textAnchor="middle">Zzz</text>
         </g>
       </svg>
     </div>
@@ -127,8 +128,8 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
       if (movementTimeoutRef.current) clearTimeout(movementTimeoutRef.current);
       
       // Approximate character dimensions (can be refined)
-      // Based on w-16 (64px at base font size) and aspect ratio, let's say ~92px height (64 * 100/70)
-      const charWidthPx = 64; // Updated from 80
+      // Based on w-32 (128px at base font size) and aspect ratio, let's say ~183px height (128 * 100/70)
+      const charWidthPx = 128; 
       const charHeightPx = Math.round(charWidthPx * (100/70)); // Maintain aspect ratio
 
       const calculateSafeZones = () => {
@@ -228,11 +229,13 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
           const rand = Math.random();
 
           // Cycle through default, tongue_out, laughing (smile), poker_face, teleporting
-          if (rand < 0.20) nextIdleVariation = 'default';         // 20%
-          else if (rand < 0.40) nextIdleVariation = 'tongue_out';  // 20%
-          else if (rand < 0.60) nextIdleVariation = 'laughing';    // 20% (serves as smile)
-          else if (rand < 0.80) nextIdleVariation = 'poker_face';  // 20%
-          else nextIdleVariation = 'teleporting';       // 20%
+          // Removed 'sleeping' and 'eye_roll'
+          if (rand < 0.25) nextIdleVariation = 'default';         // 25%
+          else if (rand < 0.50) nextIdleVariation = 'tongue_out';  // 25%
+          else if (rand < 0.75) nextIdleVariation = 'laughing';    // 25% (serves as smile)
+          else nextIdleVariation = 'poker_face';  // 25%
+          // Teleporting can be triggered as part of a movement sequence or less frequently as a direct idle variation
+          if (Math.random() < 0.1) nextIdleVariation = 'teleporting'; // 10% chance to teleport
 
           setIdleVariation(prevVariation => {
             if (nextIdleVariation === 'teleporting') {
@@ -276,3 +279,5 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     </div>
   );
 }
+
+    
