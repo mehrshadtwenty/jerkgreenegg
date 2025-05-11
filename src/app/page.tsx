@@ -190,7 +190,7 @@ export default function HomePage() {
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
-                <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me to actual, literal death, you goddamn buffoon.</p>
+                <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me.</p>
               </div>
             ) : (
               messages.map((msg) => <ChatMessageItem key={msg.id} message={msg} />)
