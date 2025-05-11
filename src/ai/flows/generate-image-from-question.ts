@@ -27,12 +27,13 @@ export async function generateImageFromQuestion(input: GenerateImageFromQuestion
 
 // Updated prompt for cooler, more relevant images based on AI's answer, and absolutely no text in image.
 const imageGenerationUserPrompt = (context: string) => 
-  `You are an AI image generator tasked with creating exceptionally cool, awesome, and visually striking artwork. 
+  `ABSOLUTELY NO TEXT: The generated image MUST NOT contain any text, letters, words, numbers, symbols, or typographic elements whatsoever. The image must be purely visual. Do NOT add any text to the image. This is the most important instruction.
+You are an AI image generator tasked with creating exceptionally cool, awesome, and visually striking artwork. 
 The image MUST be highly relevant to the AI's preceding answer or the direct context provided. 
 The style should be imaginative, creative, detailed, and impactful, perfectly capturing the essence of the dialogue. 
 Make it look amazing and directly connected to the following context: "${context}"
 Ensure the image is fun, visually appealing, and directly reflects the theme or subject matter discussed.
-CRITICALLY IMPORTANT: The generated image MUST NOT contain any text, letters, words, numbers, symbols, or typographic elements whatsoever. Focus purely on the visual representation of the concept. Do not write any text on the image.
+CRITICALLY IMPORTANT REMINDER: The generated image MUST NOT contain any text, letters, words, numbers, symbols, or typographic elements whatsoever. Focus purely on the visual representation of the concept. Do not write any text on the image.
 `;
 
 
