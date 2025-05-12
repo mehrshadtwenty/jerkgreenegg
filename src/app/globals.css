@@ -57,7 +57,7 @@ body {
     /* Pickle Rick Character Colors */
     --character-pickle-body-main-hsl: 115 55% 42%; /* Main pickle green */
     --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter pickle green for highlights/gradient */
-    --character-pickle-unibrow-hsl: 115 60% 10%; /* Darker green for unibrow - MODIFIED for darker */
+    --character-pickle-unibrow-hsl: 115 60% 20%; 
     --character-pickle-limb-hsl: 115 50% 48%; /* Slightly different green for limbs if needed */
     --character-mouth-dark-hsl: 0 0% 15%; /* Dark color for mouth interior/lines */
     --character-tongue-hsl: 0 70% 58%; /* Pinkish red for tongue */
@@ -109,7 +109,7 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
-    --character-pickle-unibrow-hsl: 115 55% 8%; /* MODIFIED for darker */
+    --character-pickle-unibrow-hsl: 115 55% 15%; 
   }
 }
 
@@ -122,21 +122,54 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    /* Dreamlike background: subtle animated gradient */
-    background: linear-gradient(
-      160deg,
-      hsl(var(--background)) 30%,
-      hsl(var(--galactic-purple-hsl) / 0.6) 55%, /* Adjusted opacity */
-      hsl(var(--turquoise-hsl) / 0.4) 80%, /* Added turquoise */
-      hsl(var(--bright-blue-hsl) / 0.3) 100%
-    );
-    background-size: 250% 250%; /* For animation */
+
+    /* Dreamlike background with layered patterns */
+    background-image: 
+      /* Layer 1: "White" glowing dots (light pearl color) */
+      radial-gradient(circle at 10px 15px, hsla(var(--pearl-white-hsl), 0.4) 0.5px, hsla(var(--pearl-white-hsl), 0.15) 1.5px, transparent 2px),
+      radial-gradient(circle at 75px 85px, hsla(var(--pearl-white-hsl), 0.5) 0.5px, hsla(var(--pearl-white-hsl), 0.2) 1.5px, transparent 2.5px),
+      /* Layer 2: "Black" glowing dots (dark core with pearl white glow) */
+      radial-gradient(circle at 40px 50px, hsl(var(--background)) 0.3px, hsla(var(--pearl-white-hsl), 0.3) 1px, hsla(var(--pearl-white-hsl), 0.05) 2px, transparent 2.5px),
+      radial-gradient(circle at 90px 25px, hsl(var(--card)) 0.4px, hsla(var(--pearl-white-hsl), 0.25) 1.2px, hsla(var(--pearl-white-hsl), 0.05) 2.2px, transparent 2.8px),
+      /* Layer 3: Original dreamy gradient */
+      linear-gradient(
+        160deg,
+        hsl(var(--background)) 30%,
+        hsl(var(--galactic-purple-hsl) / 0.6) 55%,
+        hsl(var(--turquoise-hsl) / 0.4) 80%,
+        hsl(var(--bright-blue-hsl) / 0.3) 100%
+      );
+    background-repeat: repeat, repeat, repeat, repeat, no-repeat; /* Patterns repeat, gradient does not */
+    background-size: 
+      120px 120px, /* Tile size for "white" dots pattern 1 */
+      120px 120px, /* Tile size for "white" dots pattern 2 */
+      120px 120px, /* Tile size for "black" dots pattern 1 */
+      120px 120px, /* Tile size for "black" dots pattern 2 */
+      250% 250%;   /* Original gradient size */
+    
+    /* Set initial positions for all layers. Last layer (gradient) will be animated. */
+    background-position: 0 0, 0 0, 0 0, 0 0, 0% 50%;
+    
     animation: dreamy-bg-flow 25s ease-in-out infinite alternate;
   }
 
   @keyframes dreamy-bg-flow {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
+    0% {
+      background-position:
+        0% 0%, /* pattern 1 - static position for repeating tile */
+        0% 0%, /* pattern 2 - static position for repeating tile */
+        0% 0%, /* pattern 3 - static position for repeating tile */
+        0% 0%, /* pattern 4 - static position for repeating tile */
+        0% 50%; /* animated main gradient layer */
+    }
+    100% {
+      background-position:
+        0% 0%, /* pattern 1 */
+        0% 0%, /* pattern 2 */
+        0% 0%, /* pattern 3 */
+        0% 0%, /* pattern 4 */
+        100% 50%; /* animated main gradient layer */
+    }
   }
 
   /* Updated heading styles with effects */
@@ -223,8 +256,8 @@ body {
 .ai-character-svg {
   overflow: visible; 
   filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.25)); 
-  width: 100%; /* Ensure SVG takes full width of its container */
-  height: 100%; /* Ensure SVG takes full height of its container */
+  width: 100%; 
+  height: 100%; 
 }
 
 .character-body-pickle { 
@@ -236,7 +269,7 @@ body {
 .character-unibrow { 
   fill: hsl(var(--character-pickle-unibrow-hsl)); 
   stroke: hsl(var(--character-mouth-dark-hsl) / 0.3);
-  stroke-width: 2; /* Made unibrow thicker */
+  stroke-width: 2; 
   transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; 
 }
 .character-mouth { 
@@ -246,13 +279,12 @@ body {
   transition: d 0.3s ease-in-out; 
 }
 .character-tongue { 
-  opacity: 0; /* Hidden by default */
+  opacity: 0; 
   transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out; 
-  transform-origin: 50% 80%; /* Set origin for tongue animation */
+  transform-origin: 50% 80%; 
 }
 
 
-/* Default hidden/initial states for animated parts */
 .character-sparkles, 
 .character-prop-group > * { 
   opacity: 0;
@@ -262,14 +294,14 @@ body {
 
 
 /* IDLE State - Pickle Rick (Base animations) */
-.character-idle .ai-character-svg:not(.is-teleporting .ai-character-svg) { /* Don't apply bob if teleporting */
+.character-idle .ai-character-svg:not(.is-teleporting .ai-character-svg) { 
   animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; 
 }
 .character-idle .character-pupil { animation: character-blink 4.5s infinite; }
 
 /* Default idle face unless overridden by variations */
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-unibrow { d: path("M 18 30 Q 35 22 52 30"); transform: translateY(0); } 
-.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 22 58 Q 35 68 48 58 Q 35 64 22 58 Z"); } /* Default slightly smiling mouth */
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 22 58 Q 35 68 48 58 Q 35 64 22 58 Z"); } 
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
 
 
@@ -294,16 +326,16 @@ body {
 
 /* Idle Laughing Variation (Smile) */
 .character-idle.is-laughing .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate, character-shake-gentle 0.5s infinite ease-in-out; }
-.character-idle.is-laughing .character-unibrow { d: path("M 15 25 C 25 15, 45 15, 55 25"); } /* Arched high for laughter */
-.character-idle.is-laughing .character-eye-white { transform: scaleY(0.8) translateY(1px); } /* Squinting eyes slightly */
-.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 80 55 55 Q 35 70 15 55 Z"); } /* Wider open laughing mouth */
+.character-idle.is-laughing .character-unibrow { d: path("M 15 25 C 25 15, 45 15, 55 25"); } 
+.character-idle.is-laughing .character-eye-white { transform: scaleY(0.8) translateY(1px); } 
+.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 80 55 55 Q 35 70 15 55 Z"); } 
 
 
 /* Idle Poker Face Variation */
-.character-idle.is-poker-face .character-unibrow { d: path("M 18 30 L 52 30"); } /* Straight, neutral unibrow */
-.character-idle.is-poker-face .character-eye-white { transform: scale(1); } /* Normal eyes */
-.character-idle.is-poker-face .character-pupil { transform: translate(0,0); animation: none; } /* Still pupils */
-.character-idle.is-poker-face .character-mouth { d: path("M 25 60 L 45 60"); } /* Straight line mouth */
+.character-idle.is-poker-face .character-unibrow { d: path("M 18 30 L 52 30"); } 
+.character-idle.is-poker-face .character-eye-white { transform: scale(1); } 
+.character-idle.is-poker-face .character-pupil { transform: translate(0,0); animation: none; } 
+.character-idle.is-poker-face .character-mouth { d: path("M 25 60 L 45 60"); } 
 
 
 /* USER TYPING State (Listening/Attentive Pickle) */
@@ -329,7 +361,7 @@ body {
 .character-presenting_text .ai-character-svg { animation: pulse-glow-character 1.9s infinite alternate; transform: scale(1.01) translateY(-1px) rotate(0.5deg); } 
 .character-presenting_text .character-unibrow { d: path("M 18 28 Q 35 22 52 29"); } 
 .character-presenting_text .character-mouth { d: path("M 20 58 Q 30 71 40 58 Q 30 61 20 58 Z"); } 
-.character-presenting_text .character-tongue { opacity: 0; } /* Ensure tongue is hidden unless is-tongue-out */
+.character-presenting_text .character-tongue { opacity: 0; } 
 
 
 /* PRESENTING IMAGE State (Excited Pickle "Voila!") */
@@ -368,10 +400,10 @@ body {
 }
 
 @keyframes character-think-pupils { 
-  0%, 100% { transform: translateX(0px); } /* No vertical movement */
-  25% { transform: translateX(-0.5px); } /* Slight left */
+  0%, 100% { transform: translateX(0px); } 
+  25% { transform: translateX(-0.5px); } 
   50% { transform: translateX(0px); }
-  75% { transform: translateX(0.5px); }  /* Slight right */
+  75% { transform: translateX(0.5px); }  
 }
 
 @keyframes character-shake-intense { 
@@ -410,8 +442,9 @@ body {
 
 .character-container {
   transition: top 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), left 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), opacity 0.3s ease-in-out; 
-  width: 12rem; /* Adjusted from w-24 (6rem) to w-48 (12rem) for 2x size */
-  height: auto; /* Maintain aspect ratio */
+  width: 12rem; 
+  height: auto; 
+  z-index: 10; 
 }
 
 /* Animation for image appearing in chat */
@@ -437,7 +470,6 @@ body {
   animation: image-fade-in-sparkle 0.65s ease-out forwards;
 }
 
-/* Props are generally hidden unless a specific state makes them visible */
 .character-prop-group > * {
   opacity: 0;
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -451,7 +483,6 @@ body {
   75% { transform: translateX(1px) rotate(0.5deg); }
 }
 
-/* Additional Character Prop styling */
 .character-prop-zzz {
   font-family: 'Comic Sans MS', 'Chalkduster', 'cursive';
   font-weight: bold;
@@ -462,7 +493,6 @@ body {
   to { transform: translateY(-5px) rotate(5deg); opacity: 1; }
 }
 
-/* Example: Paintbrush prop */
 .character-prop-paintbrush {
   transform-origin: bottom left;
   animation: character-prop-paint-sway 2s infinite ease-in-out;
@@ -472,7 +502,6 @@ body {
   50% { transform: rotate(10deg) translateX(2px); }
 }
 
-/* Example: Card prop */
 .character-prop-card {
   animation: character-prop-card-float 2.5s infinite ease-in-out;
 }
@@ -480,13 +509,4 @@ body {
   0%, 100% { transform: translateY(0) rotate(0); }
   50% { transform: translateY(-3px) rotate(5deg); }
 }
-
-/* Ensure Pickle Rick does not go over chat area by setting a lower z-index */
-/* Chat area wrapper has z-20, so character should be lower */
-.character-container {
-  z-index: 10; 
-}
-
-/* Removed the .vision-gallery and related styles as per user request */
-/* Removed .gallery-toggle-button and related styles */
-/* Removed .gallery-image-item and related styles */
+/* End of reviewed CSS content. The error at line 513 is beyond this point. */
