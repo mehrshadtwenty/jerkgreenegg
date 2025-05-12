@@ -66,14 +66,12 @@ const answerUserQuestionFlow = ai.defineFlow(
     name: 'answerUserQuestionFlow',
     inputSchema: AnswerUserQuestionInputSchema,
     outputSchema: AnswerUserQuestionOutputSchema,
-    // Current safety settings are kept. The prompt is very explicit about the desired behavior.
-    // HARM_CATEGORY_HARASSMENT at 'BLOCK_MEDIUM_AND_ABOVE' allows for substantial rudeness when guided by a strong prompt.
     config: {
       safetySettings: [
         { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, 
         { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, 
-        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }, 
-        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' }, 
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' },
       ],
     }
   },
