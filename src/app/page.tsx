@@ -184,13 +184,18 @@ export default function HomePage() {
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground">
       <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
       
+      {/* pt-16 is for the header height (h-16 in AppHeader) */}
       <div className="flex-grow flex flex-col overflow-hidden pt-16"> 
-        <div id="chat-area-wrapper" className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden">
-          <ScrollArea className="flex-grow p-4 space-y-2">
+        {/* Added border-primary for yellow border and rounded-lg for aesthetics */}
+        <div 
+          id="chat-area-wrapper" 
+          className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden border-2 border-primary rounded-lg shadow-xl my-4"
+        >
+          <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50"> {/* Added bg-card/50 for slight contrast inside chat area */}
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
                 <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
-                <p className="text-muted-foreground text-sm">Go on, ask something. Try not to bore me.</p>
+                <p className="text-muted-foreground text-sm">Spit out your dumbass 'what if' fantasies, let's see what shit I can conjure!</p>
               </div>
             ) : (
               messages.map((msg) => <ChatMessageItem key={msg.id} message={msg} />)
@@ -198,7 +203,7 @@ export default function HomePage() {
             <div ref={messagesEndRef} />
           </ScrollArea>
 
-          <div className="p-3 border-t border-border/50 bg-card/80 backdrop-blur-sm">
+          <div className="p-3 border-t border-primary/50 bg-card/80 backdrop-blur-sm"> {/* Changed border-border/50 to border-primary/50 */}
             <form onSubmit={handleSubmitForm} className="relative">
               <Textarea
                 ref={textareaRef}
@@ -267,4 +272,3 @@ export default function HomePage() {
     </div>
   );
 }
-

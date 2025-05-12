@@ -57,7 +57,7 @@ body {
     /* Pickle Rick Character Colors */
     --character-pickle-body-main-hsl: 115 55% 42%; /* Main pickle green */
     --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter pickle green for highlights/gradient */
-    --character-pickle-unibrow-hsl: 115 60% 15%; /* Darker green for unibrow - MODIFIED from 20% to 15% for darker */
+    --character-pickle-unibrow-hsl: 115 60% 10%; /* Darker green for unibrow - MODIFIED for darker */
     --character-pickle-limb-hsl: 115 50% 48%; /* Slightly different green for limbs if needed */
     --character-mouth-dark-hsl: 0 0% 15%; /* Dark color for mouth interior/lines */
     --character-tongue-hsl: 0 70% 58%; /* Pinkish red for tongue */
@@ -109,7 +109,7 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
-    --character-pickle-unibrow-hsl: 115 55% 10%; /* MODIFIED from 15% to 10% for darker */
+    --character-pickle-unibrow-hsl: 115 55% 8%; /* MODIFIED for darker */
   }
 }
 
@@ -185,6 +185,11 @@ body {
     transform: scale(1) !important;
     transition: opacity 0.3s ease, transform 0.3s ease !important;
   }
+  
+  /* Custom placeholder styling for chat textarea */
+  .chat-textarea::placeholder {
+    @apply text-muted-foreground/60 italic;
+  }
 }
 
 
@@ -201,6 +206,8 @@ body {
 .ai-character-svg {
   overflow: visible; 
   filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.25)); 
+  width: 100%; /* Ensure SVG takes full width of its container */
+  height: 100%; /* Ensure SVG takes full height of its container */
 }
 
 .character-body-pickle { 
@@ -305,7 +312,7 @@ body {
 .character-presenting_text .ai-character-svg { animation: pulse-glow-character 1.9s infinite alternate; transform: scale(1.01) translateY(-1px) rotate(0.5deg); } 
 .character-presenting_text .character-unibrow { d: path("M 18 28 Q 35 22 52 29"); } 
 .character-presenting_text .character-mouth { d: path("M 20 58 Q 30 71 40 58 Q 30 61 20 58 Z"); } 
-.character-presenting_text .character-tongue { opacity: 0.5; transform: translateX(2px) scaleY(1.1); }
+.character-presenting_text .character-tongue { opacity: 0; } /* Ensure tongue is hidden unless is-tongue-out */
 
 
 /* PRESENTING IMAGE State (Excited Pickle "Voila!") */
@@ -386,6 +393,8 @@ body {
 
 .character-container {
   transition: top 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), left 1.2s cubic-bezier(0.68, -0.45, 0.27, 1.45), opacity 0.3s ease-in-out; 
+  width: 6rem; /* Adjusted from w-16 (4rem) to w-24 (6rem). Previous was w-32 (8rem) then w-16(4rem) then w-24 (6rem) then w-32 (8rem) then w-16 (4rem), then w-24 (6rem) again */
+  height: auto; /* Maintain aspect ratio */
 }
 
 /* Animation for image appearing in chat */
@@ -456,9 +465,7 @@ body {
 }
 
 /* Ensure Pickle Rick does not go over chat area by setting a lower z-index */
-/* This can be adjusted if needed, but typically fixed elements have higher z-index */
+/* Chat area wrapper has z-20, so character should be lower */
 .character-container {
-  z-index: 10; /* Lower than chat area wrapper (z-20) */
+  z-index: 10; 
 }
-
-    
