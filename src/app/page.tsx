@@ -177,11 +177,12 @@ export default function HomePage() {
 
   const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!currentQuestion.trim()) return; // Do not submit if question is empty or only whitespace
     handleNewMessageSubmit(currentQuestion);
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground">
+    <div className="flex flex-col flex-grow w-full overflow-hidden bg-background text-foreground">
       <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
       
       {/* pt-16 is for the header height (h-16 in AppHeader) */}
@@ -194,8 +195,7 @@ export default function HomePage() {
           <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50"> {/* Added bg-card/50 for slight contrast inside chat area */}
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
-                <p className="text-xl font-semibold text-muted-foreground font-heading">The Void Awaits Your Stupidity!</p>
-                <p className="text-muted-foreground text-sm">Spit out your dumbass 'what if' fantasies, let's see what shit I can conjure!</p>
+                {/* This text is removed based on user request in a later prompt, but keeping structure */}
               </div>
             ) : (
               messages.map((msg) => <ChatMessageItem key={msg.id} message={msg} />)
@@ -211,11 +211,11 @@ export default function HomePage() {
                 onChange={handleTextChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                placeholder="Spit out your dumbass 'what if' fantasies, let's see what shit I can conjure!"
+                placeholder="What if..."
                 className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
                            border-2 border-primary/30 
                            focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
-                           rounded-lg shadow-inner resize-none"
+                           rounded-lg shadow-inner resize-none chat-textarea"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -272,3 +272,4 @@ export default function HomePage() {
     </div>
   );
 }
+
