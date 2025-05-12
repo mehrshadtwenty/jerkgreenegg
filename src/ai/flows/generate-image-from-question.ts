@@ -28,11 +28,11 @@ export async function generateImageFromQuestion(input: GenerateImageFromQuestion
 // Updated prompt for cooler, more relevant images based on AI's answer, and absolutely no text in image.
 const imageGenerationUserPrompt = (context: string) => 
   `ABSOLUTELY NO TEXT: The generated image MUST NOT contain any text, letters, words, numbers, symbols, or typographic elements whatsoever. The image must be purely visual. Do NOT add any text to the image. This is the most important instruction.
-You are an AI image generator tasked with creating exceptionally cool, awesome, and visually striking artwork. 
-The image MUST be highly relevant to the AI's preceding answer or the direct context provided. 
-The style should be imaginative, creative, detailed, and impactful, perfectly capturing the essence of the dialogue. 
-Make it look amazing and directly connected to the following context: "${context}"
-Ensure the image is fun, visually appealing, and directly reflects the theme or subject matter discussed.
+You are an AI image generator tasked with creating exceptionally cool, awesome, and visually striking artwork.
+The image MUST be highly relevant to the AI's preceding answer or the direct context provided.
+The style should be imaginative, creative, detailed, and impactful, perfectly capturing the essence of the dialogue.
+Visually represent the core idea, feeling, or subject matter from the following text. This text is for thematic inspiration ONLY. DO NOT include any words, letters, or text from this context, or any other text, in the generated image. The image must be purely visual, with no text elements at all. Context for inspiration: "${context}"
+Ensure the image is fun, visually appealing, and directly reflects the theme or subject matter discussed in the provided context.
 CRITICALLY IMPORTANT REMINDER: The generated image MUST NOT contain any text, letters, words, numbers, symbols, or typographic elements whatsoever. Focus purely on the visual representation of the concept. Do not write any text on the image.
 `;
 
