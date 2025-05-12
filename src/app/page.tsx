@@ -212,10 +212,10 @@ export default function HomePage() {
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 placeholder="Got some gloriously stupid 'what ifs'? Lay 'em on me, buttercup."
-                className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
+                className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground 
                            border-2 border-primary/30 
                            focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
-                           rounded-lg shadow-inner resize-none chat-textarea"
+                           rounded-lg shadow-inner resize-none chat-textarea" /* chat-textarea styles placeholder */
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -241,7 +241,7 @@ export default function HomePage() {
                 <span
                   onClick={!isLoading && !isImageGenerating ? handleGenerateImageForLastResponse : undefined}
                   className={cn(
-                    'text-link-style',
+                    'text-link-style font-heading', /* Added font-heading */
                     (isLoading || isImageGenerating) && 'opacity-50 cursor-not-allowed'
                   )}
                   role="button"
@@ -256,7 +256,7 @@ export default function HomePage() {
                 <div>
                   <span
                     onClick={handleStopImageGeneration} 
-                    className="text-link-style-stop"
+                    className="text-link-style-stop font-heading" /* Added font-heading */
                     role="button"
                     tabIndex={0}
                   >
