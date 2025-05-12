@@ -12,9 +12,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
-import { Send, Sparkles, StopCircle } from 'lucide-react';
+import { Send, Sparkles, StopCircle, Copy } from 'lucide-react'; // Added Copy
+import Image from 'next/image'; // Added Image
 import { cn } from '@/lib/utils';
 
+const CONTRACT_ADDRESS = "0xYourMemecoinContractAddressHere12345";
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -34,6 +36,24 @@ export default function HomePage() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleCopyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTRACT_ADDRESS);
+      toast({
+        title: "Address Copied, You Magnificent Ape!",
+        description: "Contract address copied. Now go buy my shitcoin before I change my mind.",
+        variant: "default", 
+      });
+    } catch (err) {
+      console.error('Failed to copy address: ', err);
+      toast({
+        title: "Copy Failed, Butterfingers!",
+        description: "Couldn't copy the address. Can't even copy-paste? Pathetic. Try again, or just stare at it, dumbass.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleNewMessageSubmit = async (questionText: string) => {
@@ -177,7 +197,7 @@ export default function HomePage() {
 
   const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!currentQuestion.trim()) return; // Do not submit if question is empty or only whitespace
+    if (!currentQuestion.trim()) return; 
     handleNewMessageSubmit(currentQuestion);
   };
 
@@ -185,17 +205,42 @@ export default function HomePage() {
     <div className="flex flex-col flex-grow w-full overflow-hidden bg-background text-foreground">
       <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
       
-      {/* pt-16 is for the header height (h-16 in AppHeader) */}
-      <div className="flex-grow flex flex-col overflow-hidden pt-16"> 
-        {/* Added border-primary for yellow border and rounded-lg for aesthetics */}
+      <div className="flex-grow flex flex-col overflow-hidden pt-16"> {/* pt-16 for AppHeader height */}
+        
+        {/* Token Contract Address Section */}
+        <div className="py-3 px-4 flex items-center justify-center">
+          <div className="flex items-center gap-3 bg-card/80 p-3 rounded-lg shadow-xl border-2 border-primary/40 max-w-lg w-full backdrop-blur-sm">
+            <Image
+              src="https://picsum.photos/32/32" 
+              alt="Memecoin Token Icon"
+              width={32}
+              height={32}
+              className="rounded-full border border-primary/50"
+              data-ai-hint="crypto token"
+            />
+            <span className="text-xs sm:text-sm text-foreground/90 truncate font-mono flex-grow" title={CONTRACT_ADDRESS}>
+              {CONTRACT_ADDRESS}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCopyAddress}
+              className="text-primary hover:text-accent focus:ring-accent w-8 h-8 sm:w-9 sm:h-9"
+              aria-label="Copy contract address"
+            >
+              <Copy className="h-4 w-4 sm:h-5 sm:h-5" />
+            </Button>
+          </div>
+        </div>
+        
         <div 
           id="chat-area-wrapper" 
           className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden border-2 border-primary rounded-lg shadow-xl my-4"
         >
-          <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50"> {/* Added bg-card/50 for slight contrast inside chat area */}
+          <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
-                {/* This text is removed based on user request in a later prompt, but keeping structure */}
+                 {/* Empty div, placeholder text removed */}
               </div>
             ) : (
               messages.map((msg) => <ChatMessageItem key={msg.id} message={msg} />)
@@ -203,7 +248,7 @@ export default function HomePage() {
             <div ref={messagesEndRef} />
           </ScrollArea>
 
-          <div className="p-3 border-t border-primary/50 bg-card/80 backdrop-blur-sm"> {/* Changed border-border/50 to border-primary/50 */}
+          <div className="p-3 border-t border-primary/50 bg-card/80 backdrop-blur-sm">
             <form onSubmit={handleSubmitForm} className="relative">
               <Textarea
                 ref={textareaRef}
@@ -215,7 +260,7 @@ export default function HomePage() {
                 className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground 
                            border-2 border-primary/30 
                            focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
-                           rounded-lg shadow-inner resize-none chat-textarea" /* chat-textarea styles placeholder */
+                           rounded-lg shadow-inner resize-none chat-textarea" 
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -241,7 +286,7 @@ export default function HomePage() {
                 <span
                   onClick={!isLoading && !isImageGenerating ? handleGenerateImageForLastResponse : undefined}
                   className={cn(
-                    'text-link-style font-heading', /* Added font-heading */
+                    'text-link-style font-heading',
                     (isLoading || isImageGenerating) && 'opacity-50 cursor-not-allowed'
                   )}
                   role="button"
@@ -256,7 +301,7 @@ export default function HomePage() {
                 <div>
                   <span
                     onClick={handleStopImageGeneration} 
-                    className="text-link-style-stop font-heading" /* Added font-heading */
+                    className="text-link-style-stop font-heading"
                     role="button"
                     tabIndex={0}
                   >
