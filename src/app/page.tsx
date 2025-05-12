@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef, FormEvent } from 'react';
@@ -210,7 +211,7 @@ export default function HomePage() {
                 onChange={handleTextChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                placeholder="اگر های کسشر زندگیتو اینجا بپرس"
+                placeholder="Got some gloriously stupid 'what ifs'? Lay 'em on me, buttercup."
                 className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground placeholder:text-muted-foreground/60 
                            border-2 border-primary/30 
                            focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
