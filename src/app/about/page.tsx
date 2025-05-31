@@ -42,7 +42,7 @@ export default function AboutPage() {
             <p className="text-center md:text-left">
               And speaking of chaotic energy, if you&apos;ve got a few brain cells left that haven&apos;t been fried by staring at charts, consider chucking some of your worthless fiat into our glorious memecoin. 
               The contract address is plastered right on the main page like a goddamn declaration of financial irresponsibility. 
-              Buying it won&apos;t make you smarter, you magnificent dolt, but who knows? Maybe <strong className="text-golden-yellow-hsl">YOU&apos;LL</strong> strike it rich and can finally afford that solid gold bird bath for your pet rock. Or maybe I just get to commission a tiny diamond-encrusted crown. Either way, it&apos;s a win-win... for someone. 
+              Buying it won&apos;t make you smarter, you magnificent dolt, but who knows? Maybe YOU&apos;LL strike it rich and can finally afford that solid gold bird bath for your pet rock. Or maybe I just get to commission a tiny diamond-encrusted crown. Hey, it&apos;s a gamble, right? Someone&apos;s gotta hit the jackpot, might as well be your dumb ass. 
               Do it. Or don&apos;t. I don&apos;t fucking care, I&apos;m an egg with expensive tastes.
             </p>
           </div>
