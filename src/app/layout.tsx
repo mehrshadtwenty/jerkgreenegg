@@ -22,8 +22,8 @@ const fontHeading = Merienda({
 });
 
 export const metadata: Metadata = {
-  title: 'Degenerate Green Egg - Your Favorite Degenerate AI',
-  description: 'Ask questions, get creative answers, and generate images with Degenerate Green Egg!',
+  title: 'Jerk Green Egg - Your Favorite AI Jerk',
+  description: 'Ask questions, get creative answers, and generate images with Jerk Green Egg!',
 };
 
 export default function RootLayout({

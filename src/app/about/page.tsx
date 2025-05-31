@@ -8,7 +8,7 @@ export default function AboutPage() {
       <header className="text-center space-y-3 pt-8"> 
         <h1 className="text-5xl font-bold text-primary flex items-center justify-center gap-3">
           <Sparkles className="h-10 w-10 text-golden-yellow-hsl" />
-          About Degenerate Green Egg
+          About Jerk Green Egg
         </h1>
         {/* Subtitle "Green Egg: Multilingual Smartass. No Filter." has been removed */}
       </header>
@@ -22,7 +22,7 @@ export default function AboutPage() {
               So, What&apos;s This Shiny Green Bastard All About?
             </h3>
             <p className="text-center md:text-left">
-              Alright, listen up, moron! This is <strong>Degenerate Green Egg</strong>, where &apos;Green Egg&apos;, an AI probably smarter than your entire bloodline, answers your dumbass questions.
+              Alright, listen up, moron! This is <strong>Jerk Green Egg</strong>, where &apos;Green Egg&apos;, an AI probably smarter than your entire bloodline, answers your dumbass questions.
               This ain&apos;t no ordinary egg, you degenerate. This is a grade-A, free-range, organic Green Egg of pure, unfiltered chaotic energy. 
               It&apos;ll roast you in any goddamn language you speak, from serious shit to your idiotic hypotheticals.
               Ask "What if?" and click that "Generate Image" crap to see your stupid ideas splattered into a picture. My mission? Pure, unadulterated chaos and maybe a laugh at your expense.
