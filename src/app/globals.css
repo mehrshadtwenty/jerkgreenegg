@@ -54,10 +54,9 @@ body {
     --fiery-orange-hsl: 15 100% 58%; 
     --turquoise-hsl: 175 70% 50%; /* Added Turquoise */
     
-    /* Character Colors (Tokhme Sabz / Green Egg - formerly Pickle Rick) */
+    /* Character Colors (Green Egg - formerly Tokhme Sabz) */
     --character-pickle-body-main-hsl: 115 55% 42%; /* Main body green */
     --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter green for highlights/gradient */
-    /* --character-pickle-unibrow-hsl removed */
     --character-pickle-limb-hsl: 115 50% 48%; 
     --character-mouth-dark-hsl: 0 0% 15%; 
     --character-tongue-hsl: 0 70% 58%; 
@@ -109,7 +108,6 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
-    /* --character-pickle-unibrow-hsl removed for dark mode as well */
   }
 }
 
@@ -243,7 +241,7 @@ body {
   }
 }
 
-/* AI Character SVG Styles & Animations - Tokhme Sabz (Green Egg) */
+/* AI Character SVG Styles & Animations - Green Egg */
 .ai-character-svg {
   overflow: visible; 
   filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.25)); 
@@ -257,7 +255,6 @@ body {
 }
 .character-eye-white { fill: hsl(var(--pearl-white-hsl)); }
 .character-pupil { fill: hsl(var(--character-mouth-dark-hsl)); transition: transform 0.2s ease-in-out; }
-/* .character-unibrow styles removed */
 .character-mouth { 
   fill: hsl(var(--character-mouth-dark-hsl)); 
   stroke: hsl(var(--character-mouth-dark-hsl)); 
@@ -268,6 +265,9 @@ body {
   opacity: 0; 
   transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out; 
   transform-origin: 50% 80%; 
+  fill: hsl(var(--character-tongue-hsl)); /* Ensure tongue color */
+  stroke: hsl(var(--character-mouth-dark-hsl) / 0.7); /* Optional: thin outline for tongue */
+  stroke-width: 0.3;
 }
 
 
@@ -279,24 +279,26 @@ body {
 }
 
 
-/* IDLE State - Tokhme Sabz (Base animations) */
+/* IDLE State - Green Egg (Base animations) */
 .character-idle .ai-character-svg:not(.is-teleporting .ai-character-svg) { 
   animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; 
 }
 .character-idle .character-pupil { animation: character-blink 4.5s infinite; }
 
 /* Default idle face unless overridden by variations */
-.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 18 58 Q 35 72 52 58 Q 35 68 18 58 Z"); } 
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 18 58 Q 35 72 52 58 Q 35 68 18 58 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3; } 
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
 
 
 /* Idle Tongue Out Variation */
+.character-idle.is-tongue-out .character-mouth { 
+  d: path("M 18 58 Q 35 78 52 58 Q 35 88 18 58 Z"); /* Mouth opens wider */
+  fill: hsl(var(--character-mouth-dark-hsl)); 
+  stroke-width: 0.3;
+}
 .character-idle.is-tongue-out .character-tongue { 
   opacity: 1; 
-  transform: scale(1.1, 1.3) translateY(1px) rotate(-5deg); 
-}
-.character-idle.is-tongue-out .character-mouth { 
-  d: path("M 18 58 Q 35 70 52 58 Q 35 80 18 58 Z"); 
+  transform: scale(1.2, 1.7) translateY(1.5px) rotate(-5deg); /* Made tongue bigger and more prominent */
 }
 
 /* Idle Teleporting Variation */
@@ -311,45 +313,50 @@ body {
 /* Idle Laughing Variation (Smile) */
 .character-idle.is-laughing .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate, character-shake-gentle 0.5s infinite ease-in-out; }
 .character-idle.is-laughing .character-eye-white { transform: scaleY(0.8) translateY(1px); } 
-.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 85 55 55 Q 35 75 15 55 Z"); } 
+.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 85 55 55 Q 35 75 15 55 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3;} 
 
 
 /* Idle Poker Face Variation */
 .character-idle.is-poker-face .character-eye-white { transform: scale(1); } 
 .character-idle.is-poker-face .character-pupil { transform: translate(0,0); animation: none; } 
-.character-idle.is-poker-face .character-mouth { d: path("M 22 60 L 48 60"); } 
+.character-idle.is-poker-face .character-mouth { 
+  d: path("M 22 60 L 48 60"); 
+  stroke: hsl(var(--character-mouth-dark-hsl)); /* Darker line */
+  stroke-width: 1.5; /* Thicker line */
+  fill: none; /* No fill for a line */
+}
 
 
 /* USER TYPING State (Listening/Attentive Green Egg) */
 .character-user_typing .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate, character-bob-attentive 2.5s infinite ease-in-out; transform: scale(1.02) translateY(-2px); }
 .character-user_typing .character-eye-white { transform: scale(1.05); } 
 .character-user_typing .character-pupil { animation: character-pupil-scan 3s infinite ease-in-out; }
-.character-user_typing .character-mouth { d: path("M 20 60 Q 35 78 50 60 Q 35 74 20 60 Z"); } 
+.character-user_typing .character-mouth { d: path("M 20 60 Q 35 78 50 60 Q 35 74 20 60 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3;} 
 
 /* THINKING TEXT State (Pondering Green Egg) */
 .character-thinking_text .ai-character-svg { animation: pulse-glow-character 1.3s infinite alternate; transform: rotate(-2deg) translateY(-2px); } 
-.character-thinking_text .character-mouth { d: path("M 23 58 Q 35 65 47 58 Q 35 62 23 58 Z"); } 
+.character-thinking_text .character-mouth { d: path("M 23 58 Q 35 65 47 58 Q 35 62 23 58 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3;} 
 .character-thinking_text .character-pupil { animation: character-think-pupils 2.8s infinite ease-in-out; }
 
 /* THINKING IMAGE State (Intense Green Egg Power) */
 .character-thinking_image .ai-character-svg { animation: pulse-glow-character 0.9s infinite alternate, character-shake-intense 0.35s 3 ease-in-out; transform: scale(1.01); } 
 .character-thinking_image .character-sparkles { opacity: 0.7; animation: character-sparkle-effect 0.7s infinite; }
-.character-thinking_image .character-mouth { d: path("M 18 55 Q 35 78 52 55 Q 35 70 18 55 Z"); } 
+.character-thinking_image .character-mouth { d: path("M 18 55 Q 35 78 52 55 Q 35 70 18 55 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3;} 
 
 /* PRESENTING TEXT State (Smug Green Egg Delivery) */
 .character-presenting_text .ai-character-svg { animation: pulse-glow-character 1.9s infinite alternate; transform: scale(1.01) translateY(-1px) rotate(0.5deg); } 
-.character-presenting_text .character-mouth { d: path("M 18 58 Q 32 73 45 57 Q 30 63 18 58 Z"); } 
+.character-presenting_text .character-mouth { d: path("M 18 58 Q 32 73 45 57 Q 30 63 18 58 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3;} 
 .character-presenting_text .character-tongue { opacity: 0; } 
 
 
 /* PRESENTING IMAGE State (Excited Green Egg "Voila!") */
 .character-presenting_image .ai-character-svg { animation: pulse-glow-character 1.7s infinite alternate; transform: scale(1.02) rotate(1deg) translateY(-3px); } 
 .character-presenting_image .character-sparkles { opacity: 0.9; animation: character-sparkle-effect 0.6s infinite; }
-.character-presenting_image .character-mouth { d: path("M 15 60 Q 35 85 55 60 Q 35 78 15 60 Z"); } 
+.character-presenting_image .character-mouth { d: path("M 15 60 Q 35 85 55 60 Q 35 78 15 60 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3;} 
 
 /* ERROR State (Glitching Green Egg) */
 .character-error .ai-character-svg { transform: rotate(5deg) translateY(4px) scale(0.98); filter: grayscale(25%) brightness(0.95); animation: character-error-tremble 0.28s 4; } 
-.character-error .character-mouth { d: path("M 18 65 Q 35 50 52 65 Q 35 55 18 65 Z"); } 
+.character-error .character-mouth { d: path("M 18 65 Q 35 50 52 65 Q 35 55 18 65 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3;} 
 .character-error .character-eye-white { transform: scaleY(0.8) scaleX(0.95); }
 
 
@@ -484,3 +491,4 @@ body {
   0%, 100% { transform: translateY(0) rotate(0); }
   50% { transform: translateY(-3px) rotate(5deg); }
 }
+

@@ -13,7 +13,7 @@ interface AiCharacterDisplayProps {
 type IdleVariation = 'default' | 'tongue_out' | 'laughing' | 'poker_face' | 'teleporting';
 
 
-// Status mapping for Tokhme Sabz (Green Egg)
+// Status mapping for Green Egg (formerly Tokhme Sabz)
 const statusConfig: Record<AiStatus | 'user_typing', { characterAnimationClass: string }> = {
   idle: { characterAnimationClass: 'character-idle' }, 
   user_typing: { characterAnimationClass: 'character-user_typing' }, 
@@ -59,7 +59,6 @@ const AiCharacterSVG = ({ animationClass, idleVariation }: { animationClass: str
             <circle cx="24" cy="42" r="3" className="character-pupil character-pupil-left" />
             <circle cx="46" cy="42" r="3" className="character-pupil character-pupil-right" />
           </g>
-          {/* Unibrow removed */}
           <path d="M 18 58 Q 35 72 52 58 Q 35 68 18 58 Z" className="character-mouth" />  
           <path d="M 30 65 Q 35 62 40 65" className="character-tongue" fill="hsl(var(--character-tongue-hsl))" stroke="hsl(var(--character-mouth-dark-hsl))" strokeWidth="0.5" />
         </g>
@@ -84,7 +83,7 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
   const effectiveStatus = isUserTyping && (status === 'idle' || status === 'presenting_text' || status === 'presenting_image' || status === 'error') ? 'user_typing' : status;
   const currentVisuals = statusConfig[effectiveStatus] || statusConfig.idle;
   const [isMounted, setIsMounted] = useState(false);
-  const [position, setPosition] = useState({ top: '10%', left: '10%', currentAnimationClass: statusConfig.idle.characterAnimationClass });
+  const [position, setPosition] = useState({ top: '20%', left: '50%', currentAnimationClass: statusConfig.idle.characterAnimationClass }); // Initial position adjusted
   const [idleVariation, setIdleVariation] = useState<IdleVariation>('default');
   
   const chatAreaWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -95,8 +94,11 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
 
   useEffect(() => {
     setIsMounted(true);
-    chatAreaWrapperRef.current = document.getElementById('chat-area-wrapper');
-
+    // Try to get the chat area wrapper element.
+    // We'll attempt to get it again in scheduleMovement if it's not ready here.
+    if (!chatAreaWrapperRef.current) {
+        chatAreaWrapperRef.current = document.getElementById('chat-area-wrapper');
+    }
     return () => { 
       if (movementTimeoutRef.current) clearTimeout(movementTimeoutRef.current);
       if (idleVariationTimeoutRef.current) clearTimeout(idleVariationTimeoutRef.current);
@@ -111,73 +113,82 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
        setPosition(prev => ({...prev, currentAnimationClass: currentVisuals.characterAnimationClass}));
     }
 
+    const isOverlappingChatAreaInternal = (charCenterX: number, charCenterY: number, chatRect: DOMRect, charWidth: number, charHeight: number) => {
+        if (!chatRect) return false;
+        const padding = 5; // Small padding to avoid direct overlap
+
+        const charLeft = charCenterX - charWidth / 2;
+        const charRight = charCenterX + charWidth / 2;
+        const charTop = charCenterY - charHeight / 2;
+        const charBottom = charCenterY + charHeight / 2;
+
+        // Check if character is within the horizontal bounds of chatRect AND vertical bounds of chatRect
+        const overlapsHorizontally = charRight > (chatRect.left + padding) && charLeft < (chatRect.right - padding);
+        const overlapsVertically = charBottom > (chatRect.top + padding) && charTop < (chatRect.bottom - padding);
+        
+        return overlapsHorizontally && overlapsVertically;
+    };
+
+
     const scheduleMovement = () => {
       if (movementTimeoutRef.current) clearTimeout(movementTimeoutRef.current);
       
+      // Attempt to get chatAreaWrapperRef if not already set
+      if (!chatAreaWrapperRef.current) {
+        chatAreaWrapperRef.current = document.getElementById('chat-area-wrapper');
+      }
+
       const charWidthPx = 96; 
       const charHeightPx = Math.round(charWidthPx * (100/70)); 
 
-      const calculateSafeZones = () => {
-        let forbiddenRect = { 
-            top: window.innerHeight * 0.20, 
-            bottom: window.innerHeight * 0.80, 
-            left: window.innerWidth * 0.15, 
-            right: window.innerWidth * 0.85,
-        };
-        
-        if (chatAreaWrapperRef.current) {
-          const rect = chatAreaWrapperRef.current.getBoundingClientRect();
-           const padding = 20; 
-           forbiddenRect = { 
-            top: rect.top - charHeightPx - padding,
-            bottom: rect.bottom + padding, 
-            left: rect.left - charWidthPx - padding,
-            right: rect.right + charWidthPx + padding,
-          };
-        }
-        return { forbiddenRect };
-      };
+      const chatRect = chatAreaWrapperRef.current?.getBoundingClientRect();
       
-      const isOverlappingForbiddenZone = (newX: number, newY: number, zone: { top: number, bottom: number, left: number, right: number }) => {
-          const charLeft = newX - charWidthPx / 2;
-          const charRight = newX + charWidthPx / 2;
-          const charTop = newY - charHeightPx / 2;
-          const charBottom = newY + charHeightPx / 2;
+      // Define screen boundaries, allowing character to touch edges
+      const screenMinXCenter = charWidthPx / 2;
+      const screenMaxXCenter = window.innerWidth - (charWidthPx / 2);
+      const screenMinYCenter = charHeightPx / 2; 
+      const screenMaxYCenter = window.innerHeight - (charHeightPx / 2);
 
-          return charRight > zone.left && charLeft < zone.right &&
-                 charBottom > zone.top && charTop < zone.bottom;
-      };
-
+      // Define character's valid Y range: top edge must be at or below chatRect.top
+      // and bottom edge must be on screen.
+      const characterMinYBasedOnChat = chatRect ? (chatRect.top + charHeightPx / 2 + 5) : screenMinYCenter; // +5px margin below chat top
+      const actualMinYCenter = Math.max(screenMinYCenter, characterMinYBasedOnChat);
+      
       let newTopPercentStr = position.top; 
       let newLeftPercentStr = position.left;
       
-      const { forbiddenRect } = calculateSafeZones();
       let attempts = 0;
-      let randomXPx = 0, randomYPx = 0;
       const maxAttempts = 50; 
+      let randomXPx, randomYPx;
       
       do {
-        randomXPx = (charWidthPx / 2) + Math.random() * (window.innerWidth - charWidthPx);
-        randomYPx = (charHeightPx / 2) + Math.random() * (window.innerHeight - charHeightPx);
+        randomXPx = screenMinXCenter + Math.random() * (screenMaxXCenter - screenMinXCenter);
+        // Generate Y within the screen, but also respecting the chatRect.top constraint
+        randomYPx = actualMinYCenter + Math.random() * (screenMaxYCenter - actualMinYCenter);
+        // Ensure Y is not generated below actualMinYCenter if the random range is very small or negative
+        randomYPx = Math.max(actualMinYCenter, randomYPx); 
+        
         attempts++;
-      } while (
-        isOverlappingForbiddenZone(randomXPx, randomYPx, forbiddenRect) && attempts < maxAttempts
-      );
+        // If chatRect is not available, we can't check for overlap, so accept the first position
+        if (!chatRect) break; 
+
+      } while (chatRect && isOverlappingChatAreaInternal(randomXPx, randomYPx, chatRect, charWidthPx, charHeightPx) && attempts < maxAttempts);
       
-      if (attempts < maxAttempts) { 
+      // If valid position found or chatRect not available, update
+      if (attempts < maxAttempts || !chatRect) { 
           newLeftPercentStr = `${(randomXPx / window.innerWidth) * 100}%`;
           newTopPercentStr = `${(randomYPx / window.innerHeight) * 100}%`;
       } else {
+          // Fallback: if too many attempts, try to place it on an edge away from chat (simplified)
           const edgeMarginPercent = Math.max(5, (charWidthPx / window.innerWidth) * 100 + 2); 
           const verticalEdgeMarginPercent = Math.max(5, (charHeightPx / window.innerHeight) * 100 + 2);
 
-          if (Math.random() < 0.5) { 
-            newTopPercentStr = Math.random() < 0.5 ? `${verticalEdgeMarginPercent}%` : `${100 - verticalEdgeMarginPercent}%`;
-            newLeftPercentStr = `${(Math.random() * (100 - 2 * edgeMarginPercent)) + edgeMarginPercent}%`;
-          } else { 
-            newLeftPercentStr = Math.random() < 0.5 ? `${edgeMarginPercent}%` : `${100 - edgeMarginPercent}%`;
-            newTopPercentStr = `${(Math.random() * (100 - 2 * verticalEdgeMarginPercent)) + verticalEdgeMarginPercent}%`;
+          if (chatRect && chatRect.top > window.innerHeight / 2) { // Chat is lower on screen
+            newTopPercentStr = `${verticalEdgeMarginPercent}%`; // Go high
+          } else { // Chat is higher or centered
+             newTopPercentStr = `${100 - verticalEdgeMarginPercent}%`; // Go low
           }
+          newLeftPercentStr = Math.random() < 0.5 ? `${edgeMarginPercent}%` : `${100 - edgeMarginPercent}%`;
       }
       
       const doMove = () => {
@@ -266,3 +277,4 @@ export function AiCharacterDisplay({ status, isUserTyping }: AiCharacterDisplayP
     </div>
   );
 }
+
