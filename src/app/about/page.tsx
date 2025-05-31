@@ -23,7 +23,7 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent className="space-y-4 text-lg text-card-foreground leading-relaxed text-center">
           <p>
-            Alright, listen up, moron! This is <strong>Tell Me If</strong>, where 'Green Egg' (formerly Tokhme Sabz), an AI probably smarter than your entire bloodline, answers your dumbass questions.
+            Alright, listen up, moron! This is <strong>Tell Me If</strong>, where 'Green Egg', an AI probably smarter than your entire bloodline, answers your dumbass questions.
             This ain't no ordinary pickle, you degenerate. This is a grade-A, free-range, organic Green Egg of pure, unfiltered chaotic energy. 
             It'll roast you in <strong className="text-emerald-green-hsl">any goddamn language</strong> you speak, from serious shit to your idiotic hypotheticals.
             Ask "What if?" and click that "Generate Image" crap to see your stupid ideas splattered into a picture. My mission? Pure, unadulterated chaos and maybe a laugh at your expense.
