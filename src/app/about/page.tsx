@@ -10,8 +10,8 @@ export default function AboutPage() {
           <Sparkles className="h-10 w-10 text-golden-yellow-hsl" />
           About Tell Me If AI
         </h1>
-        <p className="text-xl text-muted-foreground font-heading">
-          Your Brutally Honest, Multilingual AI Companion: Green Egg!
+        <p className="text-xl text-primary font-heading">
+          Meet Green Egg: The Multilingual Smartass You Didn&apos;t Know You Needed (Or Wanted).
         </p>
       </header>
 
