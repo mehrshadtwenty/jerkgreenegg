@@ -54,12 +54,12 @@ body {
     --fiery-orange-hsl: 15 100% 58%; 
     --turquoise-hsl: 175 70% 50%; /* Added Turquoise */
     
-    /* Character Colors (Green Egg - formerly Tokhme Sabz) */
+    /* Character Colors (Green Egg) */
     --character-pickle-body-main-hsl: 115 55% 42%; /* Main body green */
     --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter green for highlights/gradient */
     --character-pickle-limb-hsl: 115 50% 48%; 
-    --character-mouth-dark-hsl: 0 0% 15%; 
-    --character-tongue-hsl: 0 70% 58%; 
+    --character-mouth-dark-hsl: 0 0% 10%; /* Made mouth darker */
+    --character-tongue-hsl: 0 80% 60%; /* Made tongue more vibrant */
     --character-teeth-hsl: var(--pearl-white-hsl);
     --character-pickle-dark-green-hsl: 120 70% 25%; 
 
@@ -108,6 +108,8 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
+    --character-mouth-dark-hsl: 0 0% 8%;
+    --character-tongue-hsl: 0 75% 55%;
   }
 }
 
@@ -122,26 +124,40 @@ body {
     flex-direction: column;
 
     background-image: 
-      radial-gradient(circle at 10px 15px, hsla(var(--pearl-white-hsl), 0.4) 0.5px, hsla(var(--pearl-white-hsl), 0.15) 1.5px, transparent 2px),
-      radial-gradient(circle at 75px 85px, hsla(var(--pearl-white-hsl), 0.5) 0.5px, hsla(var(--pearl-white-hsl), 0.2) 1.5px, transparent 2.5px),
-      radial-gradient(circle at 40px 50px, hsl(var(--background)) 0.3px, hsla(var(--pearl-white-hsl), 0.3) 1px, hsla(var(--pearl-white-hsl), 0.05) 2px, transparent 2.5px),
-      radial-gradient(circle at 90px 25px, hsl(var(--card)) 0.4px, hsla(var(--pearl-white-hsl), 0.25) 1.2px, hsla(var(--pearl-white-hsl), 0.05) 2.2px, transparent 2.8px),
-      linear-gradient(
+      radial-gradient(circle at 10px 15px, hsla(var(--pearl-white-hsl), 0.03) 0.5px, hsla(var(--pearl-white-hsl), 0.01) 1.5px, transparent 2px), /* Reduced opacity */
+      radial-gradient(circle at 75px 85px, hsla(var(--pearl-white-hsl), 0.04) 0.5px, hsla(var(--pearl-white-hsl), 0.015) 1.5px, transparent 2.5px), /* Reduced opacity */
+      radial-gradient(circle at 40px 50px, hsl(var(--background)) 0.3px, hsla(var(--pearl-white-hsl), 0.02) 1px, hsla(var(--pearl-white-hsl), 0.005) 2px, transparent 2.5px), /* Reduced opacity */
+      radial-gradient(circle at 90px 25px, hsl(var(--card)) 0.4px, hsla(var(--pearl-white-hsl), 0.025) 1.2px, hsla(var(--pearl-white-hsl), 0.005) 2.2px, transparent 2.8px), /* Reduced opacity */
+      /* Fruit SVGs - subtle, neon-like */
+      /* Cherry */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='neon-glow-cherry'%3E%3CfeGaussianBlur stdDeviation='1.5' result='coloredBlur'/%3E%3CfeMerge%3E%3CfeMergeNode in='coloredBlur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23neon-glow-cherry)'%3E%3Cpath d='M60,45 Q65,30 70,45 Q85,50 70,55 L60,55 Q45,50 60,45 Z' fill='none' stroke='hsl(0, 100%25, 70%25)' stroke-width='3'/%3E %3C!-- Cherry 1 body --%3E%3Ccircle cx='65' cy='52' r='12' fill='hsl(0, 100%25, 50%25)' stroke='hsl(0, 100%25, 70%25)' stroke-width='1.5'/%3E%3Cpath d='M40,45 Q45,30 50,45 Q65,50 50,55 L40,55 Q25,50 40,45 Z' fill='none' stroke='hsl(0, 100%25, 70%25)' stroke-width='3'/%3E %3C!-- Cherry 2 body --%3E%3Ccircle cx='45' cy='52' r='12' fill='hsl(0, 100%25, 50%25)' stroke='hsl(0, 100%25, 70%25)' stroke-width='1.5'/%3E %3C!-- Stems --%3E%3Cpath d='M65,40 Q55,20 50,10' stroke='hsl(120, 70%25, 50%25)' stroke-width='4' fill='none'/%3E%3Cpath d='M45,40 Q50,25 50,10' stroke='hsl(120, 70%25, 50%25)' stroke-width='4' fill='none'/%3E%3C/g%3E%3C/svg%3E"),
+      /* Strawberry */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='35' height='35' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='neon-glow-strawberry'%3E%3CfeGaussianBlur stdDeviation='2' result='coloredBlur'/%3E%3CfeMerge%3E%3CfeMergeNode in='coloredBlur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23neon-glow-strawberry)'%3E%3Cpath d='M50,20 C30,20 20,40 20,60 C20,85 40,95 50,95 C60,95 80,85 80,60 C80,40 70,20 50,20 Z' fill='hsl(0, 90%25, 55%25)' stroke='hsl(0, 90%25, 75%25)' stroke-width='2'/%3E %3C!-- Strawberry body --%3E %3C!-- Leaves --%3E%3Cpath d='M50,25 C40,15 30,25 40,30 C35,35 45,35 50,25 Z' fill='hsl(120, 60%25, 40%25)' stroke='hsl(120, 60%25, 60%25)' stroke-width='1.5'/%3E%3Cpath d='M50,25 C60,15 70,25 60,30 C65,35 55,35 50,25 Z' fill='hsl(120, 60%25, 40%25)' stroke='hsl(120, 60%25, 60%25)' stroke-width='1.5'/%3E %3C!-- Seeds (dots) --%3E%3Ccircle cx='40' cy='50' r='1.5' fill='hsl(40,80%25,70%25)'/%3E%3Ccircle cx='60' cy='55' r='1.5' fill='hsl(40,80%25,70%25)'/%3E%3Ccircle cx='50' cy='70' r='2' fill='hsl(40,80%25,70%25)'/%3E%3Ccircle cx='35' cy='75' r='1.5' fill='hsl(40,80%25,70%25)'/%3E%3Ccircle cx='65' cy='45' r='1' fill='hsl(40,80%25,70%25)'/%3E%3C/g%3E%3C/svg%3E"),
+      linear-gradient( /* Base gradient */
         160deg,
         hsl(var(--background)) 30%,
         hsl(var(--galactic-purple-hsl) / 0.6) 55%,
         hsl(var(--turquoise-hsl) / 0.4) 80%,
         hsl(var(--bright-blue-hsl) / 0.3) 100%
       );
-    background-repeat: repeat, repeat, repeat, repeat, no-repeat; 
+    background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, no-repeat; 
     background-size: 
-      120px 120px, 
-      120px 120px, 
-      120px 120px, 
-      120px 120px, 
-      250% 250%;   
+      120px 120px, /* Star dots 1 */
+      120px 120px, /* Star dots 2 */
+      120px 120px, /* Star dots 3 */
+      120px 120px, /* Star dots 4 */
+      150px 150px, /* Cherries */
+      180px 180px, /* Strawberries */
+      250% 250%;   /* Base gradient */
     
-    background-position: 0 0, 0 0, 0 0, 0 0, 0% 50%;
+    background-position: 
+      0 0, 
+      0 0, 
+      0 0, 
+      0 0,
+      20px 30px, /* Offset cherries */
+      100px 90px, /* Offset strawberries */
+      0% 50%;
     
     animation: dreamy-bg-flow 25s ease-in-out infinite alternate;
   }
@@ -153,6 +169,8 @@ body {
         0% 0%, 
         0% 0%, 
         0% 0%, 
+        20px 30px,
+        100px 90px,
         0% 50%; 
     }
     100% {
@@ -161,6 +179,8 @@ body {
         0% 0%, 
         0% 0%, 
         0% 0%, 
+        20px 30px, /* Keep fruit positions static relative to this part of animation cycle if desired */
+        100px 90px,
         100% 50%; 
     }
   }
@@ -259,15 +279,15 @@ body {
   fill: hsl(var(--character-mouth-dark-hsl)); 
   stroke: hsl(var(--character-mouth-dark-hsl)); 
   stroke-width: 0.3; 
-  transition: d 0.3s ease-in-out; 
+  transition: d 0.3s ease-in-out, fill 0.3s ease-in-out, stroke-width 0.3s ease-in-out; 
 }
 .character-tongue { 
   opacity: 0; 
-  transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out; 
-  transform-origin: 50% 80%; 
-  fill: hsl(var(--character-tongue-hsl)); /* Ensure tongue color */
-  stroke: hsl(var(--character-mouth-dark-hsl) / 0.7); /* Optional: thin outline for tongue */
-  stroke-width: 0.3;
+  transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out, d 0.3s ease-in-out; 
+  transform-origin: center top; /* Changed for more natural tongue movement */
+  fill: hsl(var(--character-tongue-hsl)); 
+  stroke: hsl(var(--character-mouth-dark-hsl) / 0.7); 
+  stroke-width: 0.4; /* Thicker outline for tongue */
 }
 
 
@@ -287,7 +307,7 @@ body {
 
 /* Default idle face unless overridden by variations */
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 18 58 Q 35 72 52 58 Q 35 68 18 58 Z"); fill: hsl(var(--character-mouth-dark-hsl)); stroke-width: 0.3; } 
-.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; d: path("M 30 65 Q 35 62 40 65 Z"); transform: scaleY(0.5) translateY(5px); }
 
 
 /* Idle Tongue Out Variation */
@@ -298,7 +318,13 @@ body {
 }
 .character-idle.is-tongue-out .character-tongue { 
   opacity: 1; 
-  transform: scale(1.2, 1.7) translateY(1.5px) rotate(-5deg); /* Made tongue bigger and more prominent */
+  /* U-shaped tongue hanging down from inside the mouth (approx y=59) */
+  /* Starts at x=28, curves to y=72 (center x=35), ends at x=42 */
+  d: path("M 28 59 C 26 74, 44 74, 42 59 Z"); 
+  transform: translateY(2px) rotate(4deg); /* Slight downward shift and playful tilt */
+  fill: hsl(var(--character-tongue-hsl));
+  stroke: hsl(var(--character-mouth-dark-hsl) / 0.5);
+  stroke-width: 0.5;
 }
 
 /* Idle Teleporting Variation */
@@ -321,9 +347,9 @@ body {
 .character-idle.is-poker-face .character-pupil { transform: translate(0,0); animation: none; } 
 .character-idle.is-poker-face .character-mouth { 
   d: path("M 22 60 L 48 60"); 
-  stroke: hsl(var(--character-mouth-dark-hsl)); /* Darker line */
-  stroke-width: 1.5; /* Thicker line */
-  fill: none; /* No fill for a line */
+  stroke: hsl(var(--character-mouth-dark-hsl)); 
+  stroke-width: 2.2; /* Increased thickness for poker face line */
+  fill: none; 
 }
 
 
@@ -492,3 +518,4 @@ body {
   50% { transform: translateY(-3px) rotate(5deg); }
 }
 
+    
