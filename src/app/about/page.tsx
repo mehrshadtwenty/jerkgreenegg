@@ -11,7 +11,7 @@ export default function AboutPage() {
           About Tell Me If AI
         </h1>
         <p className="text-xl text-primary font-heading">
-          Meet Green Egg: The Multilingual Smartass You Didn&apos;t Know You Needed (Or Wanted).
+          Green Egg: Multilingual Smartass. No Filter.
         </p>
       </header>
 
