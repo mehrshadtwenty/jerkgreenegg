@@ -22,8 +22,8 @@ const fontHeading = Merienda({
 });
 
 export const metadata: Metadata = {
-  title: 'Tell Me If AI - Your Magical Companion',
-  description: 'Ask questions, get creative answers, and generate images with Tell Me If AI!',
+  title: 'Lashi Green Egg - Your Favorite Degenerate AI',
+  description: 'Ask questions, get creative answers, and generate images with Lashi Green Egg!',
 };
 
 export default function RootLayout({

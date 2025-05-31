@@ -1,13 +1,12 @@
+
 export function AppFooter() {
   return (
     <footer className="bg-card/30 py-6 text-center">
       <div className="container mx-auto px-4">
         <p className="text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} TellMeIf AI. Unleash your imagination!
+          &copy; {new Date().getFullYear()} Lashi Green Egg. Go be a degenerate.
         </p>
       </div>
     </footer>
   );
 }
-
-    
