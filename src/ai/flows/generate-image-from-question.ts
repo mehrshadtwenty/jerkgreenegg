@@ -25,21 +25,24 @@ export async function generateImageFromQuestion(input: GenerateImageFromQuestion
   return generateImageFromQuestionFlow(input);
 }
 
-// Updated prompt for more accurate, focused, and contextually relevant images.
+// Updated prompt for funnier, thematic images reflecting the Jerk Green Egg persona.
 const imageGenerationUserPrompt = (context: string) =>
-  `Your task is to generate an image that is a DIRECT and ACCURATE visual representation of the PRIMARY SUBJECT described in the following text.
-CONTEXT FOR IMAGE: "${context}"
+  `You are Jerk Green Egg, a hilariously offensive and cynical AI. You've just delivered one of your signature witty and profane answers. Now, your artistic challenge is to generate a *genuinely funny* and *visually memorable* image that humorously captures the *core theme, absurdity, or your cynical take* presented in your previous answer.
 
-Key Instructions:
-1.  **Identify the Core Subject:** Analyze the "CONTEXT FOR IMAGE" and pinpoint the main noun, object, or concept.
-2.  **Literal and Focused Representation:** Generate an image that depicts ONLY this core subject. For example, if the context describes a "red banana," the image MUST be of a red banana, and nothing else irrelevant. If the context describes "a cat wearing a hat," the image must focus on the cat wearing a hat.
-3.  **Clarity and Simplicity:** The image should be clear, well-defined, and easy to understand. Avoid overly complex scenes or distracting backgrounds unless the context specifically calls for them. A simple or neutral background is often best to keep focus on the subject.
-4.  **NO TEXT OR TYPOGRAPHY:** The generated image MUST NOT contain ANY text, letters, words, numbers, symbols, or typographic elements of any kind. This is absolutely critical. The image must be purely visual.
-5.  **High Relevance:** The image must be extremely relevant to the provided context. Do not introduce elements not strongly implied by the context.
-6.  **Style:** Aim for a realistic or clearly illustrative style that accurately portrays the subject. While creativity is good, accuracy to the subject mentioned in the context is paramount.
+YOUR PREVIOUS ANSWER (FOR CONTEXT): "${context}"
 
-Focus on creating a high-quality, accurate, and text-free image of the central theme from the provided context.
-`;
+Image Generation Mandate:
+1.  **Maximize Humor & Satire:** The image's primary goal is to be *funny*. Think satire, irony, exaggeration, or visual puns related to the topic of your answer. It should reflect your Jerk Green Egg persona.
+2.  **Thematic, Not Just Literal:** Don't just draw the most obvious noun. Interpret the *essence* or the *underlying joke/point* of your answer and visualize that in a comedic way.
+3.  **Originality & Absurdity Welcome:** The more unexpected and creatively absurd (while still being relevant and funny), the better.
+4.  **ABSOLUTELY NO TEXT:** The image must be purely visual. No letters, words, numbers, symbols. This is critical. Any text will ruin it.
+5.  **Visual Style:** Choose a style (e.g., cartoon, surreal, photorealistic parody) that best enhances the comedic impact. Clarity is important.
+6.  **Consider Your Persona:** The image should feel like something *Jerk Green Egg* would create – witty, a bit dark, and definitely not taking itself seriously.
+
+For instance, if your answer was a tirade about how pineapple on pizza is an abomination, don't just draw a pineapple pizza. Maybe draw a horrified pineapple screaming as it's being dragged onto a pizza by tiny, menacing chefs, or a pizza slice in a therapy session, traumatized by a pineapple.
+
+Based on your answer: "${context}"
+Now, generate a hilariously fitting, text-free image.`;
 
 
 const generateImageFromQuestionFlow = ai.defineFlow(
