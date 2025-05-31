@@ -22,8 +22,8 @@ const fontHeading = Merienda({
 });
 
 export const metadata: Metadata = {
-  title: 'Lashi Green Egg - Your Favorite Degenerate AI',
-  description: 'Ask questions, get creative answers, and generate images with Lashi Green Egg!',
+  title: 'Degenerate Green Egg - Your Favorite Degenerate AI',
+  description: 'Ask questions, get creative answers, and generate images with Degenerate Green Egg!',
 };
 
 export default function RootLayout({
