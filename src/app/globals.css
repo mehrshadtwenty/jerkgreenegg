@@ -312,14 +312,16 @@ body {
 
 /* Idle Tongue Out Variation */
 .character-idle.is-tongue-out .character-mouth { 
-  d: path("M 18 58 Q 35 78 52 58 Q 35 88 18 58 Z");
+  d: path("M 18 58 Q 35 78 52 58 Q 35 88 18 58 Z"); /* Wide smile for tongue out */
   fill: hsl(var(--character-mouth-dark-hsl)); 
   stroke-width: 0.3;
 }
 .character-idle.is-tongue-out .character-tongue { 
   opacity: 1; 
-  d: path("M 28 73 C 26 88, 44 88, 42 73 Z"); /* Adjusted Y values for deeper origin */
-  transform: translateY(0px) rotate(2deg); 
+  /* Path: M (start) C (control1) (control2) (end) Q (top_control) (start_again) Z */
+  /* Moves to (28,73), curves down to (42,73) via (26,88)&(44,88), then curves top from (42,73) to (28,73) via (35,68) */
+  d: path("M 28 73 C 26 88, 44 88, 42 73 Q 35 68 28 73 Z"); 
+  transform: translateY(0px) rotate(0deg); /* Reset any previous transform for precision */
   fill: hsl(var(--character-tongue-hsl));
   stroke: hsl(var(--character-mouth-dark-hsl) / 0.5);
   stroke-width: 0.5;
@@ -515,3 +517,4 @@ body {
   0%, 100% { transform: translateY(0) rotate(0); }
   50% { transform: translateY(-3px) rotate(5deg); }
 }
+
