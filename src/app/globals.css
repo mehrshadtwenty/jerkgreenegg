@@ -58,8 +58,8 @@ body {
     --character-pickle-body-main-hsl: 115 55% 42%; /* Main body green */
     --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter green for highlights/gradient */
     --character-pickle-limb-hsl: 115 50% 48%; 
-    --character-mouth-dark-hsl: 0 0% 10%; /* Made mouth darker */
-    --character-tongue-hsl: 0 80% 60%; /* Made tongue more vibrant */
+    --character-mouth-dark-hsl: 0 0% 8%; /* Made mouth darker */
+    --character-tongue-hsl: 0 85% 65%; /* Made tongue more vibrant */
     --character-teeth-hsl: var(--pearl-white-hsl);
     --character-pickle-dark-green-hsl: 120 70% 25%; 
 
@@ -108,8 +108,8 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
-    --character-mouth-dark-hsl: 0 0% 8%;
-    --character-tongue-hsl: 0 75% 55%;
+    --character-mouth-dark-hsl: 0 0% 5%;
+    --character-tongue-hsl: 0 80% 60%;
   }
 }
 
@@ -287,7 +287,7 @@ body {
   transform-origin: center top; /* Changed for more natural tongue movement */
   fill: hsl(var(--character-tongue-hsl)); 
   stroke: hsl(var(--character-mouth-dark-hsl) / 0.7); 
-  stroke-width: 0.4; /* Thicker outline for tongue */
+  stroke-width: 0.5; /* Thicker outline for tongue */
 }
 
 
@@ -312,16 +312,17 @@ body {
 
 /* Idle Tongue Out Variation */
 .character-idle.is-tongue-out .character-mouth { 
-  d: path("M 18 58 Q 35 78 52 58 Q 35 88 18 58 Z"); /* Mouth opens wider */
+  /* A wide open mouth: Upper lip (18,58)-(35,78)-(52,58), Lower lip (52,58)-(35,88)-(18,58) */
+  /* This creates an opening where the top center is (35,68) and bottom center is (35,73) */
+  d: path("M 18 58 Q 35 78 52 58 Q 35 88 18 58 Z");
   fill: hsl(var(--character-mouth-dark-hsl)); 
   stroke-width: 0.3;
 }
 .character-idle.is-tongue-out .character-tongue { 
   opacity: 1; 
-  /* U-shaped tongue hanging down from inside the mouth (approx y=59) */
-  /* Starts at x=28, curves to y=72 (center x=35), ends at x=42 */
-  d: path("M 28 59 C 26 74, 44 74, 42 59 Z"); 
-  transform: translateY(2px) rotate(4deg); /* Slight downward shift and playful tilt */
+  /* Tongue attached at y=72 (inside lower lip), hanging down to y=87 */
+  d: path("M 28 72 C 26 87, 44 87, 42 72 Z"); 
+  transform: translateY(0px) rotate(2deg); /* Minimal transform, relying on path data */
   fill: hsl(var(--character-tongue-hsl));
   stroke: hsl(var(--character-mouth-dark-hsl) / 0.5);
   stroke-width: 0.5;
@@ -517,5 +518,3 @@ body {
   0%, 100% { transform: translateY(0) rotate(0); }
   50% { transform: translateY(-3px) rotate(5deg); }
 }
-
-    
