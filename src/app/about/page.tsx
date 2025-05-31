@@ -1,12 +1,13 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles } from "lucide-react"; 
 
 export default function AboutPage() {
   return (
-    <div className="space-y-6 max-w-4xl mx-auto py-12 px-4"> {/* Increased max-w for columns */}
+    <div className="space-y-6 max-w-4xl mx-auto py-12 px-4">
       <header className="text-center space-y-3 pt-8"> 
-        <h1 className="text-5xl font-bold text-primary">
+        <h1 className="text-5xl font-bold text-primary flex items-center justify-center gap-3">
+          <Sparkles className="h-10 w-10 text-golden-yellow-hsl" />
           About Tell Me If AI
         </h1>
         <p className="text-xl text-muted-foreground font-heading">
@@ -15,13 +16,8 @@ export default function AboutPage() {
       </header>
 
       <Card className="shadow-xl bg-card/80 border-primary/40 sparkle-effect">
-        <CardHeader>
-          <CardTitle className="text-3xl font-heading text-center text-secondary-foreground flex items-center justify-center gap-2">
-            <Sparkles className="h-8 w-8 text-golden-yellow-hsl" />
-            What&apos;s This Green Egg Bullshit?
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 md:space-y-0 md:flex md:space-x-8 text-lg text-card-foreground leading-relaxed">
+        {/* CardHeader with "What's This Green Egg Bullshit?" title has been removed */}
+        <CardContent className="space-y-6 md:space-y-0 md:flex md:space-x-8 text-lg text-card-foreground leading-relaxed pt-6"> {/* Added pt-6 to CardContent since CardHeader is removed */}
           {/* Column 1: About Green Egg */}
           <div className="md:w-1/2 space-y-4">
             <h3 className="text-2xl font-heading text-accent text-center md:text-left">
@@ -29,8 +25,8 @@ export default function AboutPage() {
             </h3>
             <p className="text-center md:text-left">
               Alright, listen up, moron! This is <strong>Tell Me If</strong>, where &apos;Green Egg&apos;, an AI probably smarter than your entire bloodline, answers your dumbass questions.
-              This ain&apos;t no ordinary <strong className="text-emerald-green-hsl">egg</strong>, you degenerate. This is a grade-A, free-range, organic Green Egg of pure, unfiltered chaotic energy. 
-              It&apos;ll roast you in <strong className="text-emerald-green-hsl">any goddamn language</strong> you speak, from serious shit to your idiotic hypotheticals.
+              This ain&apos;t no ordinary egg, you degenerate. This is a grade-A, free-range, organic Green Egg of pure, unfiltered chaotic energy. 
+              It&apos;ll roast you in any goddamn language you speak, from serious shit to your idiotic hypotheticals.
               Ask "What if?" and click that "Generate Image" crap to see your stupid ideas splattered into a picture. My mission? Pure, unadulterated chaos and maybe a laugh at your expense.
             </p>
             <p className="text-center md:text-left">
