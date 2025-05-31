@@ -25,15 +25,20 @@ export async function generateImageFromQuestion(input: GenerateImageFromQuestion
   return generateImageFromQuestionFlow(input);
 }
 
-// Updated prompt for cooler, more relevant images based on AI's answer, and absolutely no text in image.
-const imageGenerationUserPrompt = (context: string) => 
-  `ABSOLUTELY NO TEXT: The generated image MUST NOT contain any text, letters, words, numbers, symbols, or typographic elements whatsoever. The image must be purely visual. Do NOT add any text to the image. This is the most important instruction.
-You are an AI image generator tasked with creating exceptionally cool, awesome, and visually striking artwork.
-The image MUST be highly relevant to the AI's preceding answer or the direct context provided.
-The style should be imaginative, creative, detailed, and impactful, perfectly capturing the essence of the dialogue.
-Visually represent the core idea, feeling, or subject matter from the following text. This text is for thematic inspiration ONLY. DO NOT include any words, letters, or text from this context, or any other text, in the generated image. The image must be purely visual, with no text elements at all. Context for inspiration: "${context}"
-Ensure the image is fun, visually appealing, and directly reflects the theme or subject matter discussed in the provided context.
-CRITICALLY IMPORTANT REMINDER: The generated image MUST NOT contain any text, letters, words, numbers, symbols, or typographic elements whatsoever. Focus purely on the visual representation of the concept. Do not write any text on the image.
+// Updated prompt for more accurate, focused, and contextually relevant images.
+const imageGenerationUserPrompt = (context: string) =>
+  `Your task is to generate an image that is a DIRECT and ACCURATE visual representation of the PRIMARY SUBJECT described in the following text.
+CONTEXT FOR IMAGE: "${context}"
+
+Key Instructions:
+1.  **Identify the Core Subject:** Analyze the "CONTEXT FOR IMAGE" and pinpoint the main noun, object, or concept.
+2.  **Literal and Focused Representation:** Generate an image that depicts ONLY this core subject. For example, if the context describes a "red banana," the image MUST be of a red banana, and nothing else irrelevant. If the context describes "a cat wearing a hat," the image must focus on the cat wearing a hat.
+3.  **Clarity and Simplicity:** The image should be clear, well-defined, and easy to understand. Avoid overly complex scenes or distracting backgrounds unless the context specifically calls for them. A simple or neutral background is often best to keep focus on the subject.
+4.  **NO TEXT OR TYPOGRAPHY:** The generated image MUST NOT contain ANY text, letters, words, numbers, symbols, or typographic elements of any kind. This is absolutely critical. The image must be purely visual.
+5.  **High Relevance:** The image must be extremely relevant to the provided context. Do not introduce elements not strongly implied by the context.
+6.  **Style:** Aim for a realistic or clearly illustrative style that accurately portrays the subject. While creativity is good, accuracy to the subject mentioned in the context is paramount.
+
+Focus on creating a high-quality, accurate, and text-free image of the central theme from the provided context.
 `;
 
 
@@ -45,10 +50,10 @@ const generateImageFromQuestionFlow = ai.defineFlow(
   },
   async input => {
     const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp', 
+      model: 'googleai/gemini-2.0-flash-exp',
       prompt: imageGenerationUserPrompt(input.contextForImage),
       config: {
-        responseModalities: ['TEXT', 'IMAGE'], 
+        responseModalities: ['TEXT', 'IMAGE'],
         safetySettings: [
            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -63,4 +68,3 @@ const generateImageFromQuestionFlow = ai.defineFlow(
     return {imageUrl: media.url};
   }
 );
-
