@@ -54,23 +54,23 @@ body {
     --fiery-orange-hsl: 15 100% 58%; 
     --turquoise-hsl: 175 70% 50%; /* Added Turquoise */
     
-    /* Pickle Rick Character Colors */
-    --character-pickle-body-main-hsl: 115 55% 42%; /* Main pickle green */
-    --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter pickle green for highlights/gradient */
-    --character-pickle-unibrow-hsl: 115 60% 20%; 
-    --character-pickle-limb-hsl: 115 50% 48%; /* Slightly different green for limbs if needed */
-    --character-mouth-dark-hsl: 0 0% 15%; /* Dark color for mouth interior/lines */
-    --character-tongue-hsl: 0 70% 58%; /* Pinkish red for tongue */
+    /* Character Colors (Tokhme Sabz / Green Egg - formerly Pickle Rick) */
+    --character-pickle-body-main-hsl: 115 55% 42%; /* Main body green */
+    --character-pickle-body-light-hsl: 115 60% 55%; /* Lighter green for highlights/gradient */
+    /* --character-pickle-unibrow-hsl removed */
+    --character-pickle-limb-hsl: 115 50% 48%; 
+    --character-mouth-dark-hsl: 0 0% 15%; 
+    --character-tongue-hsl: 0 70% 58%; 
     --character-teeth-hsl: var(--pearl-white-hsl);
-    --character-pickle-dark-green-hsl: 120 70% 25%; /* For icon stroke and body spots */
+    --character-pickle-dark-green-hsl: 120 70% 25%; 
 
 
     /* Legacy colors from original theme - remapped or can be used if specific shades needed */
-    --sky-blue-hsl: var(--bright-blue-hsl); /* Remapped */
-    --rose-pink-hsl: var(--neon-pink-hsl); /* Remapped */
-    --mystic-gold-hsl: var(--golden-yellow-hsl); /* Remapped */
-    --amethyst-purple-hsl: var(--galactic-purple-hsl); /* Remapped */
-    --electric-lime-hsl: var(--fiery-orange-hsl); /* Remapped to new accent */
+    --sky-blue-hsl: var(--bright-blue-hsl); 
+    --rose-pink-hsl: var(--neon-pink-hsl); 
+    --mystic-gold-hsl: var(--golden-yellow-hsl); 
+    --amethyst-purple-hsl: var(--galactic-purple-hsl); 
+    --electric-lime-hsl: var(--fiery-orange-hsl); 
 
 
     --font-heading-family: "Merienda", cursive;
@@ -87,19 +87,19 @@ body {
     --popover: 270 60% 12%;
     --popover-foreground: 30 100% 95%;
 
-    --primary: 50 100% 60%; /* Brighter Golden Yellow */
+    --primary: 50 100% 60%; 
     --primary-foreground: 50 100% 5%; 
 
-    --secondary: 210 100% 65%; /* Brighter Bright Blue */
+    --secondary: 210 100% 65%; 
     --secondary-foreground: 210 100% 5%;
 
     --muted: 270 50% 25%;
     --muted-foreground: 270 40% 65%;
 
-    --accent: 15 100% 63%; /* Brighter Fiery Orange */
+    --accent: 15 100% 63%; 
     --accent-foreground: 15 100% 5%;
 
-    --destructive: 0 80% 55%; /* Brighter Ruby Red */
+    --destructive: 0 80% 55%; 
     --destructive-foreground: 0 0% 100%;
 
     --border: 270 60% 22%;
@@ -109,7 +109,7 @@ body {
 
     --character-pickle-body-main-hsl: 115 50% 38%;
     --character-pickle-body-light-hsl: 115 55% 50%;
-    --character-pickle-unibrow-hsl: 115 55% 15%; 
+    /* --character-pickle-unibrow-hsl removed for dark mode as well */
   }
 }
 
@@ -123,15 +123,11 @@ body {
     display: flex;
     flex-direction: column;
 
-    /* Dreamlike background with layered patterns */
     background-image: 
-      /* Layer 1: "White" glowing dots (light pearl color) */
       radial-gradient(circle at 10px 15px, hsla(var(--pearl-white-hsl), 0.4) 0.5px, hsla(var(--pearl-white-hsl), 0.15) 1.5px, transparent 2px),
       radial-gradient(circle at 75px 85px, hsla(var(--pearl-white-hsl), 0.5) 0.5px, hsla(var(--pearl-white-hsl), 0.2) 1.5px, transparent 2.5px),
-      /* Layer 2: "Black" glowing dots (dark core with pearl white glow) */
       radial-gradient(circle at 40px 50px, hsl(var(--background)) 0.3px, hsla(var(--pearl-white-hsl), 0.3) 1px, hsla(var(--pearl-white-hsl), 0.05) 2px, transparent 2.5px),
       radial-gradient(circle at 90px 25px, hsl(var(--card)) 0.4px, hsla(var(--pearl-white-hsl), 0.25) 1.2px, hsla(var(--pearl-white-hsl), 0.05) 2.2px, transparent 2.8px),
-      /* Layer 3: Original dreamy gradient */
       linear-gradient(
         160deg,
         hsl(var(--background)) 30%,
@@ -139,15 +135,14 @@ body {
         hsl(var(--turquoise-hsl) / 0.4) 80%,
         hsl(var(--bright-blue-hsl) / 0.3) 100%
       );
-    background-repeat: repeat, repeat, repeat, repeat, no-repeat; /* Patterns repeat, gradient does not */
+    background-repeat: repeat, repeat, repeat, repeat, no-repeat; 
     background-size: 
-      120px 120px, /* Tile size for "white" dots pattern 1 */
-      120px 120px, /* Tile size for "white" dots pattern 2 */
-      120px 120px, /* Tile size for "black" dots pattern 1 */
-      120px 120px, /* Tile size for "black" dots pattern 2 */
-      250% 250%;   /* Original gradient size */
+      120px 120px, 
+      120px 120px, 
+      120px 120px, 
+      120px 120px, 
+      250% 250%;   
     
-    /* Set initial positions for all layers. Last layer (gradient) will be animated. */
     background-position: 0 0, 0 0, 0 0, 0 0, 0% 50%;
     
     animation: dreamy-bg-flow 25s ease-in-out infinite alternate;
@@ -156,23 +151,22 @@ body {
   @keyframes dreamy-bg-flow {
     0% {
       background-position:
-        0% 0%, /* pattern 1 - static position for repeating tile */
-        0% 0%, /* pattern 2 - static position for repeating tile */
-        0% 0%, /* pattern 3 - static position for repeating tile */
-        0% 0%, /* pattern 4 - static position for repeating tile */
-        0% 50%; /* animated main gradient layer */
+        0% 0%, 
+        0% 0%, 
+        0% 0%, 
+        0% 0%, 
+        0% 50%; 
     }
     100% {
       background-position:
-        0% 0%, /* pattern 1 */
-        0% 0%, /* pattern 2 */
-        0% 0%, /* pattern 3 */
-        0% 0%, /* pattern 4 */
-        100% 50%; /* animated main gradient layer */
+        0% 0%, 
+        0% 0%, 
+        0% 0%, 
+        0% 0%, 
+        100% 50%; 
     }
   }
 
-  /* Updated heading styles with effects */
   h1 {
     font-family: var(--font-heading-family);
     @apply text-foreground;
@@ -192,7 +186,6 @@ body {
     text-shadow: 1px 1px 1px hsl(var(--background) / 0.3);
   }
 
-  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -223,7 +216,6 @@ body {
   .text-link-style-stop {
      @apply text-destructive hover:text-destructive/80 underline cursor-pointer font-medium text-sm;
   }
-  /* Added for new character props */
   .character-prop-hidden {
     opacity: 0 !important;
     transform: scale(0.5) !important;
@@ -235,10 +227,9 @@ body {
     transition: opacity 0.3s ease, transform 0.3s ease !important;
   }
   
-  /* Custom placeholder styling for chat textarea */
   .chat-textarea::placeholder {
     @apply text-muted-foreground/60 italic;
-    font-family: var(--font-heading-family); /* Apply Merienda to placeholder */
+    font-family: var(--font-heading-family); 
   }
 }
 
@@ -252,7 +243,7 @@ body {
   }
 }
 
-/* AI Character SVG Styles & Animations - Pickle Rick */
+/* AI Character SVG Styles & Animations - Tokhme Sabz (Green Egg) */
 .ai-character-svg {
   overflow: visible; 
   filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.25)); 
@@ -266,12 +257,7 @@ body {
 }
 .character-eye-white { fill: hsl(var(--pearl-white-hsl)); }
 .character-pupil { fill: hsl(var(--character-mouth-dark-hsl)); transition: transform 0.2s ease-in-out; }
-.character-unibrow { 
-  fill: hsl(var(--character-pickle-unibrow-hsl)); 
-  stroke: hsl(var(--character-mouth-dark-hsl) / 0.3);
-  stroke-width: 2; 
-  transition: transform 0.3s ease-in-out, d 0.3s ease-in-out; 
-}
+/* .character-unibrow styles removed */
 .character-mouth { 
   fill: hsl(var(--character-mouth-dark-hsl)); 
   stroke: hsl(var(--character-mouth-dark-hsl)); 
@@ -293,15 +279,14 @@ body {
 }
 
 
-/* IDLE State - Pickle Rick (Base animations) */
+/* IDLE State - Tokhme Sabz (Base animations) */
 .character-idle .ai-character-svg:not(.is-teleporting .ai-character-svg) { 
   animation: pulse-glow-character 2.2s infinite alternate, character-bob-dynamic 3.2s infinite ease-in-out; 
 }
 .character-idle .character-pupil { animation: character-blink 4.5s infinite; }
 
 /* Default idle face unless overridden by variations */
-.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-unibrow { d: path("M 18 30 Q 35 22 52 30"); transform: translateY(0); } 
-.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 22 58 Q 35 68 48 58 Q 35 64 22 58 Z"); } 
+.character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-mouth { d: path("M 18 58 Q 35 72 52 58 Q 35 68 18 58 Z"); } 
 .character-idle:not(.is-tongue-out):not(.is-laughing):not(.is-poker-face) .character-tongue { opacity: 0; transform: scaleY(0.5) translateY(5px); }
 
 
@@ -311,9 +296,8 @@ body {
   transform: scale(1.1, 1.3) translateY(1px) rotate(-5deg); 
 }
 .character-idle.is-tongue-out .character-mouth { 
-  d: path("M 22 58 Q 35 65 48 58 Q 35 75 22 58 Z"); 
+  d: path("M 18 58 Q 35 70 52 58 Q 35 80 18 58 Z"); 
 }
-.character-idle.is-tongue-out .character-unibrow { d: path("M 18 28 Q 35 20 52 28"); } 
 
 /* Idle Teleporting Variation */
 .character-idle.is-teleporting .ai-character-svg {
@@ -326,54 +310,46 @@ body {
 
 /* Idle Laughing Variation (Smile) */
 .character-idle.is-laughing .ai-character-svg { animation: pulse-glow-character 1.5s infinite alternate, character-shake-gentle 0.5s infinite ease-in-out; }
-.character-idle.is-laughing .character-unibrow { d: path("M 15 25 C 25 15, 45 15, 55 25"); } 
 .character-idle.is-laughing .character-eye-white { transform: scaleY(0.8) translateY(1px); } 
-.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 80 55 55 Q 35 70 15 55 Z"); } 
+.character-idle.is-laughing .character-mouth { d: path("M 15 55 Q 35 85 55 55 Q 35 75 15 55 Z"); } 
 
 
 /* Idle Poker Face Variation */
-.character-idle.is-poker-face .character-unibrow { d: path("M 18 30 L 52 30"); } 
 .character-idle.is-poker-face .character-eye-white { transform: scale(1); } 
 .character-idle.is-poker-face .character-pupil { transform: translate(0,0); animation: none; } 
-.character-idle.is-poker-face .character-mouth { d: path("M 25 60 L 45 60"); } 
+.character-idle.is-poker-face .character-mouth { d: path("M 22 60 L 48 60"); } 
 
 
-/* USER TYPING State (Listening/Attentive Pickle) */
+/* USER TYPING State (Listening/Attentive Green Egg) */
 .character-user_typing .ai-character-svg { animation: pulse-glow-character 1.8s infinite alternate, character-bob-attentive 2.5s infinite ease-in-out; transform: scale(1.02) translateY(-2px); }
 .character-user_typing .character-eye-white { transform: scale(1.05); } 
 .character-user_typing .character-pupil { animation: character-pupil-scan 3s infinite ease-in-out; }
-.character-user_typing .character-unibrow { d: path("M 15 26 Q 35 18 55 26"); transform: translateY(-2px); } 
-.character-user_typing .character-mouth { d: path("M 22 60 Q 35 76 48 60 Q 35 72 22 60 Z"); } 
+.character-user_typing .character-mouth { d: path("M 20 60 Q 35 78 50 60 Q 35 74 20 60 Z"); } 
 
-/* THINKING TEXT State (Pondering Pickle) */
+/* THINKING TEXT State (Pondering Green Egg) */
 .character-thinking_text .ai-character-svg { animation: pulse-glow-character 1.3s infinite alternate; transform: rotate(-2deg) translateY(-2px); } 
-.character-thinking_text .character-unibrow { d: path("M 20 32 Q 35 28 50 32"); } 
-.character-thinking_text .character-mouth { d: path("M 25 58 Q 35 63 45 58 Q 35 60 25 58 Z"); } 
+.character-thinking_text .character-mouth { d: path("M 23 58 Q 35 65 47 58 Q 35 62 23 58 Z"); } 
 .character-thinking_text .character-pupil { animation: character-think-pupils 2.8s infinite ease-in-out; }
 
-/* THINKING IMAGE State (Intense Pickle Power) */
+/* THINKING IMAGE State (Intense Green Egg Power) */
 .character-thinking_image .ai-character-svg { animation: pulse-glow-character 0.9s infinite alternate, character-shake-intense 0.35s 3 ease-in-out; transform: scale(1.01); } 
 .character-thinking_image .character-sparkles { opacity: 0.7; animation: character-sparkle-effect 0.7s infinite; }
-.character-thinking_image .character-unibrow { d: path("M 15 25 Q 35 15 55 25"); transform: translateY(-3px); } 
-.character-thinking_image .character-mouth { d: path("M 20 56 Q 35 76 50 56 Q 35 68 20 56 Z"); } 
+.character-thinking_image .character-mouth { d: path("M 18 55 Q 35 78 52 55 Q 35 70 18 55 Z"); } 
 
-/* PRESENTING TEXT State (Smug Pickle Delivery) */
+/* PRESENTING TEXT State (Smug Green Egg Delivery) */
 .character-presenting_text .ai-character-svg { animation: pulse-glow-character 1.9s infinite alternate; transform: scale(1.01) translateY(-1px) rotate(0.5deg); } 
-.character-presenting_text .character-unibrow { d: path("M 18 28 Q 35 22 52 29"); } 
-.character-presenting_text .character-mouth { d: path("M 20 58 Q 30 71 40 58 Q 30 61 20 58 Z"); } 
+.character-presenting_text .character-mouth { d: path("M 18 58 Q 32 73 45 57 Q 30 63 18 58 Z"); } 
 .character-presenting_text .character-tongue { opacity: 0; } 
 
 
-/* PRESENTING IMAGE State (Excited Pickle "Voila!") */
+/* PRESENTING IMAGE State (Excited Green Egg "Voila!") */
 .character-presenting_image .ai-character-svg { animation: pulse-glow-character 1.7s infinite alternate; transform: scale(1.02) rotate(1deg) translateY(-3px); } 
 .character-presenting_image .character-sparkles { opacity: 0.9; animation: character-sparkle-effect 0.6s infinite; }
-.character-presenting_image .character-unibrow { d: path("M 15 24 Q 35 16 55 24"); transform: translateY(-4px); } 
-.character-presenting_image .character-mouth { d: path("M 18 60 Q 35 80 52 60 Q 35 73 18 60 Z"); } 
+.character-presenting_image .character-mouth { d: path("M 15 60 Q 35 85 55 60 Q 35 78 15 60 Z"); } 
 
-/* ERROR State (Glitching Pickle) */
+/* ERROR State (Glitching Green Egg) */
 .character-error .ai-character-svg { transform: rotate(5deg) translateY(4px) scale(0.98); filter: grayscale(25%) brightness(0.95); animation: character-error-tremble 0.28s 4; } 
-.character-error .character-unibrow { d: path("M 19 34 Q 35 20 51 33"); } 
-.character-error .character-mouth { d: path("M 22 63 Q 35 53 48 63 Q 35 58 22 63 Z"); } 
+.character-error .character-mouth { d: path("M 18 65 Q 35 50 52 65 Q 35 55 18 65 Z"); } 
 .character-error .character-eye-white { transform: scaleY(0.8) scaleX(0.95); }
 
 
@@ -447,7 +423,6 @@ body {
   z-index: 10; 
 }
 
-/* Animation for image appearing in chat */
 @keyframes image-fade-in-sparkle {
   0% {
     opacity: 0;
@@ -509,4 +484,3 @@ body {
   0%, 100% { transform: translateY(0) rotate(0); }
   50% { transform: translateY(-3px) rotate(5deg); }
 }
-/* End of reviewed CSS content. The error at line 513 is beyond this point. */
