@@ -10,9 +10,7 @@ export default function AboutPage() {
           <Sparkles className="h-10 w-10 text-golden-yellow-hsl" />
           About Tell Me If AI
         </h1>
-        <p className="text-xl text-primary font-heading">
-          Green Egg: Multilingual Smartass. No Filter.
-        </p>
+        {/* Subtitle "Green Egg: Multilingual Smartass. No Filter." has been removed */}
       </header>
 
       <Card className="shadow-xl bg-card/80 border-primary/40 sparkle-effect">
@@ -44,7 +42,7 @@ export default function AboutPage() {
             <p className="text-center md:text-left">
               And speaking of chaotic energy, if you&apos;ve got a few brain cells left that haven&apos;t been fried by staring at charts, consider chucking some of your worthless fiat into our glorious memecoin. 
               The contract address is plastered right on the main page like a goddamn declaration of financial irresponsibility. 
-              Buying it won&apos;t make you smarter, but it&apos;ll sure as shit make <strong className="text-golden-yellow-hsl">ME</strong> richer, and isn&apos;t that what life&apos;s all about, you capitalist pig-dog? 
+              Buying it won&apos;t make you smarter, you magnificent dolt, but who knows? Maybe <strong className="text-golden-yellow-hsl">YOU&apos;LL</strong> strike it rich and can finally afford that solid gold bird bath for your pet rock. Or maybe I just get to commission a tiny diamond-encrusted crown. Either way, it&apos;s a win-win... for someone. 
               Do it. Or don&apos;t. I don&apos;t fucking care, I&apos;m an egg with expensive tastes.
             </p>
           </div>
