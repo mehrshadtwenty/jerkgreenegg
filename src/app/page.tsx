@@ -16,7 +16,7 @@ import { Send, Sparkles, StopCircle, Copy } from 'lucide-react'; // Added Copy
 import Image from 'next/image'; // Added Image
 import { cn } from '@/lib/utils';
 
-const CONTRACT_ADDRESS = "0xYourMemecoinContractAddressHere12345";
+const CONTRACT_ADDRESS = "E76gue12NupYS5GwjRR7nyisEKAUpH6F1Pv9UmHMSziu";
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
