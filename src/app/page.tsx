@@ -12,8 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
-import { Send, Sparkles, StopCircle, Copy } from 'lucide-react'; // Added Copy
-import Image from 'next/image'; // Added Image
+import { Send, Sparkles, StopCircle, Copy } from 'lucide-react';
+import Link from 'next/link'; // Added Link import
 import { cn } from '@/lib/utils';
 
 const CONTRACT_ADDRESS = "E76gue12NupYS5GwjRR7nyisEKAUpH6F1Pv9UmHMSziu";
@@ -210,14 +210,17 @@ export default function HomePage() {
         {/* Token Contract Address Section */}
         <div className="py-3 px-4 flex items-center justify-center">
           <div className="flex items-center gap-3 bg-card/80 p-3 rounded-lg shadow-xl border-2 border-primary/40 max-w-lg w-full backdrop-blur-sm">
-            <Image
-              src="https://picsum.photos/32/32" 
-              alt="Memecoin Token Icon"
-              width={32}
-              height={32}
-              className="rounded-full border border-primary/50"
-              data-ai-hint="crypto token"
-            />
+            <Link href="https://pump.fun/coin/E76gue12NupYS5GwjRR7nyisEKAUpH6F1Pv9UmHMSziu" passHref legacyBehavior>
+              <a target="_blank" rel="noopener noreferrer" className="shrink-0">
+                <Button
+                  variant="default" 
+                  size="sm" 
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground font-heading shadow-md hover:shadow-fantasy-glow-accent px-4"
+                >
+                  Ape In!
+                </Button>
+              </a>
+            </Link>
             <span className="text-xs sm:text-sm text-foreground/90 truncate font-mono flex-grow" title={CONTRACT_ADDRESS}>
               {CONTRACT_ADDRESS}
             </span>
@@ -225,7 +228,7 @@ export default function HomePage() {
               variant="ghost"
               size="icon"
               onClick={handleCopyAddress}
-              className="text-primary hover:text-accent focus:ring-accent w-8 h-8 sm:w-9 sm:h-9"
+              className="text-primary hover:text-accent focus:ring-accent w-8 h-8 sm:w-9 sm:h-9 shrink-0"
               aria-label="Copy contract address"
             >
               <Copy className="h-4 w-4 sm:h-5 sm:h-5" />
