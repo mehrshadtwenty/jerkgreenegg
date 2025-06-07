@@ -293,7 +293,7 @@ export default function HomePage() {
                 className={cn(
                   "pr-12 min-h-[50px] text-base rounded-lg shadow-inner resize-none chat-textarea",
                   "bg-[linear-gradient(to_bottom,hsl(var(--amethyst-purple-hsl)/0.25)_0%,hsl(var(--pearl-white-hsl)/0.15)_100%)]",
-                  "text-primary-foreground placeholder:text-[hsl(var(--primary-foreground))/0.7]",
+                  "text-emerald-green-hsl placeholder:text-emerald-green-hsl/70",
                   "border-2 border-primary/30",
                   "focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0"
                 )}
