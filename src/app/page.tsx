@@ -63,7 +63,6 @@ export default function HomePage() {
         localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messagesToStore));
       } catch (error) {
         console.error("Error saving messages to localStorage:", error);
-        // Potentially clear localStorage if quota is an issue that persists even with slicing
         if (error instanceof DOMException && (error.name === 'QuotaExceededError' || error.code === 22)) {
             console.warn("LocalStorage quota exceeded even after slicing. Clearing stored messages.");
             localStorage.removeItem(CHAT_STORAGE_KEY);
@@ -107,8 +106,8 @@ export default function HomePage() {
     setCurrentQuestion(''); 
 
     const userMessage: ChatMessage = { id: uuidv4(), role: 'user', text: questionText, timestamp: new Date() };
-    const updatedMessagesContext = [...messages, userMessage]; // Use this for AI context immediately
-    setMessages(updatedMessagesContext); // Update UI
+    const updatedMessagesContext = [...messages, userMessage]; 
+    setMessages(updatedMessagesContext); 
 
     const aiPlaceholderMessageId = uuidv4();
     const aiPlaceholderMessage: ChatMessage = {
@@ -120,8 +119,7 @@ export default function HomePage() {
     };
     setMessages(prev => [...prev, aiPlaceholderMessage]);
 
-    // Prepare conversation history for AI
-    const historyForAI = updatedMessagesContext // use the one that includes the latest user message
+    const historyForAI = updatedMessagesContext 
       .slice(-MAX_HISTORY_MESSAGES_FOR_AI -1) 
       .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text) 
       .map(msg => ({
@@ -260,10 +258,12 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col flex-grow w-full overflow-hidden bg-background text-foreground">
+    <div className="flex flex-col h-full w-full bg-background text-foreground"> {/* Use h-full to fill parent main */}
       <AiCharacterDisplay status={aiStatus} isUserTyping={isUserTyping} /> 
       
-      <div className="flex-grow flex flex-col overflow-hidden pt-16"> {/* pt-16 for AppHeader height */}
+      {/* This container handles content below the AI character display */}
+      {/* It will grow and its children will be laid out vertically. Overflow is handled by parent <main> */}
+      <div className="flex-grow flex flex-col overflow-hidden"> 
         
         {/* Token Contract Address Section */}
         <div className="py-3 px-4 flex items-center justify-center">
@@ -294,11 +294,12 @@ export default function HomePage() {
           </div>
         </div>
         
+        {/* Chat Area Wrapper: Takes remaining space and contains scrollable messages + input */}
         <div 
           id="chat-area-wrapper" 
-          className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden border-2 border-primary rounded-lg shadow-xl my-4"
+          className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden border-2 border-primary rounded-lg shadow-xl my-4 min-h-0" // Added min-h-0
         >
-          <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50 min-h-0">
+          <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50 min-h-0"> {/* min-h-0 is crucial */}
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
                  {/* Empty div, placeholder text removed */}
@@ -309,6 +310,7 @@ export default function HomePage() {
             <div ref={messagesEndRef} />
           </ScrollArea>
 
+          {/* Input Form Area */}
           <div className="p-3 border-t border-primary/50 bg-card/80 backdrop-blur-sm">
             <form onSubmit={handleSubmitForm} className="relative">
               <Textarea
@@ -382,4 +384,3 @@ export default function HomePage() {
     </div>
   );
 }
-
