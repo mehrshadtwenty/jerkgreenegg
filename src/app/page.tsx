@@ -290,10 +290,13 @@ export default function HomePage() {
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 placeholder="Ask your dumb questions, genius."
-                className="pr-12 min-h-[50px] text-base bg-input/70 text-input-foreground 
-                           border-2 border-primary/30 
-                           focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0
-                           rounded-lg shadow-inner resize-none chat-textarea" 
+                className={cn(
+                  "pr-12 min-h-[50px] text-base rounded-lg shadow-inner resize-none chat-textarea",
+                  "bg-[linear-gradient(to_bottom,hsl(var(--amethyst-purple-hsl)/0.25)_0%,hsl(var(--pearl-white-hsl)/0.15)_100%)]",
+                  "text-primary-foreground placeholder:text-[hsl(var(--primary-foreground))/0.7]",
+                  "border-2 border-primary/30",
+                  "focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0"
+                )}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
