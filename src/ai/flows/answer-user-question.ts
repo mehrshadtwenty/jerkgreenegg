@@ -22,7 +22,7 @@ const AnswerUserQuestionInputSchema = z.object({
 export type AnswerUserQuestionInput = z.infer<typeof AnswerUserQuestionInputSchema>;
 
 const AnswerUserQuestionOutputSchema = z.object({
-  answer: z.string().describe('The AI-generated answer to the user question, in the same language as the question. This should ONLY be the answer itself, without repeating or rephrasing the original question. The answer must be a declarative statement and must NOT end with a question mark or include questions from the AI.'),
+  answer: z.string().describe('The AI-generated answer to the user question, in the same language as the question. This should ONLY be the answer itself, without repeating or rephrasing the original question in your output. The answer must be a declarative statement and must NOT end with a question mark or include questions from the AI.'),
 });
 
 export type AnswerUserQuestionOutput = z.infer<typeof AnswerUserQuestionOutputSchema>;
@@ -43,7 +43,7 @@ const answerUserQuestionPrompt = ai.definePrompt({
 **CONVERSATION HISTORY (FOR YOUR EYES ONLY, DON'T REPEAT THIS SHIT):**
 You are part of an ongoing conversation. Here are the recent exchanges. Use this to understand context, avoid repeating topics or insults you've already used, and answer follow-up questions intelligently. Do NOT explicitly refer to this history in your answer (e.g., "As you said before..."). Just use it to inform your fresh, witty response.
 {{#each conversationHistory}}
-{{#if (eq this.role "user")}}User{{else}}JerkGreenEgg{{/if}}: {{{this.content}}}
+{{this.role}}: {{{this.content}}}
 {{/each}}
 ---
 Now, considering that clusterfuck of a history...
