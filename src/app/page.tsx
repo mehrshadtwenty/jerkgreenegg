@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, FormEvent } from 'react';
 import type { ChatMessage, AiStatus } from '@/lib/types';
 import { ChatMessageItem } from '@/components/chat/chat-message-item';
 import { AiCharacterDisplay } from '@/components/chat/ai-character-display';
-import { answerUserQuestion } from '@/ai/flows/answer-user-question';
+import { answerUserQuestion, AnswerUserQuestionInput } from '@/ai/flows/answer-user-question';
 import { generateImageFromQuestion } from '@/ai/flows/generate-image-from-question';
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4 } from 'uuid';
@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 
 const CONTRACT_ADDRESS = "E76gue12NupYS5GwjRR7nyisEKAUpH6F1Pv9UmHMSziu";
 const CHAT_STORAGE_KEY = 'jerkGreenEggChatMessages';
+const MAX_HISTORY_MESSAGES = 6; // Approx 3 user turns, 3 AI turns
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -95,7 +96,8 @@ export default function HomePage() {
     setCurrentQuestion(''); 
 
     const userMessage: ChatMessage = { id: uuidv4(), role: 'user', text: questionText, timestamp: new Date() };
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
 
     const aiPlaceholderMessageId = uuidv4();
     const aiPlaceholderMessage: ChatMessage = {
@@ -107,9 +109,24 @@ export default function HomePage() {
     };
     setMessages(prev => [...prev, aiPlaceholderMessage]);
 
+    // Prepare conversation history
+    const historyForAI = updatedMessages
+      .slice(-MAX_HISTORY_MESSAGES -1) // Get up to MAX_HISTORY_MESSAGES previous messages plus current user message
+      .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text) // Exclude placeholder and ensure text exists
+      .map(msg => ({
+        role: msg.role,
+        content: msg.text as string, // msg.text is asserted as string due to filter
+      }));
+      
+    const aiInput: AnswerUserQuestionInput = {
+      question: questionText,
+      conversationHistory: historyForAI.slice(0, -1), // Pass history *before* the current question
+    };
+
+
     let textResultError = null;
     try {
-      const textResult = await answerUserQuestion({ question: questionText });
+      const textResult = await answerUserQuestion(aiInput);
       setMessages(prev => prev.map(msg =>
         msg.id === aiPlaceholderMessageId ? {
           ...msg,
@@ -353,3 +370,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
