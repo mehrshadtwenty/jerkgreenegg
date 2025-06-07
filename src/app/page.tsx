@@ -13,10 +13,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button'; 
 import { Send, Sparkles, StopCircle, Copy } from 'lucide-react';
-import Link from 'next/link'; // Added Link import
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const CONTRACT_ADDRESS = "E76gue12NupYS5GwjRR7nyisEKAUpH6F1Pv9UmHMSziu";
+const CHAT_STORAGE_KEY = 'jerkGreenEggChatMessages';
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -29,6 +30,35 @@ export default function HomePage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load messages from localStorage on initial mount
+  useEffect(() => {
+    const storedMessagesRaw = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (storedMessagesRaw) {
+      try {
+        const parsedMessages = JSON.parse(storedMessagesRaw) as ChatMessage[];
+        // Convert string timestamps back to Date objects
+        setMessages(
+          parsedMessages.map((msg) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to parse messages from localStorage", error);
+        localStorage.removeItem(CHAT_STORAGE_KEY); // Clear corrupted data
+      }
+    }
+  }, []);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    // Only save if messages array is not empty, or if it was populated from storage and then cleared.
+    // This avoids writing an empty array over potentially loaded data on the very first render cycle.
+    if (messages.length > 0 || localStorage.getItem(CHAT_STORAGE_KEY) !== null) {
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+    }
+  }, [messages]);
   
   useEffect(() => {
     scrollToBottom();
@@ -240,7 +270,7 @@ export default function HomePage() {
           id="chat-area-wrapper" 
           className="relative z-20 flex-grow flex flex-col max-w-2xl w-full mx-auto overflow-hidden border-2 border-primary rounded-lg shadow-xl my-4"
         >
-          <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50">
+          <ScrollArea className="flex-grow p-4 space-y-2 bg-card/50 min-h-0">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center pt-10">
                  {/* Empty div, placeholder text removed */}

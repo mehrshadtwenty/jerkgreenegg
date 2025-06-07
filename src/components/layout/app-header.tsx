@@ -14,7 +14,11 @@ export function AppHeader() {
           </h1>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
-          <Button variant="ghost" asChild className="font-heading hover:text-accent transition-colors">
+          <Button 
+            variant="ghost" 
+            asChild 
+            className="font-heading text-foreground nav-link-custom-hover transition-colors duration-300 px-2 sm:px-3" // Added nav-link-custom-hover
+          >
             <Link href="/about">About</Link>
           </Button>
         </nav>
