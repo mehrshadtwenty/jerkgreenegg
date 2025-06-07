@@ -312,6 +312,7 @@ export default function HomePage() {
                   "bg-[linear-gradient(to_bottom,hsl(var(--amethyst-purple-hsl)/0.25)_0%,hsl(var(--pearl-white-hsl)/0.15)_100%)]",
                   "text-emerald-green-hsl placeholder:text-emerald-green-hsl/70",
                   "border-2 border-primary/30",
+                  "focus:bg-[hsl(var(--input)/0.7)]", // Added focus background
                   "focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0"
                 )}
                 onKeyDown={(e) => {
@@ -370,5 +371,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
