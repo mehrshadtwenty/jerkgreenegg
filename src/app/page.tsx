@@ -27,6 +27,7 @@ export default function HomePage() {
   const [isUserTyping, setIsUserTyping] = useState(false);
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState('');
+  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -49,16 +50,15 @@ export default function HomePage() {
         localStorage.removeItem(CHAT_STORAGE_KEY); // Clear corrupted data
       }
     }
+    setHasLoadedFromStorage(true); // Indicate loading attempt is complete
   }, []);
 
-  // Save messages to localStorage whenever they change
+  // Save messages to localStorage whenever they change, AFTER initial load attempt
   useEffect(() => {
-    // Only save if messages array is not empty, or if it was populated from storage and then cleared.
-    // This avoids writing an empty array over potentially loaded data on the very first render cycle.
-    if (messages.length > 0 || localStorage.getItem(CHAT_STORAGE_KEY) !== null) {
-        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+    if (hasLoadedFromStorage) {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
     }
-  }, [messages]);
+  }, [messages, hasLoadedFromStorage]);
   
   useEffect(() => {
     scrollToBottom();
