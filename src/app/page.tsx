@@ -138,16 +138,16 @@ export default function HomePage() {
     setMessages(prev => [...prev, aiPlaceholderMessage]);
 
     const historyForAI = updatedMessagesContext
-      .slice(-MAX_HISTORY_MESSAGES_FOR_AI -1)
-      .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text)
+      .slice(-MAX_HISTORY_MESSAGES_FOR_AI -1) 
+      .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text) 
       .map(msg => ({
         role: msg.role,
-        content: msg.text as string,
+        content: msg.text as string, 
       }));
 
     const aiInput: AnswerUserQuestionInput = {
       question: questionText,
-      conversationHistory: historyForAI.slice(0, -1),
+      conversationHistory: historyForAI.slice(0, -1), 
     };
 
 
