@@ -18,7 +18,8 @@ import { cn } from '@/lib/utils';
 
 const CONTRACT_ADDRESS = "E76gue12NupYS5GwjRR7nyisEKAUpH6F1Pv9UmHMSziu";
 const CHAT_STORAGE_KEY = 'jerkGreenEggChatMessages';
-const MAX_HISTORY_MESSAGES = 6; // Approx 3 user turns, 3 AI turns
+const MAX_HISTORY_MESSAGES_FOR_AI = 6; // Approx 3 user turns, 3 AI turns for AI context
+const MAX_MESSAGES_FOR_LOCAL_STORAGE = 10; // Limit messages stored in localStorage
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -57,7 +58,17 @@ export default function HomePage() {
   // Save messages to localStorage whenever they change, AFTER initial load attempt
   useEffect(() => {
     if (hasLoadedFromStorage) {
-      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+      const messagesToStore = messages.slice(-MAX_MESSAGES_FOR_LOCAL_STORAGE);
+      try {
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messagesToStore));
+      } catch (error) {
+        console.error("Error saving messages to localStorage:", error);
+        // Potentially clear localStorage if quota is an issue that persists even with slicing
+        if (error instanceof DOMException && (error.name === 'QuotaExceededError' || error.code === 22)) {
+            console.warn("LocalStorage quota exceeded even after slicing. Clearing stored messages.");
+            localStorage.removeItem(CHAT_STORAGE_KEY);
+        }
+      }
     }
   }, [messages, hasLoadedFromStorage]);
   
@@ -96,8 +107,8 @@ export default function HomePage() {
     setCurrentQuestion(''); 
 
     const userMessage: ChatMessage = { id: uuidv4(), role: 'user', text: questionText, timestamp: new Date() };
-    const updatedMessages = [...messages, userMessage];
-    setMessages(updatedMessages);
+    const updatedMessagesContext = [...messages, userMessage]; // Use this for AI context immediately
+    setMessages(updatedMessagesContext); // Update UI
 
     const aiPlaceholderMessageId = uuidv4();
     const aiPlaceholderMessage: ChatMessage = {
@@ -109,18 +120,18 @@ export default function HomePage() {
     };
     setMessages(prev => [...prev, aiPlaceholderMessage]);
 
-    // Prepare conversation history
-    const historyForAI = updatedMessages
-      .slice(-MAX_HISTORY_MESSAGES -1) // Get up to MAX_HISTORY_MESSAGES previous messages plus current user message
-      .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text) // Exclude placeholder and ensure text exists
+    // Prepare conversation history for AI
+    const historyForAI = updatedMessagesContext // use the one that includes the latest user message
+      .slice(-MAX_HISTORY_MESSAGES_FOR_AI -1) 
+      .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text) 
       .map(msg => ({
         role: msg.role,
-        content: msg.text as string, // msg.text is asserted as string due to filter
+        content: msg.text as string, 
       }));
       
     const aiInput: AnswerUserQuestionInput = {
       question: questionText,
-      conversationHistory: historyForAI.slice(0, -1), // Pass history *before* the current question
+      conversationHistory: historyForAI.slice(0, -1), 
     };
 
 
@@ -312,7 +323,7 @@ export default function HomePage() {
                   "bg-[linear-gradient(to_bottom,hsl(var(--amethyst-purple-hsl)/0.25)_0%,hsl(var(--pearl-white-hsl)/0.15)_100%)]",
                   "text-emerald-green-hsl placeholder:text-emerald-green-hsl/70",
                   "border-2 border-primary/30",
-                  "focus:bg-[hsl(var(--input)/0.7)]", // Added focus background
+                  "focus:bg-[hsl(var(--input)/0.7)]", 
                   "focus:border-accent focus:shadow-fantasy-glow-accent focus:ring-0"
                 )}
                 onKeyDown={(e) => {
@@ -371,3 +382,4 @@ export default function HomePage() {
     </div>
   );
 }
+
