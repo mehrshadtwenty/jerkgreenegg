@@ -17,9 +17,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const CONTRACT_ADDRESS = "E76gue12NupYS5GwjRR7nyisEKAUpH6F1Pv9UmHMSziu";
-const CHAT_STORAGE_KEY = 'jerkGreenEggChatMessages';
 const MAX_HISTORY_MESSAGES_FOR_AI = 6; // Approx 3 user turns, 3 AI turns for AI context
-const MAX_MESSAGES_FOR_LOCAL_STORAGE = 10; // Limit messages stored in localStorage
 
 export default function HomePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -29,65 +27,9 @@ export default function HomePage() {
   const [isUserTyping, setIsUserTyping] = useState(false);
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState('');
-  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Load messages from localStorage on initial mount
-  useEffect(() => {
-    let loadedMessagesFromStorage: ChatMessage[] = [];
-    const storedMessagesRaw = localStorage.getItem(CHAT_STORAGE_KEY);
-    if (storedMessagesRaw) {
-      try {
-        const parsedMessages = JSON.parse(storedMessagesRaw) as ChatMessage[];
-        // Convert string timestamps back to Date objects
-        // Note: imageUrls are not stored, so they won't be loaded here.
-        loadedMessagesFromStorage = parsedMessages.map((msg) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp),
-            imageUrl: undefined, // Explicitly ensure no imageUrl is loaded
-          }));
-      } catch (error) {
-        console.error("Failed to parse messages from localStorage", error);
-        localStorage.removeItem(CHAT_STORAGE_KEY); // Clear corrupted data
-      }
-    }
-    setMessages(loadedMessagesFromStorage); // Explicitly set messages based on what was loaded (or empty)
-    setHasLoadedFromStorage(true); // Indicate loading attempt is complete
-  }, []);
-
-  // Save messages to localStorage whenever they change, AFTER initial load attempt
-  useEffect(() => {
-    if (hasLoadedFromStorage) {
-      const messagesToStore = messages
-        .slice(-MAX_MESSAGES_FOR_LOCAL_STORAGE)
-        .map(msg => {
-          // Create a new object without the imageUrl to avoid storing large data URIs
-          const { imageUrl, ...restOfMsg } = msg;
-          return restOfMsg;
-        });
-      try {
-        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messagesToStore));
-      } catch (error) {
-        console.error("Error saving messages to localStorage:", error);
-        // Check if it's a QuotaExceededError
-        if (error instanceof DOMException && (error.name === 'QuotaExceededError' || error.code === 22)) {
-            console.warn("LocalStorage quota exceeded even after removing image URLs. Clearing stored messages for JerkGreenEgg.");
-            toast({
-              title: "Storage Full, Captain Dipshit!",
-              description: "My memory banks are overflowing with your genius. Couldn't save all your old chats. Tough luck.",
-              variant: "destructive",
-            });
-            try {
-              localStorage.removeItem(CHAT_STORAGE_KEY);
-            } catch (clearError) {
-              console.error("Failed to clear localStorage for JerkGreenEgg after quota error:", clearError);
-            }
-        }
-      }
-    }
-  }, [messages, hasLoadedFromStorage, toast]);
 
   useEffect(() => {
     scrollToBottom();
@@ -138,16 +80,16 @@ export default function HomePage() {
     setMessages(prev => [...prev, aiPlaceholderMessage]);
 
     const historyForAI = updatedMessagesContext
-      .slice(-MAX_HISTORY_MESSAGES_FOR_AI -1) 
-      .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text) 
+      .slice(-MAX_HISTORY_MESSAGES_FOR_AI -1)
+      .filter(msg => msg.id !== aiPlaceholderMessageId && msg.text)
       .map(msg => ({
         role: msg.role,
-        content: msg.text as string, 
+        content: msg.text as string,
       }));
 
     const aiInput: AnswerUserQuestionInput = {
       question: questionText,
-      conversationHistory: historyForAI.slice(0, -1), 
+      conversationHistory: historyForAI.slice(0, -1),
     };
 
 
@@ -402,3 +344,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
