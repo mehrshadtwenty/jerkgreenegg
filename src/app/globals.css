@@ -248,6 +248,20 @@ body {
     outline: none; /* Remove default focus outline if desired */
     box-shadow: none; /* Remove default focus box-shadow if desired */
   }
+
+  /* Custom Icon Button Hover Style (e.g., for Copy button) */
+  .icon-button-primary-hover:hover svg,
+  .icon-button-primary-hover:focus-visible svg {
+    color: hsl(var(--primary)) !important; /* Explicitly set/keep primary color for SVG */
+    filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.7)); /* Primary glow for SVG */
+  }
+
+  .icon-button-primary-hover:hover,
+  .icon-button-primary-hover:focus-visible {
+    background-color: transparent !important; /* Remove ghost's hover bg */
+    outline: none !important; /* Remove default focus outline */
+    box-shadow: none !important; /* Remove default focus box-shadow */
+  }
 }
 
 

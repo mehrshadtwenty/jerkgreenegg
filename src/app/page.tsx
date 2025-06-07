@@ -258,7 +258,7 @@ export default function HomePage() {
               variant="ghost"
               size="icon"
               onClick={handleCopyAddress}
-              className="text-primary hover:text-accent focus:ring-accent w-8 h-8 sm:w-9 sm:h-9 shrink-0"
+              className="text-primary w-8 h-8 sm:w-9 sm:h-9 shrink-0 icon-button-primary-hover"
               aria-label="Copy contract address"
             >
               <Copy className="h-4 w-4 sm:h-5 sm:h-5" />
