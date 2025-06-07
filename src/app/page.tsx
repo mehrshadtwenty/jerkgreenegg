@@ -36,24 +36,24 @@ export default function HomePage() {
 
   // Load messages from localStorage on initial mount
   useEffect(() => {
+    let loadedMessagesFromStorage: ChatMessage[] = [];
     const storedMessagesRaw = localStorage.getItem(CHAT_STORAGE_KEY);
     if (storedMessagesRaw) {
       try {
         const parsedMessages = JSON.parse(storedMessagesRaw) as ChatMessage[];
         // Convert string timestamps back to Date objects
         // Note: imageUrls are not stored, so they won't be loaded here.
-        setMessages(
-          parsedMessages.map((msg) => ({
+        loadedMessagesFromStorage = parsedMessages.map((msg) => ({
             ...msg,
             timestamp: new Date(msg.timestamp),
             imageUrl: undefined, // Explicitly ensure no imageUrl is loaded
-          }))
-        );
+          }));
       } catch (error) {
         console.error("Failed to parse messages from localStorage", error);
         localStorage.removeItem(CHAT_STORAGE_KEY); // Clear corrupted data
       }
     }
+    setMessages(loadedMessagesFromStorage); // Explicitly set messages based on what was loaded (or empty)
     setHasLoadedFromStorage(true); // Indicate loading attempt is complete
   }, []);
 
